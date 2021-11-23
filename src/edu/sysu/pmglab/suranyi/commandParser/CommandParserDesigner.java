@@ -76,7 +76,7 @@ public class CommandParserDesigner extends JFrame {
 
         tabbedPane.addMouseListener(new MouseAdapter() {
             @Override
-            public void mouseClicked(MouseEvent e) {
+            public void mousePressed(MouseEvent e) {
                 if (tabbedPane.getSelectedIndex() == 2) {
                     try {
                         CommandParser parser = transToParser();
@@ -106,29 +106,31 @@ public class CommandParserDesigner extends JFrame {
             }
         });
 
-        new DropTarget(commandScrollPane, DnDConstants.ACTION_COPY_OR_MOVE, new DropTargetAdapter() {
-            @Override
-            public void drop(DropTargetDropEvent e) {
-                try {
-                    if (e.isDataFlavorSupported(DataFlavor.javaFileListFlavor)) {
-                        // 接受拖拽来的数据
-                        e.acceptDrop(DnDConstants.ACTION_COPY_OR_MOVE);
-                        List<File> list = (List<File>) e.getTransferable().getTransferData(DataFlavor.javaFileListFlavor);
-                        if (list.size() == 1) {
-                            loadFromFile(list.get(0).getAbsolutePath());
+        for (Component component: new Component[]{commandScrollPane, ruleScrollPane, commandPreview}) {
+            new DropTarget(component, DnDConstants.ACTION_COPY_OR_MOVE, new DropTargetAdapter() {
+                @Override
+                public void drop(DropTargetDropEvent e) {
+                    try {
+                        if (e.isDataFlavorSupported(DataFlavor.javaFileListFlavor)) {
+                            // 接受拖拽来的数据
+                            e.acceptDrop(DnDConstants.ACTION_COPY_OR_MOVE);
+                            List<File> list = (List<File>) e.getTransferable().getTransferData(DataFlavor.javaFileListFlavor);
+                            if (list.size() == 1) {
+                                loadFromFile(list.get(0).getAbsolutePath());
+                            } else {
+                                // 拒绝拖拽来的数据
+                                JOptionPane.showOptionDialog(null, "Only a single file is allowed.", "Error", JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE, null, new String[]{"OK"}, "OK");
+                                e.rejectDrop();
+                            }
                         } else {
                             // 拒绝拖拽来的数据
-                            JOptionPane.showOptionDialog(null, "Only a single file is allowed.", "Error", JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE, null, new String[]{"OK"}, "OK");
                             e.rejectDrop();
                         }
-                    } else {
-                        // 拒绝拖拽来的数据
-                        e.rejectDrop();
+                    } catch (Exception ignored) {
                     }
-                } catch (Exception ignored) {
                 }
-            }
-        });
+            });
+        }
 
         commandModel.addCellEditor(commandTable, "request", new DefaultCellEditor(new JCheckBox()));
         commandModel.addCellEditor(commandTable, "hidden", new DefaultCellEditor(new JCheckBox()));
