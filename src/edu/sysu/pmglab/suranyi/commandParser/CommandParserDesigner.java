@@ -42,6 +42,7 @@ public class CommandParserDesigner extends JFrame {
     private JTextArea commandPreview;
     private JButton openButton;
     private JSpinner offsetSpinner;
+    private JButton clearButton;
 
     CommandParserDesigner() {
         setTitle("Command Parser Designer");
@@ -245,6 +246,18 @@ public class CommandParserDesigner extends JFrame {
                 // 加载解析器
                 loadFromFile(jfc.getSelectedFile().getAbsolutePath());
             }
+        });
+
+        clearButton.addActionListener(e -> {
+            // 将解析器映射为 GUI 组件
+            commandModel.clearAll();
+            ruleModel.clearAll();
+
+            // 设置主程序名、偏移量、全局规则
+            mainClassTextField.setText("<main class>");
+            offsetSpinner.setValue(0);
+            globalRuleComboBox.setSelectedItem(".");
+            commandPreview.setText("");
         });
     }
 
