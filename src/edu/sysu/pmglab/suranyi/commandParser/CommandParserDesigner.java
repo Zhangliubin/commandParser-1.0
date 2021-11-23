@@ -78,10 +78,15 @@ public class CommandParserDesigner extends JFrame {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (tabbedPane.getSelectedIndex() == 2) {
-                    CommandParser parser = transToParser();
-                    if (parser != null) {
-                        commandPreview.setText(transToParser().toString());
-                        commandPreview.setCaretPosition(0);
+                    try {
+                        CommandParser parser = transToParser();
+                        if (parser != null) {
+                            commandPreview.setText(parser.toString());
+                            commandPreview.setCaretPosition(0);
+                        }
+                    } catch (Exception exception) {
+                        commandPreview.setText("");
+                        JOptionPane.showOptionDialog(null, exception.getMessage(), "Error", JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE, null, new String[]{"OK"}, "OK");
                     }
                 }
             }
