@@ -3,8 +3,6 @@ package dev;
 import edu.sysu.pmglab.suranyi.commandParser.CommandMatcher;
 import edu.sysu.pmglab.suranyi.commandParser.CommandParser;
 import edu.sysu.pmglab.suranyi.easytools.FileUtils;
-import edu.sysu.pmglab.suranyi.unifyIO.FileStream;
-import edu.sysu.pmglab.suranyi.unifyIO.InputStreamReaderStream;
 import edu.sysu.pmglab.suranyi.unifyIO.bgztools.BGZTools;
 
 import java.io.IOException;
@@ -18,7 +16,7 @@ import java.util.Scanner;
 
 public class BGZIPParserFromFile {
     public static int submit(String... args) throws IOException {
-        CommandParser mainParser = CommandParser.loadFromFile(new FileStream(new InputStreamReaderStream(BGZIPParserFromFile.class.getResourceAsStream("/command/bgzip"))));
+        CommandParser mainParser = CommandParser.loadFromInnerResource(BGZIPParserFromFile.class, "/command/bgzip");
         CommandMatcher options = mainParser.parse(args);
         CommandParser subParser = getSubParser(options);
 
@@ -138,7 +136,6 @@ public class BGZIPParserFromFile {
                         }
                     }
 
-                    long[] pointer = (long[]) options.get("-r");
                     long start = System.currentTimeMillis();
                     BGZTools.concat(realOutputFileName + ".~$temp", (String[]) options.get("extract"));
                     long end = System.currentTimeMillis();
@@ -187,22 +184,22 @@ public class BGZIPParserFromFile {
 
     static CommandParser getSubParser(CommandMatcher options) throws IOException {
         if (options.isPassedIn("compress")) {
-            CommandParser subParser = CommandParser.loadFromFile(new FileStream(new InputStreamReaderStream(BGZIPParserFromFile.class.getResourceAsStream("/command/compress"))));
+            CommandParser subParser = CommandParser.loadFromInnerResource(BGZIPParserFromFile.class, "/command/compress");
             return subParser;
         } else if (options.isPassedIn("decompress")) {
-            CommandParser subParser = CommandParser.loadFromFile(new FileStream(new InputStreamReaderStream(BGZIPParserFromFile.class.getResourceAsStream("/command/decompress"))));
+            CommandParser subParser = CommandParser.loadFromInnerResource(BGZIPParserFromFile.class, "/command/decompress");
             return subParser;
         } else if (options.isPassedIn("md5")) {
-            CommandParser subParser = CommandParser.loadFromFile(new FileStream(new InputStreamReaderStream(BGZIPParserFromFile.class.getResourceAsStream("/command/md5"))));
+            CommandParser subParser = CommandParser.loadFromInnerResource(BGZIPParserFromFile.class, "/command/md5");
             return subParser;
         } else if (options.isPassedIn("convert")) {
-            CommandParser subParser = CommandParser.loadFromFile(new FileStream(new InputStreamReaderStream(BGZIPParserFromFile.class.getResourceAsStream("/command/convert"))));
+            CommandParser subParser = CommandParser.loadFromInnerResource(BGZIPParserFromFile.class, "/command/convert");
             return subParser;
         } else if (options.isPassedIn("concat")) {
-            CommandParser subParser = CommandParser.loadFromFile(new FileStream(new InputStreamReaderStream(BGZIPParserFromFile.class.getResourceAsStream("/command/concat"))));
+            CommandParser subParser = CommandParser.loadFromInnerResource(BGZIPParserFromFile.class, "/command/concat");
             return subParser;
         } else if (options.isPassedIn("extract")) {
-            CommandParser subParser = CommandParser.loadFromFile(new FileStream(new InputStreamReaderStream(BGZIPParserFromFile.class.getResourceAsStream("/command/extract"))));
+            CommandParser subParser = CommandParser.loadFromInnerResource(BGZIPParserFromFile.class, "/command/extract");
             return subParser;
         }
         return null;

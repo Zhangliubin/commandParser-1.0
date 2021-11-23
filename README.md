@@ -76,7 +76,7 @@ bgzip
 
 ```java
 // 从文件中加载解析器 (文件打包为 jar 包时，相对路径失效，因此需要使用以下语句表明在 jar 工程中的文件)
-CommandParser mainParser = CommandParser.loadFromFile(new FileStream(new InputStreamReaderStream(BGZIPParserFromFile.class.getResourceAsStream("/command/bgzip"))));
+CommandParser mainParser = CommandParser.loadFromInnerResource(BGZIPParserFromFile.class, "/command/bgzip");
 
 // 使用该解析器解析指令
 CommandMatcher options = mainParser.parse("bgzip", "compress", "-h");
@@ -184,8 +184,11 @@ md5	false	.	string-array	.	-1	Options	Calculate a message-digest fingerprint (ch
 // 使用脚本创建解析器
 CommandParser parser = new CommandParser("bgzip <input>");
 
-// 从文件中导入解析器
-CommandParser parser = CommandParser.loadFromFile(new FileStream(new InputStreamReaderStream(BGZIPParserFromFile.class.getResourceAsStream("/command/bgzip"))));
+// 从文件中导入解析器 (不建议使用该语句)
+CommandParser parser = CommandParser.loadFromFile("/command/bgzip");
+
+// 从文件中导入解析器 (建议使用该语句)
+CommandParser parser = CommandParser.loadFromInnerResource(BGZIPParserFromFile.class, "/command/bgzip");
 ```
 
 CommandParser 包含三个注册器:
@@ -373,3 +376,7 @@ parser.register("--model", "-m")
 - [GBC-1.1](https://pmglab.top/gbc)
 - 本示例程序中的 bgzip-tools
 
+## TODO List
+
+1. 图形界面中增加搜索功能
+2. 支持更多的参数类型

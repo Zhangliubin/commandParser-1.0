@@ -2,7 +2,6 @@ package edu.sysu.pmglab.suranyi.commandParser;
 
 import com.formdev.flatlaf.FlatLightLaf;
 import dev.BGZIPParserFromFile;
-import edu.sysu.pmglab.suranyi.unifyIO.bgztools.BGZIPParser;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;

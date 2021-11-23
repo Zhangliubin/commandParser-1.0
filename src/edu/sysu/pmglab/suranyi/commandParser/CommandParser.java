@@ -1,5 +1,6 @@
 package edu.sysu.pmglab.suranyi.commandParser;
 
+import dev.BGZIPParserFromFile;
 import edu.sysu.pmglab.suranyi.check.Assert;
 import edu.sysu.pmglab.suranyi.commandParser.converter.map.KVConverter;
 import edu.sysu.pmglab.suranyi.commandParser.converter.value.PassedInConverter;
@@ -7,6 +8,7 @@ import edu.sysu.pmglab.suranyi.commandParser.exception.CommandParserException;
 import edu.sysu.pmglab.suranyi.commandParser.exception.ParameterException;
 import edu.sysu.pmglab.suranyi.container.SmartList;
 import edu.sysu.pmglab.suranyi.unifyIO.FileStream;
+import edu.sysu.pmglab.suranyi.unifyIO.InputStreamReaderStream;
 import edu.sysu.pmglab.suranyi.unifyIO.options.FileOptions;
 
 import java.io.IOException;
@@ -536,6 +538,10 @@ public class CommandParser {
         }
 
         return parser;
+    }
+
+    public static <T> CommandParser loadFromInnerResource(Class<T> className, String fileName) throws IOException {
+        return CommandParser.loadFromFile(new FileStream(new InputStreamReaderStream(className.getResourceAsStream(fileName))));
     }
 
     public static CommandParser loadFromFile(FileStream file) throws IOException {
