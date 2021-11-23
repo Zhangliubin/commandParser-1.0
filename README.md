@@ -11,10 +11,10 @@ CommandParser 在 JDK 8 中开发完成，得益于 Java 跨平台的特性，�
 - 在 Windows 和 MacOS 下，当设备准确配置了JDK运行环境时，可以双击启动图形界面；
 - 在 Java 脚本程序中，可以通过导入该包进行使用。
 
-| Type         | File                                             |
-| ------------ | ------------------------------------------------ |
-| Package      | [CommandParser-1.0.jar](./commandParser-1.0.jar) |
-| Source codes | [CommandParser-1.0.zip](./commandParser-1.0.zip) |
+| Type         | File                                                         |
+| ------------ | ------------------------------------------------------------ |
+| Package      | [CommandParser-1.0.jar](./commandParser-1.0.jar)             |
+| Source codes | [CommandParser-1.0](https://github.com/Zhangliubin/commandParser-1.0) |
 
 ## 快速入门
 
