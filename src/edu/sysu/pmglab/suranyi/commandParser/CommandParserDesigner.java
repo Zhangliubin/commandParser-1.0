@@ -132,7 +132,7 @@ public class CommandParserDesigner extends JFrame {
 
         commandModel.addCellEditor(commandTable, "request", new DefaultCellEditor(new JCheckBox()));
         commandModel.addCellEditor(commandTable, "hidden", new DefaultCellEditor(new JCheckBox()));
-        commandModel.addCellEditor(commandTable, "convertTo", new DefaultCellEditor(new JComboBox<>(new String[]{"built-in", "passedIn", "boolean", "short", "int", "long", "double", "string", "short-array", "integer-array", "long-array", "double-array", "string-array", "k1=v1;k2=v2;...", "<start>-<end> (integer)", "<start>-<end> (long)", "<start>-<end> (double)", "<index>:<start>-<end> (integer)", "<start>-<end> (string)", "<index>:<start>-<end> (string)"})));
+        commandModel.addCellEditor(commandTable, "convertTo", new DefaultCellEditor(new JComboBox<>(new String[]{"built-in", "passedIn", "boolean", "short", "integer", "long", "double", "string", "short-array", "integer-array", "long-array", "double-array", "string-array", "k1=v1;k2=v2;...", "<start>-<end> (integer)", "<start>-<end> (long)", "<start>-<end> (double)", "<index>:<start>-<end> (integer)", "<start>-<end> (string)", "<index>:<start>-<end> (string)"})));
 
         JComboBox<String> validateWithCombobox = new JComboBox<>(new String[]{".", "built-in", "NotDirectory", "EnsureFileExists", "NotDirectory EnsureFileExists", "RangeOf($start,$end)"});
         validateWithCombobox.setEditable(true);
