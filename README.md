@@ -201,7 +201,7 @@ CommandParser 包含三个注册器:
 - parser.registerGlobalRule(CommandRuleType ruleType): 设置全局规则。全局规则接受一个 CommandRuleType 参数 (这是一个枚举类)，支持 AT_MOST_ONE (至多包含 1 个参数)、AT_LEAST_ONE (至少包含 1 个参数)、REQUEST_ONE (恰好 1 个参数)
 - parser.createOptionGroup(String optionGroup): 创建参数组
 
-<img src="/Users/suranyi/Library/Application Support/typora-user-images/image-20211123155539971.png" alt="image-20211123155539971" style="zoom: 67%;" />
+<img src="https://tva1.sinaimg.cn/large/008i3skNgy1gwpc7o2zdsj30lx0dw40k.jpg" alt="image-20211123155539971" style="zoom: 67%;" />
 
 ### 向解析器中注册指令
 
