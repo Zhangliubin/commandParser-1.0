@@ -702,14 +702,7 @@ public class CommandItem {
 
             for (String validator : validators) {
                 if (validator.startsWith("RangeOf(")) {
-                    String value1 = validator.substring(8, validator.indexOf(","));
-                    String value2 = validator.substring(validator.indexOf(",") + 1, validator.indexOf(")"));
-
-                    if (item.converter instanceof DoubleConverter || item.converter instanceof DoubleArrayConverter || item.converter instanceof NaturalDoubleRangeConverter) {
-                        addToItem.add(new RangeValidator(Double.parseDouble(value1), Double.parseDouble(value2)));
-                    } else if (item.converter instanceof IntConverter || item.converter instanceof LongConverter || item.converter instanceof ShortConverter || item.converter instanceof IntArrayConverter || item.converter instanceof LongArrayConverter || item.converter instanceof ShortArrayConverter) {
-                        addToItem.add(new RangeValidator(Integer.parseInt(value1), Integer.parseInt(value2)));
-                    }
+                    addToItem.add(new RangeValidator(Double.parseDouble(validator.substring(8, validator.indexOf(","))), Double.parseDouble(validator.substring(validator.indexOf(",") + 1, validator.indexOf(")")))));
                 } else if (validator.equals("EnsureFileExists")) {
                     addToItem.add(EnsureFileExistsValidator.INSTANCE);
                 } else if (validator.equals("NotDirectory")) {
