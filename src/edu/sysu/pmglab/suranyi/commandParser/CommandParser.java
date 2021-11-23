@@ -469,75 +469,7 @@ public class CommandParser {
     }
 
     public static CommandParser loadFromFile(String fileName) throws IOException {
-        FileStream file = new FileStream(fileName, FileOptions.CHANNEL_READER);
-        // 写入注释行
-        String line = file.readLineToString();
-        if (line == null || !line.equals("##" + VERSION)) {
-            throw new CommandParserException(VERSION);
-        }
-
-        // 创建键值对转换器
-        KVConverter<String, String> kvConverter = new KVConverter<String, String>() {
-            @Override
-            public HashMap<String, String> convert(String... params) {
-                return parseKV(params);
-            }
-        };
-
-        CommandParser parser = new CommandParser(false);
-        SmartList<CommandRule> registeredRules = new SmartList<>(1, true);
-        while ((line = file.readLineToString()) != null) {
-            // 解析注释行
-            if (line.startsWith("##")) {
-                if (line.startsWith("##programName=<")) {
-                    HashMap<String, String> converted = kvConverter.parseKV(line.substring(15, line.length() - 1));
-                    parser.setProgramName(converted.get("value").replace("\"", ""));
-                }
-
-                if (line.startsWith("##offset=<")) {
-                    HashMap<String, String> converted = kvConverter.parseKV(line.substring(10, line.length() - 1));
-                    parser.offset(Integer.parseInt(converted.get("value").replace("\"", "")));
-                }
-
-                if (line.startsWith("##globalRule=<")) {
-                    HashMap<String, String> converted = kvConverter.parseKV(line.substring(14, line.length() - 1));
-                    if (!(".".equals(converted.get("value")) || "'.'".equals(converted.get("value")) || "\".\"".equals(converted.get("value")))) {
-                        // 全局规则非空
-                        parser.registerGlobalRule(CommandRuleType.valueOf(converted.get("value").replace("\"", "").replace("'", "")));
-                    }
-                }
-
-                if (line.startsWith("##commandRule=<")) {
-                    HashMap<String, String> converted = kvConverter.parseKV(line.substring(15, line.length() - 1));
-                    // 先保存，之后再添加
-                    registeredRules.add(new CommandRule(converted.get("command1").replace("\"", ""), converted.get("command2").replace("\"", ""), CommandRuleType.valueOf(converted.get("value").replace("\"", ""))));
-                }
-            } else {
-                if (!line.equals(HEADER)) {
-                    throw new CommandParserException("no header found");
-                } else {
-                    break;
-                }
-            }
-        }
-
-        if (line == null) {
-            throw new CommandParserException("no header found");
-        }
-
-        // 解析指令
-        while ((line = file.readLineToString()) != null) {
-            parser.register(CommandItem.loadFromString(line));
-        }
-
-        file.close();
-
-        // 添加规则
-        for (CommandRule rule : registeredRules) {
-            parser.registerRule(rule.command1, rule.command2, rule.type);
-        }
-
-        return parser;
+        return loadFromFile(new FileStream(fileName, FileOptions.CHANNEL_READER));
     }
 
     public static <T> CommandParser loadFromInnerResource(Class<T> className, String fileName) throws IOException {

@@ -195,7 +195,7 @@ public class CommandItem {
             this.length = this.converter.getDefaultLength();
         }
 
-        validateWith(new IntValidator(MIN, MAX));
+        validateWith(new RangeValidator(MIN, MAX));
         return this;
     }
 
@@ -216,7 +216,7 @@ public class CommandItem {
             this.length = this.converter.getDefaultLength();
         }
 
-        validateWith(new DoubleValidator(MIN, MAX));
+        validateWith(new RangeValidator(MIN, MAX));
         return this;
     }
 
@@ -706,9 +706,9 @@ public class CommandItem {
                     String value2 = validator.substring(validator.indexOf(",") + 1, validator.indexOf(")"));
 
                     if (item.converter instanceof DoubleConverter || item.converter instanceof DoubleArrayConverter || item.converter instanceof NaturalDoubleRangeConverter) {
-                        addToItem.add(new DoubleValidator(Double.parseDouble(value1), Double.parseDouble(value2)));
+                        addToItem.add(new RangeValidator(Double.parseDouble(value1), Double.parseDouble(value2)));
                     } else if (item.converter instanceof IntConverter || item.converter instanceof LongConverter || item.converter instanceof ShortConverter || item.converter instanceof IntArrayConverter || item.converter instanceof LongArrayConverter || item.converter instanceof ShortArrayConverter) {
-                        addToItem.add(new IntValidator(Integer.parseInt(value1), Integer.parseInt(value2)));
+                        addToItem.add(new RangeValidator(Integer.parseInt(value1), Integer.parseInt(value2)));
                     }
                 } else if (validator.equals("EnsureFileExists")) {
                     addToItem.add(EnsureFileExistsValidator.INSTANCE);
