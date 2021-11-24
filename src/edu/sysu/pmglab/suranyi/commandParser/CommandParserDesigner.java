@@ -381,7 +381,7 @@ public class CommandParserDesigner extends JFrame {
             }
 
             new CommandParserDesigner();
-        } else {
+        } else if (args[0].equals("bgzip")){
             // BGZIPParser.submit(args);
             BGZIPParserFromFile.submit(args);
         }
