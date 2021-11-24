@@ -14,8 +14,6 @@ import java.util.HashMap;
 
 class CommandUsage {
     String programName;
-    private final HashMap<String, String> builder = new HashMap<>(10);
-    private final SmartList<String> builderOrder = new SmartList<>(10);
 
     private int length = 80;
     private int firstLevelPrefixLength = 0;

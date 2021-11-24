@@ -7,6 +7,6 @@
 compress	false	.	string-array	.	-1	Options	Compression using parallel-bgzip (supported by CLM algorithm).	'compress <file>'	false	false
 convert	false	.	string-array	.	-1	Options	Convert *.gz format to *.bgz format.	'convert <file>'	false	false
 decompress	false	.	string-array	.	-1	Options	Decompression.	'decompress <file>'	false	false
-extract	false	.	string-array	.	-1	Options	Cut the bgzip file by pointer range (decompressed file).	'cut <file> <start>-<end>'	false	false
+extract	false	.	string-array	.	-1	Options	Cut the bgzip file by pointer range (decompressed file).	'extract <file> -r <start>-<end>'	false	false
 concat	false	.	string-array	.	-1	Options	Concatenate multiple files.	'concat <file>,<file>,...'	false	false
 md5	false	.	string-array	.	-1	Options	Calculate a message-digest fingerprint (checksum) for decompressed file.	'md5 <file>'	false	false

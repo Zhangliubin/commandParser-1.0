@@ -45,7 +45,7 @@ public class BGZIPParser {
         mainParser.register("extract")
                 .convertTo(new StringArrayConverter() {
                 })
-                .setDescription("Cut the bgzip file by pointer range (decompressed file).", "'cut <file> <start>-<end>'");
+                .setDescription("Cut the bgzip file by pointer range (decompressed file).", "'extract <file> -r <start>-<end>'");
 
         mainParser.register("concat")
                 .convertTo(new StringArrayConverter() {
