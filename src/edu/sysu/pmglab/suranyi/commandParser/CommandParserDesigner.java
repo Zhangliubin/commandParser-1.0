@@ -117,6 +117,7 @@ public class CommandParserDesigner extends JFrame {
                             List<File> list = (List<File>) e.getTransferable().getTransferData(DataFlavor.javaFileListFlavor);
                             if (list.size() == 1) {
                                 loadFromFile(list.get(0).getAbsolutePath());
+                                tabbedPane.setSelectedIndex(0);
                             } else {
                                 // 拒绝拖拽来的数据
                                 JOptionPane.showOptionDialog(null, "Only a single file is allowed.", "Error", JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE, null, new String[]{"OK"}, "OK");
@@ -247,6 +248,7 @@ public class CommandParserDesigner extends JFrame {
             if (jfc.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
                 // 加载解析器
                 loadFromFile(jfc.getSelectedFile().getAbsolutePath());
+                tabbedPane.setSelectedIndex(0);
             }
         });
 
