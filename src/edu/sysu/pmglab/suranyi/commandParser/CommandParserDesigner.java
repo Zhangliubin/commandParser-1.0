@@ -262,6 +262,9 @@ public class CommandParserDesigner extends JFrame {
             offsetSpinner.setValue(0);
             globalRuleComboBox.setSelectedItem(".");
             commandPreview.setText("");
+
+            // 添加默认信息
+            commandModel.addRow(new Object[]{"--help,-help,-h", Boolean.FALSE, ".", "passedIn", ".", 0, "Options", ".", ".", Boolean.TRUE, Boolean.TRUE});
         });
     }
 
