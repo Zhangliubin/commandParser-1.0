@@ -160,7 +160,8 @@ class CommandUsage {
 
         // 对命令进行分组
         SmartList<String> optionGroups = new SmartList<>();
-        for (CommandItem commandItem : this.parser.registeredCommandItems.values()) {
+        for (String commandName : this.parser.mainRegisteredCommandItems) {
+            CommandItem commandItem = this.parser.getCommandItem(commandName);
             if (!optionGroups.contains(commandItem.getOptionGroup()) && !commandItem.isHide()) {
                 optionGroups.add(commandItem.getOptionGroup());
             }
