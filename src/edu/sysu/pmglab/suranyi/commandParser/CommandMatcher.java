@@ -15,6 +15,7 @@ public class CommandMatcher {
      */
     HashMap<String, Object> commandValues = new HashMap<>();
     HashMap<String, Boolean> commandIsPassedIn = new HashMap<>();
+    HashMap<String, String> passedInValues = new HashMap<>();
 
     final HashMap<String, CommandItem> commandItems;
 
@@ -37,6 +38,7 @@ public class CommandMatcher {
 
         this.commandValues.put(commandItem.getCommandName(), commandItem.parseValue(values));
         this.commandIsPassedIn.put(commandItem.getCommandName(), true);
+        this.passedInValues.put(commandItem.getCommandName(), String.join(" ", values));
     }
 
     public boolean isPassedIn(String commandKey) {
@@ -50,6 +52,7 @@ public class CommandMatcher {
 
     /**
      * 获取参数对应的值
+     *
      * @param commandKey 参数键
      * @return 参数值
      */
@@ -64,6 +67,7 @@ public class CommandMatcher {
 
     /**
      * 是否包含该参数
+     *
      * @param commandKey 参数键
      */
     public boolean contain(String commandKey) {
@@ -72,6 +76,10 @@ public class CommandMatcher {
 
     @Override
     public String toString() {
-        return this.commandValues.toString();
+        StringBuilder commands = new StringBuilder();
+        for (String commandName : this.passedInValues.keySet()) {
+            commands.append(commands).append(this.passedInValues.get(commandName)).append(" \\").append("\n");
+        }
+        return commands.toString();
     }
 }

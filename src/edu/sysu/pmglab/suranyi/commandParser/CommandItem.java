@@ -44,7 +44,7 @@ public class CommandItem {
         // 验证参数名是否合法、参数名不可重复
         for (String commandName : commandNames) {
             if (!CommandOptions.checkCommandName(commandName)) {
-                throw new CommandParserException("invalid syntax: commandName contains invalid characters");
+                throw new CommandParserException("invalid syntax: commandName (" + commandName + ") contains invalid characters");
             }
         }
 
