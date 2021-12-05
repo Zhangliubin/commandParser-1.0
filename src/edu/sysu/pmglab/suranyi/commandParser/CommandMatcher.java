@@ -1,7 +1,9 @@
 package edu.sysu.pmglab.suranyi.commandParser;
 
 import edu.sysu.pmglab.suranyi.commandParser.exception.ParameterException;
+import edu.sysu.pmglab.suranyi.container.SmartList;
 
+import java.util.Comparator;
 import java.util.HashMap;
 
 /**
@@ -15,7 +17,8 @@ public class CommandMatcher {
      */
     HashMap<String, Object> commandValues = new HashMap<>();
     HashMap<String, Boolean> commandIsPassedIn = new HashMap<>();
-    HashMap<String, String> passedInValues = new HashMap<>();
+
+    SmartList<String[]> passedInValues = new SmartList<>(1, true);
 
     final HashMap<String, CommandItem> commandItems;
 
@@ -38,7 +41,7 @@ public class CommandMatcher {
 
         this.commandValues.put(commandItem.getCommandName(), commandItem.parseValue(values));
         this.commandIsPassedIn.put(commandItem.getCommandName(), true);
-        this.passedInValues.put(commandItem.getCommandName(), String.join(" ", values));
+        this.passedInValues.add(new String[]{commandItem.getCommandName(), String.join(" ", values)});
     }
 
     public boolean isPassedIn(String commandKey) {
@@ -76,10 +79,33 @@ public class CommandMatcher {
 
     @Override
     public String toString() {
-        StringBuilder commands = new StringBuilder();
-        for (String commandName : this.passedInValues.keySet()) {
-            commands.append(commandName).append(this.passedInValues.get(commandName)).append(" \\").append("\n");
+        if (passedInValues.size() > 0) {
+            // 按照优先级排序
+            this.passedInValues.sort(Comparator.comparingInt(o -> commandItems.get(o[0]).getPriority()));
+
+            // 链接参数
+            StringBuilder commands = new StringBuilder();
+            for (int i = 0; i < passedInValues.size() - 1; i++) {
+                commands.append(passedInValues.get(i)[0]);
+                String value = passedInValues.get(i)[1];
+                if (value.length() > 0) {
+                    commands.append(" ").append(value);
+                }
+
+                commands.append(" \\").append("\n");
+            }
+
+            // 添加最后一个参数
+            commands.append(passedInValues.get(-1)[0]);
+
+            String value = passedInValues.get(-1)[1];
+            if (value.length() > 0) {
+                commands.append(" ").append(value);
+            }
+
+            return commands.toString();
+        } else {
+            return "";
         }
-        return commands.toString();
     }
 }
