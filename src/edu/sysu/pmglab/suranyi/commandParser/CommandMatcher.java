@@ -78,7 +78,7 @@ public class CommandMatcher {
     public String toString() {
         StringBuilder commands = new StringBuilder();
         for (String commandName : this.passedInValues.keySet()) {
-            commands.append(commands).append(this.passedInValues.get(commandName)).append(" \\").append("\n");
+            commands.append(commandName).append(this.passedInValues.get(commandName)).append(" \\").append("\n");
         }
         return commands.toString();
     }
