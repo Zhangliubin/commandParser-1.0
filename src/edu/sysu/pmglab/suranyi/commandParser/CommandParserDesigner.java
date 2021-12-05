@@ -176,7 +176,11 @@ public class CommandParserDesigner extends JFrame {
 
         addButton.addActionListener(e -> {
             if (tabbedPane.getSelectedIndex() == 0) {
-                commandModel.addRow(new Object[]{".", Boolean.FALSE, ".", "passedIn", ".", 0, "Options", ".", ".", Boolean.FALSE, Boolean.FALSE});
+                if (commandModel.getRowCount() == 0) {
+                    commandModel.addRow(new Object[]{".", Boolean.FALSE, ".", "passedIn", ".", 0, "Options", ".", ".", Boolean.FALSE, Boolean.FALSE});
+                } else {
+                    commandModel.addRow(new Object[]{".", Boolean.FALSE, ".", "passedIn", ".", 0, commandModel.getValueAt(commandModel.getRowCount() - 1, 6), ".", ".", Boolean.FALSE, Boolean.FALSE});
+                }
                 int selectRowIndex = commandModel.getRowCount() - 1;
                 commandTable.setRowSelectionInterval(selectRowIndex, selectRowIndex);
             } else if (tabbedPane.getSelectedIndex() == 1) {
