@@ -649,7 +649,7 @@ public class CommandItem {
             }
 
             if (!options[2].equals(CommandOptions.MISS_VALUE) && !(item.converter instanceof AbstractConverter)) {
-                if (item.converter.isArrayType() && item.length != 1 && item.length != 0) {
+                if (item.converter.isArrayType() && item.length != 0) {
                     // 无限长度或长度大于 1 时，才进行数组切割
                     if (options[2].contains(",")) {
                         // 以 , 作为分隔符
@@ -675,6 +675,23 @@ public class CommandItem {
             if (!options[2].equals(CommandOptions.MISS_VALUE)) {
                 item.defaultTo(options[2]);
             }
+        }
+
+        // 其他规则判断: 长度
+        if (item.converter instanceof PassedInConverter && item.length != 0) {
+            throw new CommandParserException(item.commandNames[0] + ": passedIn type don't accept any values, please set arity to '0'");
+        }
+
+        if (item.converter instanceof IValueConverter && item.length != 1) {
+            throw new CommandParserException(item.commandNames[0] + ": single-value (boolean,short,integer,long,float,double,string) type accept 1 value, please set arity to '1'");
+        }
+
+        if (item.converter instanceof IMapConverter && item.length != 1) {
+            throw new CommandParserException(item.commandNames[0] + ": mapping type accept 1 value, please set arity to '1'");
+        }
+
+        if (item.converter instanceof IArrayConverter && item.length == 0) {
+            throw new CommandParserException(item.commandNames[0] + ": array (boolean,short,integer,long,float,double,string) type accept at least 1 value, please set arity to any value other than 0");
         }
 
         // 设定验证器
@@ -724,24 +741,6 @@ public class CommandItem {
         } else {
             throw new CommandParserException(item.commandNames[0] + ": couldn't convert " + options[10] + " to a boolean value");
         }
-
-        // 其他规则判断: 长度
-        if (item.converter instanceof PassedInConverter && item.length != 0) {
-            throw new CommandParserException(item.commandNames[0] + ": passedIn type don't accept any values, please set arity to '0'");
-        }
-
-        if (item.converter instanceof IValueConverter && item.length != 1) {
-            throw new CommandParserException(item.commandNames[0] + ": single-value (boolean,short,integer,long,float,double,string) type accept 1 value, please set arity to '1'");
-        }
-
-        if (item.converter instanceof IValueConverter && item.length != 1) {
-            throw new CommandParserException(item.commandNames[0] + ": single-value (boolean,short,integer,long,float,double,string) type accept 1 value, please set arity to '1'");
-        }
-
-        if (item.converter instanceof IArrayConverter && item.length == 0) {
-            throw new CommandParserException(item.commandNames[0] + ": array (boolean,short,integer,long,float,double,string) type accept at least 1 value, please set arity to '1'");
-        }
-
 
         return item;
     }

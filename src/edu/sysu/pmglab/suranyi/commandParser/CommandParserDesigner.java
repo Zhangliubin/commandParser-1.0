@@ -54,6 +54,7 @@ public class CommandParserDesigner extends JFrame {
     private JButton parserTestingParseButton;
     private JButton parserTestingClearButton;
     private JButton parserTestingOpenButton;
+    private JButton checkButton;
 
     CommandParserDesigner() {
         setTitle("Command Parser Designer");
@@ -278,6 +279,16 @@ public class CommandParserDesigner extends JFrame {
 
             // 添加默认信息
             commandModel.addRow(new Object[]{"--help,-help,-h", Boolean.FALSE, ".", "passedIn", ".", 0, "Options", ".", ".", Boolean.TRUE, Boolean.TRUE});
+        });
+
+        checkButton.addActionListener(e -> {
+            try {
+                transToParser();
+                JOptionPane.showOptionDialog(this, "Congratulations, the parser has passed the check!", "Information", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, null, new String[]{"OK"}, "OK");
+            } catch (Exception exception) {
+                exception.printStackTrace();
+                JOptionPane.showOptionDialog(this, exception.getMessage(), "Error", JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE, null, new String[]{"OK"}, "OK");
+            }
         });
 
         parserTestingClearButton.addActionListener(e -> {
