@@ -237,7 +237,6 @@ public class CommandParserDesigner extends JFrame {
 
         saveButton.addActionListener(e -> {
             JFileChooser jfc = new JFileChooser();
-            jfc.addChoosableFileFilter(new FileNameExtensionFilter("Command Parser Format", "cp"));
             jfc.setCurrentDirectory(new File(System.getProperty("user.dir")).getParentFile());
 
             jfc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
