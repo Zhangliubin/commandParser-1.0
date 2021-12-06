@@ -301,10 +301,97 @@
                         <constraints/>
                         <properties>
                           <font name="Courier"/>
+                          <text value=""/>
                         </properties>
                       </component>
                     </children>
                   </scrollpane>
+                </children>
+              </grid>
+              <grid id="2b4cc" layout-manager="GridLayoutManager" row-count="2" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                <margin top="0" left="0" bottom="0" right="0"/>
+                <constraints>
+                  <tabbedpane title="Parser Testing"/>
+                </constraints>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <scrollpane id="b9420" binding="parserTestingScrollPane">
+                    <constraints>
+                      <grid row="1" column="0" row-span="1" col-span="2" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties/>
+                    <border type="none"/>
+                    <children>
+                      <component id="f41c3" class="javax.swing.JTable" binding="parserTestingTable" custom-create="true">
+                        <constraints/>
+                        <properties/>
+                      </component>
+                    </children>
+                  </scrollpane>
+                  <scrollpane id="976be" binding="parserTestingInputScrollPane">
+                    <constraints>
+                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false">
+                        <minimum-size width="-1" height="100"/>
+                        <preferred-size width="-1" height="100"/>
+                        <maximum-size width="-1" height="100"/>
+                      </grid>
+                    </constraints>
+                    <properties/>
+                    <border type="none"/>
+                    <children>
+                      <component id="4b138" class="javax.swing.JTextArea" binding="parserTestingInputTextArea">
+                        <constraints/>
+                        <properties/>
+                      </component>
+                    </children>
+                  </scrollpane>
+                  <grid id="c2779" layout-manager="GridLayoutManager" row-count="3" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                    <margin top="0" left="0" bottom="0" right="0"/>
+                    <constraints>
+                      <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties/>
+                    <border type="none"/>
+                    <children>
+                      <component id="b4ae3" class="javax.swing.JButton" binding="parserTestingParseButton">
+                        <constraints>
+                          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                            <minimum-size width="80" height="25"/>
+                            <preferred-size width="80" height="25"/>
+                            <maximum-size width="80" height="25"/>
+                          </grid>
+                        </constraints>
+                        <properties>
+                          <text value="Parse"/>
+                        </properties>
+                      </component>
+                      <component id="2d8d3" class="javax.swing.JButton" binding="parserTestingClearButton">
+                        <constraints>
+                          <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                            <minimum-size width="80" height="25"/>
+                            <preferred-size width="80" height="25"/>
+                            <maximum-size width="80" height="25"/>
+                          </grid>
+                        </constraints>
+                        <properties>
+                          <text value="Clear"/>
+                        </properties>
+                      </component>
+                      <component id="aea0f" class="javax.swing.JButton" binding="parserTestingOpenButton">
+                        <constraints>
+                          <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                            <minimum-size width="80" height="25"/>
+                            <preferred-size width="80" height="25"/>
+                            <maximum-size width="80" height="25"/>
+                          </grid>
+                        </constraints>
+                        <properties>
+                          <text value="Open"/>
+                        </properties>
+                      </component>
+                    </children>
+                  </grid>
                 </children>
               </grid>
             </children>

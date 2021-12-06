@@ -18,5 +18,5 @@ public enum OperateOptions {
     /**
      * 重新打开文件
      */
-    REOPEN;
+    REOPEN
 }

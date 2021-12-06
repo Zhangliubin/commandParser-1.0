@@ -36,7 +36,7 @@ public class FileStream implements AutoCloseable, Closeable {
     private byte[] cache;
 
     // 分隔符及是否切割末尾字符
-    private boolean separatorTrim = false;
+    private final boolean separatorTrim = false;
 
     // 文件状态
     private boolean closed;

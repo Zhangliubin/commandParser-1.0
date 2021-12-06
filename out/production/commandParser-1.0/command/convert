@@ -1,7 +1,7 @@
 ##commandParserV1.0
 ##programName=<value="bgzip convert <input>";description="when '-h' were passed in, would be show 'Usage: $value [options]'">
 ##offset=<value=1;description="skip the $value arguments before the command argument passed in">
-##globalRule=<value="REQUEST_ONE";description="one of the following rules is supported: {'.','AT_MOST_ONE','AT_LEAST_ONE','REQUEST_ONE'}">
+##globalRule=<value=".";description="one of the following rules is supported: {'.','AT_MOST_ONE','AT_LEAST_ONE','REQUEST_ONE'}">
 #commandName	request	default	convertTo	validateWith	arity	group	description	format	hidden	help
 --help,-help,-h	false	.	passedIn	.	0	Options	.	.	true	true
 convert	true	string	string	EnsureFileExists NotDirectory	1	Options	.	.	true	false

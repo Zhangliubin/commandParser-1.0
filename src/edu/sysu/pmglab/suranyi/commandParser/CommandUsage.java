@@ -5,7 +5,6 @@ import edu.sysu.pmglab.suranyi.commandParser.converter.map.*;
 import edu.sysu.pmglab.suranyi.container.SmartList;
 
 import java.util.Arrays;
-import java.util.HashMap;
 
 /**
  * @author suranyi
@@ -15,11 +14,11 @@ import java.util.HashMap;
 class CommandUsage {
     String programName;
 
-    private int length = 80;
-    private int firstLevelPrefixLength = 0;
-    private int secondLevelPrefixLength = 2;
-    private int descriptionPrefixLength = 2;
-    private String requestMark = "*";
+    private final int length = 80;
+    private final int firstLevelPrefixLength = 0;
+    private final int secondLevelPrefixLength = 2;
+    private final int descriptionPrefixLength = 2;
+    private final String requestMark = "*";
 
     CommandParser parser;
 
@@ -82,7 +81,7 @@ class CommandUsage {
                     description += "format: " + commandItem.getFormat();
                 }
 
-                wrapDescription(out, descriptionPrefixLength, descriptionPrefixLength, description);
+                wrapDescription(out, descriptionPrefixLength, description);
             }
         }
 
@@ -105,20 +104,20 @@ class CommandUsage {
         return commandItem.getDefaultValue().toString();
     }
 
-    void wrapDescription(StringBuilder out, int indent, int currentLineIndent, String description) {
+    void wrapDescription(StringBuilder out, int indent, String description) {
         if (description.contains("\n")) {
             // 包含 \n，此时需要细微处理
             String[] descriptions = description.split("\n");
 
             if (descriptions.length > 1) {
-                wrapDescription(out, indent, descriptionPrefixLength, descriptions[0]);
+                wrapDescription(out, indent, descriptions[0]);
                 for (int i = 1; i < descriptions.length; i++) {
                     out.append("\n");
                     out.append(generateSpaces(indent));
-                    wrapDescription(out, indent, descriptionPrefixLength, descriptions[i]);
+                    wrapDescription(out, indent, descriptions[i]);
                 }
             } else {
-                wrapDescription(out, indent, descriptionPrefixLength, descriptions[0]);
+                wrapDescription(out, indent, descriptions[0]);
             }
         } else {
             String[] words = description.split(" ");

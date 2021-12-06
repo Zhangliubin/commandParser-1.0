@@ -6,7 +6,6 @@ import edu.sysu.pmglab.suranyi.easytools.FileUtils;
 import edu.sysu.pmglab.suranyi.unifyIO.bgztools.BGZTools;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Scanner;
 
 /**

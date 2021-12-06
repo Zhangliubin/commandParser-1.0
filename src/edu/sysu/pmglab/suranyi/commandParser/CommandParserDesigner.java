@@ -2,6 +2,7 @@ package edu.sysu.pmglab.suranyi.commandParser;
 
 import com.formdev.flatlaf.FlatLightLaf;
 import dev.BGZIPParserFromFile;
+import edu.sysu.pmglab.suranyi.unifyIO.FileStream;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -15,6 +16,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -24,6 +27,7 @@ import java.util.List;
 
 public class CommandParserDesigner extends JFrame {
     CommandTableModel commandModel;
+    CommandTableModel parserTestingModel;
     CommandTableModel ruleModel;
 
     private JTable commandTable;
@@ -43,12 +47,19 @@ public class CommandParserDesigner extends JFrame {
     private JButton openButton;
     private JSpinner offsetSpinner;
     private JButton clearButton;
+    private JTextArea parserTestingInputTextArea;
+    private JTable parserTestingTable;
+    private JScrollPane parserTestingScrollPane;
+    private JScrollPane parserTestingInputScrollPane;
+    private JButton parserTestingParseButton;
+    private JButton parserTestingClearButton;
+    private JButton parserTestingOpenButton;
 
     CommandParserDesigner() {
         setTitle("Command Parser Designer");
 
         pack();
-        setResizable(true);
+        setResizable(false);
         setContentPane(mainPanel);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -106,7 +117,7 @@ public class CommandParserDesigner extends JFrame {
             }
         });
 
-        for (Component component: new Component[]{commandScrollPane, ruleScrollPane, commandPreview}) {
+        for (Component component : new Component[]{commandScrollPane, ruleScrollPane, commandPreview}) {
             new DropTarget(component, DnDConstants.ACTION_COPY_OR_MOVE, new DropTargetAdapter() {
                 @Override
                 public void drop(DropTargetDropEvent e) {
@@ -245,7 +256,6 @@ public class CommandParserDesigner extends JFrame {
 
         openButton.addActionListener(e -> {
             JFileChooser jfc = new JFileChooser();
-            jfc.addChoosableFileFilter(new FileNameExtensionFilter("Command Parser Format", "cp"));
             jfc.setCurrentDirectory(new File(System.getProperty("user.dir")).getParentFile());
 
             jfc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
@@ -270,6 +280,88 @@ public class CommandParserDesigner extends JFrame {
             // 添加默认信息
             commandModel.addRow(new Object[]{"--help,-help,-h", Boolean.FALSE, ".", "passedIn", ".", 0, "Options", ".", ".", Boolean.TRUE, Boolean.TRUE});
         });
+
+        parserTestingClearButton.addActionListener(e -> {
+            parserTestingInputTextArea.setText("");
+            parserTestingModel.clearAll();
+        });
+
+        parserTestingOpenButton.addActionListener(e -> {
+            JFileChooser jfc = new JFileChooser();
+            jfc.setCurrentDirectory(new File(System.getProperty("user.dir")).getParentFile());
+
+            jfc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+            if (jfc.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+                // 加载解析器
+                try (FileStream input = new FileStream(jfc.getSelectedFile().getAbsolutePath())) {
+                    parserTestingModel.clearAll();
+                    parserTestingInputTextArea.setText(new String(input.readAll()));
+                    parserTestingInputTextArea.setCaretPosition(0);
+                } catch (IOException ioException) {
+                    JOptionPane.showOptionDialog(this, ioException.getMessage(), "Error", JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE, null, new String[]{"OK"}, "OK");
+                }
+            }
+
+        });
+
+        new DropTarget(parserTestingInputTextArea, DnDConstants.ACTION_COPY_OR_MOVE, new DropTargetAdapter() {
+            @Override
+            public void drop(DropTargetDropEvent e) {
+                try {
+                    if (e.isDataFlavorSupported(DataFlavor.javaFileListFlavor)) {
+                        // 接受拖拽来的数据
+                        e.acceptDrop(DnDConstants.ACTION_COPY_OR_MOVE);
+                        List<File> list = (List<File>) e.getTransferable().getTransferData(DataFlavor.javaFileListFlavor);
+                        if (list.size() == 1) {
+                            try (FileStream input = new FileStream(list.get(0).getAbsolutePath())) {
+                                parserTestingModel.clearAll();
+                                parserTestingInputTextArea.setText(new String(input.readAll()));
+                                parserTestingInputTextArea.setCaretPosition(0);
+                            } catch (IOException ioException) {
+                                JOptionPane.showOptionDialog(null, ioException.getMessage(), "Error", JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE, null, new String[]{"OK"}, "OK");
+                            }
+
+                        } else {
+                            // 拒绝拖拽来的数据
+                            JOptionPane.showOptionDialog(null, "Only a single file is allowed.", "Error", JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE, null, new String[]{"OK"}, "OK");
+                            e.rejectDrop();
+                        }
+                    } else {
+                        // 拒绝拖拽来的数据
+                        e.rejectDrop();
+                    }
+                } catch (Exception ignored) {
+                }
+            }
+        });
+
+        parserTestingParseButton.addActionListener(e -> {
+            try {
+                CommandParser parser = transToParser();
+                CommandMatcher options = parser.parseFromString(parserTestingInputTextArea.getText());
+                parserTestingModel.clearAll();
+
+                HashMap<String, String> commandPassedInValues = new HashMap<>();
+                for (String[] commandGroup : options.passedInValues) {
+                    commandPassedInValues.put(commandGroup[0], commandGroup[1]);
+                }
+
+                for (String commandName : parser.mainRegisteredCommandItems) {
+                    String commandNames = Arrays.toString(parser.getCommandItem(commandName).getCommandNames()).replace(" ", "");
+
+                    if (options.isPassedIn(commandName)) {
+                        parserTestingModel.addRow(new Object[]{commandNames.substring(1, commandNames.length() - 1), options.isPassedIn(commandName), commandPassedInValues.get(commandName)});
+                    } else {
+                        parserTestingModel.addRow(new Object[]{commandNames.substring(1, commandNames.length() - 1), options.isPassedIn(commandName), ""});
+                    }
+                }
+            } catch (Exception exception) {
+                exception.printStackTrace();
+                JOptionPane.showOptionDialog(this, exception.getMessage(), "Error", JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE, null, new String[]{"OK"}, "OK");
+            }
+        });
+
+        // parserTestingTable = new JTable(parserTestingModel = new CommandTableModel("commandName", "isPassedIn", "catch", "value"));
     }
 
     void loadFromFile(String fileName) {
@@ -374,10 +466,16 @@ public class CommandParserDesigner extends JFrame {
         ruleTable = new JTable(ruleModel = new CommandTableModel("command1", "command2", "ruleType"));
         ruleTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
+        parserTestingTable = new JTable(parserTestingModel = new CommandTableModel("commandName", "isPassedIn", "catch"));
+        parserTestingTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
         offsetSpinner = new JSpinner(new SpinnerNumberModel(0, 0, 128, 1));
 
         // 可无限横向拉长
         commandTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+
+        // 表格不可编辑
+        parserTestingTable.setEnabled(false);
     }
 
     public static void main(String[] args) throws IOException {
@@ -390,7 +488,7 @@ public class CommandParserDesigner extends JFrame {
             }
 
             new CommandParserDesigner();
-        } else if (args[0].equals("bgzip")){
+        } else if (args[0].equals("bgzip")) {
             // BGZIPParser.submit(args);
             BGZIPParserFromFile.submit(args);
         }

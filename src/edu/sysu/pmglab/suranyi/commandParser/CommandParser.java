@@ -1,5 +1,6 @@
 package edu.sysu.pmglab.suranyi.commandParser;
 
+import com.sun.xml.internal.messaging.saaj.util.ByteInputStream;
 import dev.BGZIPParserFromFile;
 import edu.sysu.pmglab.suranyi.check.Assert;
 import edu.sysu.pmglab.suranyi.commandParser.converter.map.KVConverter;
@@ -11,7 +12,9 @@ import edu.sysu.pmglab.suranyi.unifyIO.FileStream;
 import edu.sysu.pmglab.suranyi.unifyIO.InputStreamReaderStream;
 import edu.sysu.pmglab.suranyi.unifyIO.options.FileOptions;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -431,6 +434,64 @@ public class CommandParser {
     }
 
     /**
+     * 解析指令
+     *
+     * @param fileName 参数文件名
+     * @return 返回解析结果
+     */
+    public CommandMatcher parseFromFile(String fileName) throws IOException {
+        try (FileStream file = new FileStream(fileName, fileName.endsWith(".gz") ? FileOptions.GZIP_READER : FileOptions.DEFAULT_READER)) {
+            SmartList<String> args = new SmartList<>();
+            String line;
+            while ((line = file.readLineToString()) != null) {
+                // 去除首尾空白信息, 把 \t 换为空格
+                line = line.trim().replace("\t", " ");
+
+                if (!line.startsWith("#")) {
+                    // 以 \ 结尾，去除该字符
+                    if (line.endsWith(" \\")) {
+                        line = line.substring(0, line.length() - 2);
+                    }
+
+                    args.add(line.split(" "));
+                }
+            }
+            return parse(args.toStringArray());
+        }
+    }
+
+    /**
+     * 解析指令
+     *
+     * @param strings 长字符串
+     * @return 返回解析结果
+     */
+    public CommandMatcher parseFromString(String strings) {
+        // 按行切割数据
+        String[] lines = strings.split("\n");
+
+        // 把 strings 包装为 FileStream
+        SmartList<String> args = new SmartList<>();
+
+        for (String line : lines) {
+            // 去除首尾空白信息, 把 \t 换为空格
+            line = line.trim().replace("\t", " ");
+
+            if (!line.startsWith("#")) {
+                // 以 \ 结尾，去除该字符
+                if (line.endsWith(" \\")) {
+                    line = line.substring(0, line.length() - 2);
+                }
+
+                args.add(line.split(" "));
+            }
+        }
+
+        return parse(args.toStringArray());
+    }
+
+
+    /**
      * 获取注册的命令组
      *
      * @param commandName 命令名
@@ -564,7 +625,7 @@ public class CommandParser {
             }
             // 写入标题行
             file.write(HEADER);
-            for (String commandName: this.mainRegisteredCommandItems) {
+            for (String commandName : this.mainRegisteredCommandItems) {
                 file.write("\n");
                 file.write(this.registeredCommandItems.get(commandName).toString());
             }

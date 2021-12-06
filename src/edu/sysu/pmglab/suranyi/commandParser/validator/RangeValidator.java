@@ -21,11 +21,11 @@ public class RangeValidator implements IValidator {
     }
 
     public RangeValidator(short MIN, short MAX) {
-        this((long) MIN, (long) MAX);
+        this(MIN, (long) MAX);
     }
 
     public RangeValidator(int MIN, int MAX) {
-        this((long) MIN, (long) MAX);
+        this(MIN, (long) MAX);
     }
 
     public RangeValidator(long MIN, long MAX) {

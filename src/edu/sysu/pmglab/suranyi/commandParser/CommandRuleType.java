@@ -23,5 +23,5 @@ public enum CommandRuleType {
     /**
      * 依存 (0 or 2)
      */
-    INTERDEPEND;
+    INTERDEPEND
 }

@@ -889,7 +889,7 @@ public class SmartList<T> implements Collection<T>, RandomAccess {
     public Iterator<T> iterator() {
         return new Iterator<T>() {
             int seek = 0;
-            int length = end - start;
+            final int length = end - start;
 
             @Override
             public boolean hasNext() {
