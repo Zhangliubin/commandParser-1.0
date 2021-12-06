@@ -8,7 +8,7 @@ import edu.sysu.pmglab.suranyi.container.SmartList;
  * @description 浮点数组转换器
  */
 
-public abstract class DoubleArrayConverter implements IConverter<double[]> {
+public abstract class DoubleArrayConverter implements IArrayConverter<double[]> {
     public final String separator;
 
     public DoubleArrayConverter() {
@@ -44,11 +44,6 @@ public abstract class DoubleArrayConverter implements IConverter<double[]> {
 
             return converted.toDoubleArray();
         }
-    }
-
-    @Override
-    public int getDefaultLength() {
-        return -1;
     }
 
     @Override

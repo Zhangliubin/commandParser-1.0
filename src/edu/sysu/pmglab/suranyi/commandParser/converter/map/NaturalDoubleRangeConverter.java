@@ -92,11 +92,6 @@ public abstract class NaturalDoubleRangeConverter implements IConverter<double[]
     }
 
     @Override
-    public int getDefaultLength() {
-        return 1;
-    }
-
-    @Override
     public String toString() {
         return "<start>-<end> (double)";
     }

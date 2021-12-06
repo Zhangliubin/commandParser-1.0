@@ -92,11 +92,6 @@ public abstract class KVConverter<K, V> implements IConverter<HashMap<K, V>> {
     }
 
     @Override
-    public int getDefaultLength() {
-        return 1;
-    }
-
-    @Override
     public String toString() {
         return "k1=v1" + separator + "k2=v2" + separator + "...";
     }

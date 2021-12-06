@@ -11,7 +11,7 @@ import java.util.Arrays;
  */
 
 
-public abstract class DoubleConverter implements IConverter<Double> {
+public abstract class DoubleConverter implements IValueConverter<Double> {
 
     @Override
     public Double convert(String... params) {

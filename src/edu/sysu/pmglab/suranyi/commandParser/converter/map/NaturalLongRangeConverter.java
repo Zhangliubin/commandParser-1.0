@@ -92,11 +92,6 @@ public abstract class NaturalLongRangeConverter implements IConverter<long[]> {
     }
 
     @Override
-    public int getDefaultLength() {
-        return 1;
-    }
-
-    @Override
     public String toString() {
         return "<start>-<end> (long)";
     }

@@ -10,7 +10,7 @@ import java.util.Arrays;
  * @description 整数转换器转换器
  */
 
-public abstract class LongConverter implements IConverter<Long> {
+public abstract class LongConverter implements IValueConverter<Long> {
 
     @Override
     public Long convert(String... params) {

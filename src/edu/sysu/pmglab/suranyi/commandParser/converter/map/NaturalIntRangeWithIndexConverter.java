@@ -117,11 +117,6 @@ public abstract class NaturalIntRangeWithIndexConverter extends NaturalIntRangeC
     }
 
     @Override
-    public int getDefaultLength() {
-        return 1;
-    }
-
-    @Override
     public String toString() {
         return "<index>:<start>-<end> (integer)";
     }

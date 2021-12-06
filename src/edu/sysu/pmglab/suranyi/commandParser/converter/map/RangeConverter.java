@@ -54,11 +54,6 @@ public abstract class RangeConverter implements IConverter<String[]> {
     }
 
     @Override
-    public int getDefaultLength() {
-        return 1;
-    }
-
-    @Override
     public String toString() {
         return "<start>-<end> (string)";
     }

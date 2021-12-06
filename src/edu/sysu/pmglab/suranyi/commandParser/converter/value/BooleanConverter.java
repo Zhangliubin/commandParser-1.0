@@ -10,7 +10,7 @@ import java.util.Arrays;
  * @description bool 对象转换器
  */
 
-public abstract class BooleanConverter implements IConverter<Boolean> {
+public abstract class BooleanConverter implements IValueConverter<Boolean> {
 
     private static final String TRUE = "true";
     private static final String FALSE = "false";

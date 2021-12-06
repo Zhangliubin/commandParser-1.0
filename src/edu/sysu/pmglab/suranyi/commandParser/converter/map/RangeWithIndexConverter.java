@@ -80,11 +80,6 @@ public abstract class RangeWithIndexConverter extends RangeConverter {
     }
 
     @Override
-    public int getDefaultLength() {
-        return 1;
-    }
-
-    @Override
     public String toString() {
         return "<index>:<start>-<end> (string)";
     }

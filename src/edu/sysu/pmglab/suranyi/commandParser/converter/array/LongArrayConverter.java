@@ -8,7 +8,7 @@ import edu.sysu.pmglab.suranyi.container.SmartList;
  * @description 整数数组转换器
  */
 
-public abstract class LongArrayConverter implements IConverter<long[]> {
+public abstract class LongArrayConverter implements IArrayConverter<long[]> {
     public final String separator;
 
     public LongArrayConverter() {
@@ -44,11 +44,6 @@ public abstract class LongArrayConverter implements IConverter<long[]> {
 
             return converted.toLongArray();
         }
-    }
-
-    @Override
-    public int getDefaultLength() {
-        return -1;
     }
 
     @Override

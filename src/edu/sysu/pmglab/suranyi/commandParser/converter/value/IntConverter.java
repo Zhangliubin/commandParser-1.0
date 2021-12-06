@@ -10,7 +10,7 @@ import java.util.Arrays;
  * @description 整数转换器转换器
  */
 
-public abstract class IntConverter implements IConverter<Integer> {
+public abstract class IntConverter implements IValueConverter<Integer> {
 
     @Override
     public Integer convert(String... params) {

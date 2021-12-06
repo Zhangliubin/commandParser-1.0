@@ -113,10 +113,6 @@ public class CommandItem {
                 this.converter = new IntConverter() {
                 };
                 converterAutoSet = true;
-            } else if (defaultValue instanceof Double) {
-                this.converter = new DoubleConverter() {
-                };
-                converterAutoSet = true;
             } else if (defaultValue instanceof String) {
                 this.converter = new StringConverter() {
                 };
@@ -133,6 +129,14 @@ public class CommandItem {
                 this.converter = new ShortConverter() {
                 };
                 converterAutoSet = true;
+            } else if (defaultValue instanceof Float) {
+                this.converter = new FloatConverter() {
+                };
+                converterAutoSet = true;
+            } else if (defaultValue instanceof Double) {
+                this.converter = new DoubleConverter() {
+                };
+                converterAutoSet = true;
             } else if (defaultValue instanceof int[] || defaultValue instanceof Integer[]) {
                 this.converter = new IntArrayConverter() {
                 };
@@ -147,6 +151,14 @@ public class CommandItem {
                 converterAutoSet = true;
             } else if (defaultValue instanceof short[] || defaultValue instanceof Short[]) {
                 this.converter = new ShortArrayConverter() {
+                };
+                converterAutoSet = true;
+            } else if (defaultValue instanceof float[] || defaultValue instanceof Float[]) {
+                this.converter = new FloatArrayConverter() {
+                };
+                converterAutoSet = true;
+            } else if (defaultValue instanceof boolean[] || defaultValue instanceof Boolean[]) {
+                this.converter = new BooleanArrayConverter() {
                 };
                 converterAutoSet = true;
             } else if (defaultValue instanceof String[]) {
@@ -517,7 +529,18 @@ public class CommandItem {
         } else if (options[1].equals("true")) {
             item.request = true;
         } else {
-            throw new CommandParserException("couldn't convert " + options[1] + " to a boolean value");
+            throw new CommandParserException(item.commandNames[0] + ": couldn't convert " + options[1] + " to a boolean value");
+        }
+
+        // 替换空值
+        options[5] = options[5].replace(" ", "");
+        if (!options[5].equals(CommandOptions.MISS_VALUE)) {
+            // 如果没有设置长度，则会在上面的转换器设置中设置
+            if (options[5].equals(">=1") || options[5].equals("≥1")) {
+                item.arity(-1);
+            } else {
+                item.arity(Integer.parseInt(options[5]));
+            }
         }
 
         // 推断转换器及验证器
@@ -526,98 +549,62 @@ public class CommandItem {
                 case "boolean":
                     item.convertTo(new BooleanConverter() {
                     });
-
-                    if (!options[2].equals(CommandOptions.MISS_VALUE)) {
-                        item.defaultTo(item.converter.convert(options[2]));
-                    }
-                    break;
-                case "double":
-                    item.convertTo(new DoubleConverter() {
-                    });
-
-                    if (!options[2].equals(CommandOptions.MISS_VALUE)) {
-                        item.defaultTo(item.converter.convert(options[2]));
-                    }
-                    break;
-                case "integer":
-                    item.convertTo(new IntConverter() {
-                    });
-
-                    if (!options[2].equals(CommandOptions.MISS_VALUE)) {
-                        item.defaultTo(item.converter.convert(options[2]));
-                    }
-                    break;
-                case "long":
-                    item.convertTo(new LongConverter() {
-                    });
-
-                    if (!options[2].equals(CommandOptions.MISS_VALUE)) {
-                        item.defaultTo(item.converter.convert(options[2]));
-                    }
                     break;
                 case "short":
                     item.convertTo(new ShortConverter() {
                     });
-
-                    if (!options[2].equals(CommandOptions.MISS_VALUE)) {
-                        item.defaultTo(item.converter.convert(options[2]));
-                    }
+                    break;
+                case "integer":
+                    item.convertTo(new IntConverter() {
+                    });
+                    break;
+                case "long":
+                    item.convertTo(new LongConverter() {
+                    });
+                    break;
+                case "float":
+                    item.convertTo(new FloatConverter() {
+                    });
+                    break;
+                case "double":
+                    item.convertTo(new DoubleConverter() {
+                    });
                     break;
                 case "string":
                     item.convertTo(new StringConverter() {
                     });
-
-                    if (!options[2].equals(CommandOptions.MISS_VALUE)) {
-                        item.defaultTo(options[2]);
-                    }
                     break;
                 case "passedIn":
                     item.convertTo(new PassedInConverter() {
                     });
-
-                    if (!options[2].equals(CommandOptions.MISS_VALUE)) {
-                        throw new CommandParserException("passedIn type don't accept the defaultValue, please use '.'");
-                    }
                     break;
-                case "integer-array":
-                    item.convertTo(new IntArrayConverter() {
+                case "boolean-array":
+                    item.convertTo(new BooleanArrayConverter() {
                     });
-
-                    if (!options[2].equals(CommandOptions.MISS_VALUE)) {
-                        item.defaultTo(item.converter.convert(options[2].split(" ", -1)));
-                    }
                     break;
                 case "short-array":
                     item.convertTo(new ShortArrayConverter() {
                     });
-
-                    if (!options[2].equals(CommandOptions.MISS_VALUE)) {
-                        item.defaultTo(item.converter.convert(options[2].split(" ", -1)));
-                    }
                     break;
-                case "string-array":
-                    item.convertTo(new StringArrayConverter() {
+                case "integer-array":
+                    item.convertTo(new IntArrayConverter() {
                     });
-
-                    if (!options[2].equals(CommandOptions.MISS_VALUE)) {
-                        item.defaultTo(item.converter.convert(options[2].split(" ", -1)));
-                    }
                     break;
                 case "long-array":
                     item.convertTo(new LongArrayConverter() {
                     });
-
-                    if (!options[2].equals(CommandOptions.MISS_VALUE)) {
-                        item.defaultTo(item.converter.convert(options[2].split(" ", -1)));
-                    }
+                    break;
+                case "string-array":
+                    item.convertTo(new StringArrayConverter() {
+                    });
+                    break;
+                case "float-array":
+                    item.convertTo(new FloatConverter() {
+                    });
                     break;
                 case "double-array":
                     item.convertTo(new DoubleArrayConverter() {
                     });
-
-                    if (!options[2].equals(CommandOptions.MISS_VALUE)) {
-                        item.defaultTo(item.converter.convert(options[2].split(" ", -1)));
-                    }
                     break;
                 case "k1=v1;k2=v2;...":
                     item.convertTo(new KVConverter<String, String>() {
@@ -626,58 +613,30 @@ public class CommandItem {
                             return parseKV(params);
                         }
                     });
-
-                    if (!options[2].equals(CommandOptions.MISS_VALUE)) {
-                        item.defaultTo(item.converter.convert(options[2]));
-                    }
                     break;
                 case "<start>-<end> (double)":
                     item.convertTo(new NaturalDoubleRangeConverter() {
                     });
-
-                    if (!options[2].equals(CommandOptions.MISS_VALUE)) {
-                        item.defaultTo(item.converter.convert(options[2]));
-                    }
                     break;
                 case "<start>-<end> (integer)":
                     item.convertTo(new NaturalIntRangeConverter() {
                     });
-
-                    if (!options[2].equals(CommandOptions.MISS_VALUE)) {
-                        item.defaultTo(item.converter.convert(options[2]));
-                    }
                     break;
                 case "<index>:<start>-<end> (integer)":
                     item.convertTo(new NaturalIntRangeWithIndexConverter() {
                     });
-
-                    if (!options[2].equals(CommandOptions.MISS_VALUE)) {
-                        item.defaultTo(item.converter.convert(options[2]));
-                    }
                     break;
                 case "<start>-<end> (long)":
                     item.convertTo(new NaturalLongRangeConverter() {
                     });
-
-                    if (!options[2].equals(CommandOptions.MISS_VALUE)) {
-                        item.defaultTo(item.converter.convert(options[2]));
-                    }
                     break;
                 case "<start>-<end> (string)":
                     item.convertTo(new RangeConverter() {
                     });
-
-                    if (!options[2].equals(CommandOptions.MISS_VALUE)) {
-                        item.defaultTo(item.converter.convert(options[2]));
-                    }
                     break;
                 case "<index>:<start>-<end> (string)":
                     item.convertTo(new RangeWithIndexConverter() {
                     });
-
-                    if (!options[2].equals(CommandOptions.MISS_VALUE)) {
-                        item.defaultTo(item.converter.convert(options[2]));
-                    }
                     break;
                 default:
                     // 其他情况需要用户重新配置
@@ -688,8 +647,31 @@ public class CommandItem {
                     }
                     break;
             }
+
+            if (!options[2].equals(CommandOptions.MISS_VALUE) && !(item.converter instanceof AbstractConverter)) {
+                if (item.converter.isArrayType() && item.length != 1 && item.length != 0) {
+                    // 无限长度或长度大于 1 时，才进行数组切割
+                    if (options[2].contains(",")) {
+                        // 以 , 作为分隔符
+                        item.defaultTo(item.converter.convert(options[2].replace(" ", "").split(",")));
+                    } else if (options[2].contains(";")) {
+                        // 以 ; 作为分隔符
+                        item.defaultTo(item.converter.convert(options[2].replace(" ", "").split(";")));
+                    } else if (options[2].contains(" ")) {
+                        // 以 ' ' 作为分隔符
+                        item.defaultTo(item.converter.convert(options[2].split(" ")));
+                    } else {
+                        item.defaultTo(item.converter.convert(options[2]));
+                    }
+                } else {
+                    item.defaultTo(item.converter.convert(options[2]));
+                }
+            }
         } else {
             // 没有传入转换器，此时一律当成 string 处理
+            item.convertTo(new StringConverter() {
+            });
+
             if (!options[2].equals(CommandOptions.MISS_VALUE)) {
                 item.defaultTo(options[2]);
             }
@@ -715,17 +697,6 @@ public class CommandItem {
             item.validateWith(addToItem.toArray(new IValidator[]{}));
         }
 
-        // 替换空值
-        options[5] = options[5].replace(" ", "");
-        if (!options[5].equals(CommandOptions.MISS_VALUE)) {
-            // 如果没有设置长度，则会在上面的转换器设置中设置
-            if (options[5].equals(">=1") || options[5].equals("≥1")) {
-                item.arity(-1);
-            } else {
-                item.arity(Integer.parseInt(options[5]));
-            }
-        }
-
         if (!options[6].equals(CommandOptions.MISS_VALUE)) {
             item.setOptionGroup(options[6]);
         }
@@ -743,7 +714,7 @@ public class CommandItem {
         } else if (options[9].equals("true")) {
             item.hide = true;
         } else {
-            throw new CommandParserException("couldn't convert " + options[9] + " to a boolean value");
+            throw new CommandParserException(item.commandNames[0] + ": couldn't convert " + options[9] + " to a boolean value");
         }
 
         if (options[10].equals(CommandOptions.MISS_VALUE) || options[10].equals("false")) {
@@ -751,8 +722,26 @@ public class CommandItem {
         } else if (options[10].equals("true")) {
             item.help = true;
         } else {
-            throw new CommandParserException("couldn't convert " + options[10] + " to a boolean value");
+            throw new CommandParserException(item.commandNames[0] + ": couldn't convert " + options[10] + " to a boolean value");
         }
+
+        // 其他规则判断: 长度
+        if (item.converter instanceof PassedInConverter && item.length != 0) {
+            throw new CommandParserException(item.commandNames[0] + ": passedIn type don't accept any values, please set arity to '0'");
+        }
+
+        if (item.converter instanceof IValueConverter && item.length != 1) {
+            throw new CommandParserException(item.commandNames[0] + ": single-value (boolean,short,integer,long,float,double,string) type accept 1 value, please set arity to '1'");
+        }
+
+        if (item.converter instanceof IValueConverter && item.length != 1) {
+            throw new CommandParserException(item.commandNames[0] + ": single-value (boolean,short,integer,long,float,double,string) type accept 1 value, please set arity to '1'");
+        }
+
+        if (item.converter instanceof IArrayConverter && item.length == 0) {
+            throw new CommandParserException(item.commandNames[0] + ": array (boolean,short,integer,long,float,double,string) type accept at least 1 value, please set arity to '1'");
+        }
+
 
         return item;
     }

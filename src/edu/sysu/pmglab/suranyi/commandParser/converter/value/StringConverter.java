@@ -10,7 +10,7 @@ import java.util.Arrays;
  * @description 字符串转换器
  */
 
-public abstract class StringConverter implements IConverter<String> {
+public abstract class StringConverter implements IValueConverter<String> {
 
     @Override
     public String convert(String... params) {

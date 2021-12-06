@@ -92,11 +92,6 @@ public abstract class NaturalIntRangeConverter implements IConverter<int[]> {
     }
 
     @Override
-    public int getDefaultLength() {
-        return 1;
-    }
-
-    @Override
     public String toString() {
         return "<start>-<end> (integer)";
     }
