@@ -477,7 +477,7 @@ public class CommandParser {
             // 去除首尾空白信息, 把 \t 换为空格
             line = line.trim().replace("\t", " ");
 
-            if (!line.startsWith("#")) {
+            if (!line.startsWith("#") && line.length() > 0) {
                 // 以 \ 结尾，去除该字符
                 if (line.endsWith(" \\")) {
                     line = line.substring(0, line.length() - 2);
