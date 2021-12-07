@@ -188,13 +188,31 @@ public class CommandParserDesigner extends JFrame {
 
         addButton.addActionListener(e -> {
             if (tabbedPane.getSelectedIndex() == 0) {
-                if (commandModel.getRowCount() == 0) {
-                    commandModel.addRow(new Object[]{".", Boolean.FALSE, ".", "passedIn", ".", 0, "Options", ".", ".", Boolean.FALSE, Boolean.FALSE});
+                int selectedRow = commandTable.getSelectedRow();
+                if (selectedRow >= 0 && selectedRow <= commandTable.getRowCount() - 1) {
+                    commandModel.insertRow(new Object[]{".", commandModel.getValueAt(selectedRow - 1, 1), ".", commandModel.getValueAt(selectedRow - 1, 3), commandModel.getValueAt(selectedRow - 1, 4), commandModel.getValueAt(selectedRow - 1, 5), commandModel.getValueAt(selectedRow - 1, 6), ".", ".", commandModel.getValueAt(selectedRow - 1, 9), Boolean.FALSE}, selectedRow + 1);
+                    commandTable.setRowSelectionInterval(selectedRow + 1, selectedRow + 1);
                 } else {
-                    commandModel.addRow(new Object[]{".", Boolean.FALSE, ".", "passedIn", ".", 0, commandModel.getValueAt(commandModel.getRowCount() - 1, 6), ".", ".", Boolean.FALSE, Boolean.FALSE});
+                    // 追加项目
+                    if (commandModel.getRowCount() == 0) {
+                        commandModel.addRow(new Object[]{".", Boolean.FALSE, ".", "passedIn", ".", 0, "Options", ".", ".", Boolean.FALSE, Boolean.FALSE});
+                    } else {
+                        commandModel.addRow(new Object[]{".", Boolean.FALSE, ".", "passedIn", ".", 0, commandModel.getValueAt(commandModel.getRowCount() - 1, 6), ".", ".", Boolean.FALSE, Boolean.FALSE});
+                    }
+
+                    int selectRowIndex = commandModel.getRowCount() - 1;
+                    commandTable.setRowSelectionInterval(selectRowIndex, selectRowIndex);
                 }
-                int selectRowIndex = commandModel.getRowCount() - 1;
-                commandTable.setRowSelectionInterval(selectRowIndex, selectRowIndex);
+            } else if (tabbedPane.getSelectedIndex() == 1) {
+                int selectedRow = ruleTable.getSelectedRow();
+                if (selectedRow >= 1 && selectedRow <= ruleTable.getRowCount() - 1) {
+                    ruleModel.upRow(selectedRow);
+                    ruleTable.setRowSelectionInterval(selectedRow - 1, selectedRow - 1);
+                }
+            }
+
+            if (tabbedPane.getSelectedIndex() == 0) {
+
             } else if (tabbedPane.getSelectedIndex() == 1) {
                 ruleModel.addRow(new Object[]{".", ".", CommandRuleType.AT_MOST_ONE});
                 int selectRowIndex = ruleModel.getRowCount() - 1;
@@ -370,8 +388,6 @@ public class CommandParserDesigner extends JFrame {
                 JOptionPane.showOptionDialog(this, exception.getMessage(), "Error", JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE, null, new String[]{"OK"}, "OK");
             }
         });
-
-        // parserTestingTable = new JTable(parserTestingModel = new CommandTableModel("commandName", "isPassedIn", "catch", "value"));
     }
 
     void loadFromFile(String fileName) {

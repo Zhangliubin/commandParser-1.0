@@ -26,6 +26,23 @@ class CommandTableModel extends AbstractTableModel {
         this.columnNames = columnNames;
     }
 
+    public void insertRow(Object[] row, int rowIndex) {
+        synchronized (this) {
+            int currentRowCount = getRowCount();
+            if (row == null) {
+                // 插入新行
+                Object[] empty = new Object[columnNames.length];
+                Arrays.fill(empty, ".");
+                data.insert(rowIndex, empty);
+            } else {
+                data.insert(rowIndex, row);
+            }
+
+            fireTableChanged(new TableModelEvent(this, rowIndex, currentRowCount + 1,
+                    TableModelEvent.ALL_COLUMNS, TableModelEvent.INSERT));
+        }
+    }
+
     public void addRow(Object[] row) {
         synchronized (this) {
             int currentRowCount = getRowCount();
