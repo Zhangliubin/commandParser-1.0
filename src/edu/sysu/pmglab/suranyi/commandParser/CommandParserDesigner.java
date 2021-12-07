@@ -2,10 +2,10 @@ package edu.sysu.pmglab.suranyi.commandParser;
 
 import com.formdev.flatlaf.FlatLightLaf;
 import dev.BGZIPParserFromFile;
+import edu.sysu.pmglab.suranyi.commandParser.exception.CommandParserException;
 import edu.sysu.pmglab.suranyi.unifyIO.FileStream;
 
 import javax.swing.*;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.dnd.DnDConstants;
@@ -128,7 +128,9 @@ public class CommandParserDesigner extends JFrame {
                             e.acceptDrop(DnDConstants.ACTION_COPY_OR_MOVE);
                             List<File> list = (List<File>) e.getTransferable().getTransferData(DataFlavor.javaFileListFlavor);
                             if (list.size() == 1) {
-                                loadFromFile(list.get(0).getAbsolutePath());
+                                File file = list.get(0);
+                                setTitle("Command Parser Designer: " + file.getName());
+                                loadFromFile(file.getAbsolutePath());
                                 tabbedPane.setSelectedIndex(0);
                             } else {
                                 // 拒绝拖拽来的数据
@@ -140,6 +142,7 @@ public class CommandParserDesigner extends JFrame {
                             e.rejectDrop();
                         }
                     } catch (Exception ignored) {
+                        setTitle("Command Parser Designer");
                     }
                 }
             });
@@ -190,7 +193,7 @@ public class CommandParserDesigner extends JFrame {
             if (tabbedPane.getSelectedIndex() == 0) {
                 int selectedRow = commandTable.getSelectedRow();
                 if (selectedRow >= 0 && selectedRow <= commandTable.getRowCount() - 1) {
-                    commandModel.insertRow(new Object[]{".", commandModel.getValueAt(selectedRow - 1, 1), ".", commandModel.getValueAt(selectedRow - 1, 3), commandModel.getValueAt(selectedRow - 1, 4), commandModel.getValueAt(selectedRow - 1, 5), commandModel.getValueAt(selectedRow - 1, 6), ".", ".", commandModel.getValueAt(selectedRow - 1, 9), Boolean.FALSE}, selectedRow + 1);
+                    commandModel.insertRow(new Object[]{".", commandModel.getValueAt(selectedRow, 1), commandModel.getValueAt(selectedRow, 2), commandModel.getValueAt(selectedRow, 3), commandModel.getValueAt(selectedRow, 4), commandModel.getValueAt(selectedRow, 5), commandModel.getValueAt(selectedRow, 6), ".", ".", commandModel.getValueAt(selectedRow, 9), Boolean.FALSE}, selectedRow + 1);
                     commandTable.setRowSelectionInterval(selectedRow + 1, selectedRow + 1);
                 } else {
                     // 追加项目
@@ -278,9 +281,15 @@ public class CommandParserDesigner extends JFrame {
 
             jfc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
             if (jfc.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
-                // 加载解析器
-                loadFromFile(jfc.getSelectedFile().getAbsolutePath());
-                tabbedPane.setSelectedIndex(0);
+                try {
+                    // 加载解析器
+                    File file = jfc.getSelectedFile();
+                    setTitle("Command Parser Designer: " + file.getName());
+                    loadFromFile(file.getAbsolutePath());
+                    tabbedPane.setSelectedIndex(0);
+                } catch (Exception exception) {
+                    setTitle("Command Parser Designer");
+                }
             }
         });
 
@@ -294,6 +303,7 @@ public class CommandParserDesigner extends JFrame {
             offsetSpinner.setValue(0);
             globalRuleComboBox.setSelectedItem(".");
             commandPreview.setText("");
+            setTitle("Command Parser Designer");
 
             // 添加默认信息
             commandModel.addRow(new Object[]{"--help,-help,-h", Boolean.FALSE, ".", "passedIn", ".", 0, "Options", ".", ".", Boolean.TRUE, Boolean.TRUE});
@@ -391,18 +401,17 @@ public class CommandParserDesigner extends JFrame {
     }
 
     void loadFromFile(String fileName) {
-        // 加载解析器
+        commandModel.clearAll();
+        ruleModel.clearAll();
+
+        // 将解析器映射为 GUI 组件
         CommandParser parser;
         try {
             parser = CommandParser.loadFromFile(fileName);
         } catch (Exception exception) {
             JOptionPane.showOptionDialog(this, exception.getMessage(), "Error", JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE, null, new String[]{"OK"}, "OK");
-            return;
+            throw new CommandParserException(exception.getMessage());
         }
-
-        // 将解析器映射为 GUI 组件
-        commandModel.clearAll();
-        ruleModel.clearAll();
 
         // 设置主程序名、偏移量、全局规则
         mainClassTextField.setText(parser.usage.programName);
