@@ -63,6 +63,6 @@ public class ElementValidator implements IValidator {
     @Override
     public String toString() {
         String values = keys.toString().replace(" ", "");
-        return "ElementOf{" + values.substring(1, values.length() - 1) + '}';
+        return "ElementOf(" + values.substring(1, values.length() - 1) + ')';
     }
 }
