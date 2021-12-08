@@ -22,21 +22,21 @@ public enum EnsureFileIsNotDirectoryValidator implements IValidator {
         if (params instanceof String[]) {
             for (String fileName : (String[]) params) {
                 if (Files.isDirectory(Paths.get(fileName))) {
-                    throw new ParameterException("value " + "failed validate: file is directory (" + fileName + ")");
+                    throw new ParameterException(commandKey + " failed validate: file is directory (" + fileName + ")");
                 }
             }
         } else if (params instanceof String) {
             if (Files.isDirectory(Paths.get((String) params))) {
-                throw new ParameterException("value " + "failed validate: file is directory (" + params + ")");
+                throw new ParameterException(commandKey + " failed validate: file is directory (" + params + ")");
             }
         } else if (params instanceof Map) {
             for (String fileName : ((Map<?, String>) params).values()) {
                 if (!Files.exists(Paths.get(fileName))) {
-                    throw new ParameterException("value " + "failed validate: no such file or directory (" + fileName + ")");
+                    throw new ParameterException(commandKey + " failed validate: no such file or directory (" + fileName + ")");
                 }
             }
         } else {
-            throw new ParameterException("unable to infer the type of " + commandKey);
+            throw new ParameterException(commandKey + " unable to infer the type of " + commandKey);
         }
     }
 

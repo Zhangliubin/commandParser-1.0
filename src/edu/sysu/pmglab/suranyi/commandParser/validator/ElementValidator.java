@@ -38,21 +38,21 @@ public class ElementValidator implements IValidator {
         if (params instanceof String[]) {
             for (String param : (String[]) params) {
                 if (!keys.contains(param)) {
-                    throw new ParameterException("one of the following values is supported: " + keys);
+                    throw new ParameterException(commandKey + ": one of the following values is supported: " + keys);
                 }
             }
         } else if (params instanceof String) {
             if (!keys.contains(((String) params))) {
-                throw new ParameterException("one of the following values is supported: " + keys);
+                throw new ParameterException(commandKey + ": one of the following values is supported: " + keys);
             }
         } else if (params instanceof Map) {
             for (String param : ((Map<?, String>) params).values()) {
                 if (!keys.contains(param)) {
-                    throw new ParameterException("one of the following values is supported: " + keys);
+                    throw new ParameterException(commandKey + ": one of the following values is supported: " + keys);
                 }
             }
         } else {
-            throw new ParameterException("unable to infer the type of " + commandKey);
+            throw new ParameterException(commandKey + ": unable to infer the type of " + commandKey);
         }
     }
 
