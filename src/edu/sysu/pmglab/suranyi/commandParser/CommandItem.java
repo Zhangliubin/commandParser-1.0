@@ -588,7 +588,7 @@ public class CommandItem {
             builder.append(this.validators[0]);
             if (this.validators.length > 1) {
                 for (int i = 1; i < this.validators.length; i++) {
-                    builder.append(" ");
+                    builder.append(";");
                     builder.append(validators[i]);
                 }
             }
