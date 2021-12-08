@@ -9,10 +9,7 @@ import edu.sysu.pmglab.suranyi.commandParser.exception.CommandParserException;
 import edu.sysu.pmglab.suranyi.commandParser.validator.*;
 import edu.sysu.pmglab.suranyi.container.SmartList;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Locale;
+import java.util.*;
 
 /**
  * @author suranyi
@@ -446,7 +443,52 @@ public class CommandItem {
         builder.append("\t");
         builder.append(this.request);
         builder.append("\t");
-        builder.append(defaultValue == null ? "." : defaultValue);
+        if (this.defaultValue == null || this.converter instanceof PassedInConverter) {
+            builder.append(".");
+        } else {
+            if (this.converter instanceof StringArrayConverter && this.defaultValue instanceof String[]) {
+                String value = Arrays.toString(((String[]) this.defaultValue)).replace(" ", "");
+                builder.append(value, 1, value.length() - 1);
+            } else if (this.converter instanceof BooleanArrayConverter && this.defaultValue instanceof boolean[]) {
+                String value = Arrays.toString(((boolean[]) this.defaultValue)).replace(" ", "");
+                builder.append(value, 1, value.length() - 1);
+            } else if (this.converter instanceof ShortArrayConverter && this.defaultValue instanceof short[]) {
+                String value = Arrays.toString(((short[]) this.defaultValue)).replace(" ", "");
+                builder.append(value, 1, value.length() - 1);
+            } else if (this.converter instanceof IntArrayConverter && this.defaultValue instanceof int[]) {
+                String value = Arrays.toString(((int[]) this.defaultValue)).replace(" ", "");
+                builder.append(value, 1, value.length() - 1);
+            } else if (this.converter instanceof LongArrayConverter && this.defaultValue instanceof long[]) {
+                String value = Arrays.toString(((long[]) this.defaultValue)).replace(" ", "");
+                builder.append(value, 1, value.length() - 1);
+            } else if (this.converter instanceof FloatArrayConverter && this.defaultValue instanceof float[]) {
+                String value = Arrays.toString(((float[]) this.defaultValue)).replace(" ", "");
+                builder.append(value, 1, value.length() - 1);
+            } else if (this.converter instanceof DoubleArrayConverter && this.defaultValue instanceof double[]) {
+                String value = Arrays.toString(((double[]) this.defaultValue)).replace(" ", "");
+                builder.append(value, 1, value.length() - 1);
+            } else if (this.defaultValue instanceof Boolean || this.defaultValue instanceof Integer || this.defaultValue instanceof String ||
+                    this.defaultValue instanceof Short || this.defaultValue instanceof Long || this.defaultValue instanceof Float || this.defaultValue instanceof Double) {
+                builder.append(this.defaultValue);
+            } else if (this.converter instanceof NaturalLongRangeConverter && this.defaultValue instanceof long[] && ((long[]) this.defaultValue).length == 2) {
+                builder.append(((long[]) this.defaultValue)[0] + "-" + ((long[]) this.defaultValue)[1]);
+            } else if (this.converter instanceof NaturalIntRangeWithIndexConverter && this.defaultValue instanceof int[] && ((int[]) this.defaultValue).length == 3) {
+                builder.append((((int[]) this.defaultValue)[0] + ":" + ((int[]) this.defaultValue)[1]) + ((int[]) this.defaultValue)[2]);
+            } else if (this.converter instanceof NaturalIntRangeConverter && this.defaultValue instanceof int[] && ((int[]) this.defaultValue).length == 2) {
+                builder.append(((int[]) this.defaultValue)[0] + "-" + ((int[]) this.defaultValue)[1]);
+            } else if (this.converter instanceof NaturalDoubleRangeConverter && this.defaultValue instanceof double[] && ((double[]) this.defaultValue).length == 2) {
+                builder.append(((double[]) this.defaultValue)[0] + "-" + ((double[]) this.defaultValue)[1]);
+            } else if (this.converter instanceof RangeConverter && this.defaultValue instanceof String[] && ((String[]) this.defaultValue).length == 2) {
+                builder.append(((String[]) this.defaultValue)[0] + "-" + ((String[]) this.defaultValue)[1]);
+            } else if (this.converter instanceof RangeWithIndexConverter && this.defaultValue instanceof String[] && ((String[]) this.defaultValue).length == 3) {
+                builder.append((((String[]) this.defaultValue)[0] + ":" + ((String[]) this.defaultValue)[1]) + ((String[]) this.defaultValue)[2]);
+            } else if (this.converter instanceof KVConverter && this.defaultValue instanceof HashMap) {
+                String value = this.defaultValue.toString().replace(" ", "").replace(",", ";");
+                builder.append(value, 1, value.length() - 1);
+            } else {
+                builder.append(".");
+            }
+        }
         builder.append("\t");
         builder.append(converter);
         builder.append("\t");
@@ -456,7 +498,7 @@ public class CommandItem {
             builder.append(this.validators[0]);
             if (this.validators.length > 1) {
                 for (int i = 1; i < this.validators.length; i++) {
-                    builder.append(" ");
+                    builder.append(";");
                     builder.append(validators[i]);
                 }
             }
@@ -483,7 +525,60 @@ public class CommandItem {
 
         row[0] = commandNames.substring(1, commandNames.length() - 1);
         row[1] = request;
-        row[2] = this.defaultValue == null ? "." : this.defaultValue;
+
+        if (this.defaultValue == null || this.converter instanceof PassedInConverter) {
+            row[2] = ".";
+        } else {
+            if (this.converter instanceof StringArrayConverter && this.defaultValue instanceof String[]) {
+                String value = Arrays.toString(((String[]) this.defaultValue)).replace(" ", "");
+                row[2] = value.substring(1, value.length() - 1);
+            } else if (this.converter instanceof BooleanArrayConverter && this.defaultValue instanceof boolean[]) {
+                String value = Arrays.toString(((boolean[]) this.defaultValue)).replace(" ", "");
+                row[2] = value.substring(1, value.length() - 1);
+            } else if (this.converter instanceof ShortArrayConverter && this.defaultValue instanceof short[]) {
+                String value = Arrays.toString(((Short[]) this.defaultValue)).replace(" ", "");
+                row[2] = value.substring(1, value.length() - 1);
+            } else if (this.converter instanceof IntArrayConverter && this.defaultValue instanceof int[]) {
+                String value = Arrays.toString(((int[]) this.defaultValue)).replace(" ", "");
+                row[2] = value.substring(1, value.length() - 1);
+            } else if (this.converter instanceof LongArrayConverter && this.defaultValue instanceof long[]) {
+                String value = Arrays.toString(((long[]) this.defaultValue)).replace(" ", "");
+                row[2] = value.substring(1, value.length() - 1);
+            } else if (this.converter instanceof FloatArrayConverter && this.defaultValue instanceof float[]) {
+                String value = Arrays.toString(((float[]) this.defaultValue)).replace(" ", "");
+                row[2] = value.substring(1, value.length() - 1);
+            } else if (this.converter instanceof DoubleArrayConverter && this.defaultValue instanceof double[]) {
+                String value = Arrays.toString(((double[]) this.defaultValue)).replace(" ", "");
+                row[2] = value.substring(1, value.length() - 1);
+            } else if (this.defaultValue instanceof Boolean || this.defaultValue instanceof Integer || this.defaultValue instanceof String ||
+                    this.defaultValue instanceof Short || this.defaultValue instanceof Long || this.defaultValue instanceof Float || this.defaultValue instanceof Double) {
+                row[2] = this.defaultValue;
+            } else if (this.converter instanceof NaturalLongRangeConverter && this.defaultValue instanceof long[] && ((long[]) this.defaultValue).length == 2) {
+                String value = Arrays.toString(((long[]) this.defaultValue)).replace(" ", "");
+                row[2] = value;
+            } else if (this.converter instanceof NaturalIntRangeWithIndexConverter && this.defaultValue instanceof int[] && ((int[]) this.defaultValue).length == 3) {
+                int[] converted = (int[]) this.defaultValue;
+                row[2] = converted[0] + ":" + converted[1] + "-" + converted[2];
+            } else if (this.converter instanceof NaturalIntRangeConverter && this.defaultValue instanceof int[] && ((int[]) this.defaultValue).length == 2) {
+                int[] converted = (int[]) this.defaultValue;
+                row[2] = converted[0] + "-" + converted[1];
+            } else if (this.converter instanceof NaturalDoubleRangeConverter && this.defaultValue instanceof double[] && ((double[]) this.defaultValue).length == 2) {
+                double[] converted = (double[]) this.defaultValue;
+                row[2] = converted[0] + "-" + converted[1];
+            } else if (this.converter instanceof RangeConverter && this.defaultValue instanceof String[] && ((String[]) this.defaultValue).length == 2) {
+                String[] converted = (String[]) this.defaultValue;
+                row[2] = converted[0] + "-" + converted[1];
+            } else if (this.converter instanceof RangeWithIndexConverter && this.defaultValue instanceof String[] && ((String[]) this.defaultValue).length == 3) {
+                String[] converted = (String[]) this.defaultValue;
+                row[2] = converted[0] + ":" + converted[1] + "-" + converted[2];
+            } else if (this.converter instanceof KVConverter && this.defaultValue instanceof HashMap) {
+                String value = this.defaultValue.toString().replace(" ", "").replace(",", ";");
+                row[2] = value.substring(1, value.length() - 1);
+            } else {
+                row[2] = ".";
+            }
+        }
+
         row[3] = converter.toString();
 
         if (validators.length == 0) {
@@ -600,7 +695,7 @@ public class CommandItem {
                     });
                     break;
                 case "float-array":
-                    item.convertTo(new FloatConverter() {
+                    item.convertTo(new FloatArrayConverter() {
                     });
                     break;
                 case "double-array":

@@ -314,7 +314,6 @@ public class CommandParserDesigner extends JFrame {
                 transToParser();
                 JOptionPane.showOptionDialog(this, "Congratulations, the parser has passed the check!", "Information", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, null, new String[]{"OK"}, "OK");
             } catch (Exception exception) {
-                exception.printStackTrace();
                 JOptionPane.showOptionDialog(this, exception.getMessage(), "Error", JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE, null, new String[]{"OK"}, "OK");
             }
         });
