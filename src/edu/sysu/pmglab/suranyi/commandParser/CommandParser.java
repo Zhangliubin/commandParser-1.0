@@ -1,7 +1,5 @@
 package edu.sysu.pmglab.suranyi.commandParser;
 
-import com.sun.xml.internal.messaging.saaj.util.ByteInputStream;
-import dev.BGZIPParserFromFile;
 import edu.sysu.pmglab.suranyi.check.Assert;
 import edu.sysu.pmglab.suranyi.commandParser.converter.map.KVConverter;
 import edu.sysu.pmglab.suranyi.commandParser.converter.value.PassedInConverter;
@@ -12,9 +10,7 @@ import edu.sysu.pmglab.suranyi.unifyIO.FileStream;
 import edu.sysu.pmglab.suranyi.unifyIO.InputStreamReaderStream;
 import edu.sysu.pmglab.suranyi.unifyIO.options.FileOptions;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;

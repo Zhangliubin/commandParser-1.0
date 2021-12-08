@@ -4,7 +4,7 @@ import edu.sysu.pmglab.suranyi.commandParser.converter.IConverter;
 
 /**
  * @author suranyi
- * @description 数值类型
+ * @description 单值类型
  */
 
 public interface IValueConverter <T> extends IConverter<T> {

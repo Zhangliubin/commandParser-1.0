@@ -11,7 +11,7 @@ import java.util.Arrays;
  * @description double 范围转换器
  */
 
-public abstract class NaturalDoubleRangeConverter implements IConverter<double[]> {
+public class NaturalDoubleRangeConverter implements IConverter<double[]> {
     final double VALUE_MIN;
     final double VALUE_MAX;
 

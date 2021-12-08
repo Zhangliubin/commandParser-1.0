@@ -1,9 +1,9 @@
 package edu.sysu.pmglab.suranyi.unifyIO.partreader;
 
 import edu.sysu.pmglab.suranyi.container.Pair;
-import edu.sysu.pmglab.suranyi.unifyIO.options.FileOptions;
 import edu.sysu.pmglab.suranyi.unifyIO.FileStream;
 import edu.sysu.pmglab.suranyi.unifyIO.IFileStream;
+import edu.sysu.pmglab.suranyi.unifyIO.options.FileOptions;
 
 import java.io.IOException;
 

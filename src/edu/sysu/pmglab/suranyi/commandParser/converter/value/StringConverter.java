@@ -1,6 +1,5 @@
 package edu.sysu.pmglab.suranyi.commandParser.converter.value;
 
-import edu.sysu.pmglab.suranyi.commandParser.converter.IConverter;
 import edu.sysu.pmglab.suranyi.commandParser.exception.ParameterException;
 
 import java.util.Arrays;
@@ -10,7 +9,7 @@ import java.util.Arrays;
  * @description 字符串转换器
  */
 
-public abstract class StringConverter implements IValueConverter<String> {
+public class StringConverter implements IValueConverter<String> {
 
     @Override
     public String convert(String... params) {

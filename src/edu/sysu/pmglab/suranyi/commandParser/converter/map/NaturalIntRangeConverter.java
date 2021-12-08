@@ -11,7 +11,7 @@ import java.util.Arrays;
  * @description 整数范围转换器
  */
 
-public abstract class NaturalIntRangeConverter implements IConverter<int[]> {
+public class NaturalIntRangeConverter implements IConverter<int[]> {
     final int VALUE_MIN;
     final int VALUE_MAX;
 

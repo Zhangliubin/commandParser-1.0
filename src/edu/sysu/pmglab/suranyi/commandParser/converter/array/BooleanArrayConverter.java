@@ -1,6 +1,5 @@
 package edu.sysu.pmglab.suranyi.commandParser.converter.array;
 
-import edu.sysu.pmglab.suranyi.commandParser.converter.IConverter;
 import edu.sysu.pmglab.suranyi.container.SmartList;
 
 /**
@@ -8,7 +7,7 @@ import edu.sysu.pmglab.suranyi.container.SmartList;
  * @description 布尔数组转换器
  */
 
-public abstract class BooleanArrayConverter implements IArrayConverter<boolean[]> {
+public class BooleanArrayConverter implements IArrayConverter<boolean[]> {
     public final String separator;
 
     public BooleanArrayConverter() {

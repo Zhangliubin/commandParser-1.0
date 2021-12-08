@@ -1,6 +1,5 @@
 package edu.sysu.pmglab.suranyi.commandParser.converter.value;
 
-import edu.sysu.pmglab.suranyi.commandParser.converter.IConverter;
 import edu.sysu.pmglab.suranyi.commandParser.exception.ParameterException;
 
 import java.util.Arrays;
@@ -10,7 +9,7 @@ import java.util.Arrays;
  * @description bool 对象转换器
  */
 
-public abstract class BooleanConverter implements IValueConverter<Boolean> {
+public class BooleanConverter implements IValueConverter<Boolean> {
 
     private static final String TRUE = "true";
     private static final String FALSE = "false";

@@ -1,6 +1,5 @@
 package edu.sysu.pmglab.suranyi.commandParser.converter.value;
 
-import edu.sysu.pmglab.suranyi.commandParser.converter.IConverter;
 import edu.sysu.pmglab.suranyi.commandParser.exception.ParameterException;
 
 import java.util.Arrays;
@@ -10,8 +9,7 @@ import java.util.Arrays;
  * @description 浮点数转换器转换器
  */
 
-
-public abstract class FloatConverter implements IValueConverter<Float> {
+public class FloatConverter implements IValueConverter<Float> {
 
     @Override
     public Float convert(String... params) {

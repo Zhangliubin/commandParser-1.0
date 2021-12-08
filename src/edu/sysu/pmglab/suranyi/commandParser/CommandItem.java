@@ -12,6 +12,7 @@ import edu.sysu.pmglab.suranyi.container.SmartList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Locale;
 
 /**
  * @author suranyi
@@ -682,6 +683,10 @@ public class CommandItem {
             throw new CommandParserException(item.commandNames[0] + ": passedIn type don't accept any values, please set arity to '0'");
         }
 
+        if (item.converter instanceof PassedInConverter && !options[4].equals(CommandOptions.MISS_VALUE)) {
+            throw new CommandParserException(item.commandNames[0] + ": passedIn type don't accept any validators, please set validateWith to '.'");
+        }
+
         if (item.converter instanceof IValueConverter && item.length != 1) {
             throw new CommandParserException(item.commandNames[0] + ": single-value (boolean,short,integer,long,float,double,string) type accept 1 value, please set arity to '1'");
         }
@@ -695,19 +700,27 @@ public class CommandItem {
         }
 
         // 设定验证器
-        String[] validators = options[4].split(" ", -1);
+        String[] validators = options[4].split(";");
         if (!options[4].equals(CommandOptions.MISS_VALUE)) {
             SmartList<IValidator> addToItem = new SmartList<>();
 
             for (String validator : validators) {
-                if (validator.startsWith("RangeOf(")) {
-                    addToItem.add(new RangeValidator(Double.parseDouble(validator.substring(8, validator.indexOf(","))), Double.parseDouble(validator.substring(validator.indexOf(",") + 1, validator.indexOf(")")))));
-                } else if (validator.equals("EnsureFileExists")) {
+                // 替换空格
+                validator = validator.replace(" ", "");
+
+                // 验证器转为小写
+                String validator2LowerCase = validator.toLowerCase(Locale.ROOT);
+
+                if (validator2LowerCase.startsWith("rangeof(")) {
+                    addToItem.add(new RangeValidator(Double.parseDouble(validator2LowerCase.substring(8, validator2LowerCase.indexOf(","))), Double.parseDouble(validator2LowerCase.substring(validator2LowerCase.indexOf(",") + 1, validator2LowerCase.indexOf(")")))));
+                } else if (validator2LowerCase.equals("ensurefileexists")) {
                     addToItem.add(EnsureFileExistsValidator.INSTANCE);
-                } else if (validator.equals("NotDirectory")) {
+                } else if (validator2LowerCase.equals("notdirectory")) {
                     addToItem.add(EnsureFileIsNotDirectoryValidator.INSTANCE);
+                } else if (validator2LowerCase.startsWith("elementof")) {
+                    addToItem.add(new ElementValidator(validator.substring(10, validator.length() - 1).split(",")));
                 } else {
-                    addToItem.add(new AbstractValidator(validator));
+                    addToItem.add(new AbstractValidator(validator2LowerCase));
                 }
             }
 

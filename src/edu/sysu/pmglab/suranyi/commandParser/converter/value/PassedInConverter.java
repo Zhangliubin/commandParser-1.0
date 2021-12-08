@@ -8,7 +8,7 @@ import edu.sysu.pmglab.suranyi.commandParser.exception.CommandParserException;
  * @description 参数是否被传入转换器 (只要被调用了 convert，就一定被传入了)
  */
 
-public abstract class PassedInConverter implements IConverter<Boolean> {
+public class PassedInConverter implements IConverter<Boolean> {
     @Override
     public Boolean convert(String... params) {
         if (params.length != 0) {

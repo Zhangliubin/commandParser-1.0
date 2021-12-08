@@ -1,6 +1,5 @@
 package edu.sysu.pmglab.suranyi.commandParser.converter.array;
 
-import edu.sysu.pmglab.suranyi.commandParser.converter.IConverter;
 import edu.sysu.pmglab.suranyi.container.SmartList;
 
 /**
@@ -8,7 +7,7 @@ import edu.sysu.pmglab.suranyi.container.SmartList;
  * @description 整数数组转换器
  */
 
-public abstract class ShortArrayConverter implements IArrayConverter<short[]> {
+public class ShortArrayConverter implements IArrayConverter<short[]> {
     public final String separator;
 
     public ShortArrayConverter() {

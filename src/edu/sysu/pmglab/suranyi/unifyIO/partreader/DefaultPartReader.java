@@ -6,9 +6,8 @@ import edu.sysu.pmglab.suranyi.container.VolumeByteStream;
 import edu.sysu.pmglab.suranyi.easytools.ArrayUtils;
 import edu.sysu.pmglab.suranyi.easytools.ByteCode;
 import edu.sysu.pmglab.suranyi.easytools.FileUtils;
-import edu.sysu.pmglab.suranyi.easytools.ValueUtils;
-import edu.sysu.pmglab.suranyi.unifyIO.options.FileOptions;
 import edu.sysu.pmglab.suranyi.unifyIO.FileStream;
+import edu.sysu.pmglab.suranyi.unifyIO.options.FileOptions;
 
 import java.io.IOException;
 

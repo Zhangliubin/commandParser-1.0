@@ -150,9 +150,9 @@ public class CommandParserDesigner extends JFrame {
 
         commandModel.addCellEditor(commandTable, "request", new DefaultCellEditor(new JCheckBox()));
         commandModel.addCellEditor(commandTable, "hidden", new DefaultCellEditor(new JCheckBox()));
-        commandModel.addCellEditor(commandTable, "convertTo", new DefaultCellEditor(new JComboBox<>(new String[]{"built-in", "passedIn", "boolean", "short", "integer", "long", "double", "string", "short-array", "integer-array", "long-array", "double-array", "string-array", "k1=v1;k2=v2;...", "<start>-<end> (integer)", "<start>-<end> (long)", "<start>-<end> (double)", "<index>:<start>-<end> (integer)", "<start>-<end> (string)", "<index>:<start>-<end> (string)"})));
+        commandModel.addCellEditor(commandTable, "convertTo", new DefaultCellEditor(new JComboBox<>(new String[]{"built-in", "passedIn", "boolean", "short", "integer", "long", "float", "double", "string", "short-array", "integer-array", "long-array", "float-array", "double-array", "string-array", "k1=v1;k2=v2;...", "<start>-<end> (integer)", "<start>-<end> (long)", "<start>-<end> (double)", "<index>:<start>-<end> (integer)", "<start>-<end> (string)", "<index>:<start>-<end> (string)"})));
 
-        JComboBox<String> validateWithCombobox = new JComboBox<>(new String[]{".", "built-in", "NotDirectory", "EnsureFileExists", "NotDirectory EnsureFileExists", "RangeOf($start,$end)"});
+        JComboBox<String> validateWithCombobox = new JComboBox<>(new String[]{".", "built-in", "NotDirectory", "EnsureFileExists", "RangeOf($start,$end)", "ElementOf($value,$value,...)"});
         validateWithCombobox.setEditable(true);
         commandModel.addCellEditor(commandTable, "validateWith", new DefaultCellEditor(validateWithCombobox));
         commandModel.addCellEditor(commandTable, "arity", new DefaultCellEditor(new JComboBox<>(new Object[]{0, 1, "≥1", 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16})));
@@ -394,7 +394,6 @@ public class CommandParserDesigner extends JFrame {
                     }
                 }
             } catch (Exception exception) {
-                exception.printStackTrace();
                 JOptionPane.showOptionDialog(this, exception.getMessage(), "Error", JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE, null, new String[]{"OK"}, "OK");
             }
         });

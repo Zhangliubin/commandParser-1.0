@@ -1,6 +1,5 @@
 package edu.sysu.pmglab.suranyi.commandParser.converter.value;
 
-import edu.sysu.pmglab.suranyi.commandParser.converter.IConverter;
 import edu.sysu.pmglab.suranyi.commandParser.exception.ParameterException;
 
 import java.util.Arrays;
@@ -11,7 +10,7 @@ import java.util.Arrays;
  */
 
 
-public abstract class DoubleConverter implements IValueConverter<Double> {
+public class DoubleConverter implements IValueConverter<Double> {
 
     @Override
     public Double convert(String... params) {

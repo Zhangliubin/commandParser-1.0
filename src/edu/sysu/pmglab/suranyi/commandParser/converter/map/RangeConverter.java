@@ -10,7 +10,7 @@ import java.util.Arrays;
  * @description 范围转换器
  */
 
-public abstract class RangeConverter implements IConverter<String[]> {
+public class RangeConverter implements IConverter<String[]> {
     @Override
     public String[] convert(String... params) {
         if (params.length != 1) {

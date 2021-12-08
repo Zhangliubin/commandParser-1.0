@@ -7,6 +7,9 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Map;
 
+import static edu.sysu.pmglab.suranyi.check.exception.RuntimeExceptionOptions.ArrayIndexOutOfBoundsException;
+import static edu.sysu.pmglab.suranyi.check.exception.RuntimeExceptionOptions.AssertionError;
+import static edu.sysu.pmglab.suranyi.check.exception.RuntimeExceptionOptions.NullPointerException;
 import static edu.sysu.pmglab.suranyi.check.exception.RuntimeExceptionOptions.*;
 
 /**

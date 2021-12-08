@@ -9,7 +9,7 @@ import java.util.Arrays;
  * @description 整数范围转换器, 带有索引项
  */
 
-public abstract class RangeWithIndexConverter extends RangeConverter {
+public class RangeWithIndexConverter extends RangeConverter {
     @Override
     public String[] convert(String... params) {
         if (params.length != 1) {

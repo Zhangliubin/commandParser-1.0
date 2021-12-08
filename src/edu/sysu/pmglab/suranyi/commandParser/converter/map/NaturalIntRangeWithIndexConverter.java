@@ -10,7 +10,7 @@ import java.util.Arrays;
  * @description 整数范围转换器, 带有索引项
  */
 
-public abstract class NaturalIntRangeWithIndexConverter extends NaturalIntRangeConverter {
+public class NaturalIntRangeWithIndexConverter extends NaturalIntRangeConverter {
     final int INDEX_MIN;
     final int INDEX_MAX;
     final int VALUE_MIN;

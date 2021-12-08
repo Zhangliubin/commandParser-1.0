@@ -1,6 +1,5 @@
 package edu.sysu.pmglab.suranyi.easytools;
 
-import java.util.ArrayList;
 import java.util.Collection;
 
 /**

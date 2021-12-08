@@ -1,8 +1,8 @@
 package edu.sysu.pmglab.suranyi.easytools;
 
-import edu.sysu.pmglab.suranyi.unifyIO.options.FileOptions;
-import edu.sysu.pmglab.suranyi.unifyIO.FileStream;
 import edu.sysu.pmglab.suranyi.container.VolumeByteStream;
+import edu.sysu.pmglab.suranyi.unifyIO.FileStream;
+import edu.sysu.pmglab.suranyi.unifyIO.options.FileOptions;
 
 import java.io.IOException;
 import java.math.BigInteger;
