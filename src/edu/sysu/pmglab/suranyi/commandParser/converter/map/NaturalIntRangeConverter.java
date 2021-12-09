@@ -1,6 +1,5 @@
 package edu.sysu.pmglab.suranyi.commandParser.converter.map;
 
-import edu.sysu.pmglab.suranyi.commandParser.converter.IConverter;
 import edu.sysu.pmglab.suranyi.commandParser.exception.CommandParserException;
 import edu.sysu.pmglab.suranyi.commandParser.exception.ParameterException;
 
@@ -11,7 +10,7 @@ import java.util.Arrays;
  * @description 整数范围转换器
  */
 
-public class NaturalIntRangeConverter implements IConverter<int[]> {
+public class NaturalIntRangeConverter implements IMapConverter<int[]> {
     final int VALUE_MIN;
     final int VALUE_MAX;
 

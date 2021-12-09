@@ -1,6 +1,5 @@
 package edu.sysu.pmglab.suranyi.commandParser.converter.map;
 
-import edu.sysu.pmglab.suranyi.commandParser.converter.IConverter;
 import edu.sysu.pmglab.suranyi.commandParser.exception.CommandParserException;
 import edu.sysu.pmglab.suranyi.commandParser.exception.ParameterException;
 
@@ -11,7 +10,7 @@ import java.util.Arrays;
  * @description double 范围转换器
  */
 
-public class NaturalDoubleRangeConverter implements IConverter<double[]> {
+public class NaturalDoubleRangeConverter implements IMapConverter<double[]> {
     final double VALUE_MIN;
     final double VALUE_MAX;
 

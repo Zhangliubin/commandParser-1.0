@@ -28,7 +28,7 @@ public interface IConverter<T> {
     /**
      * 获取参数的默认长度
      *
-     * @return 参数长度默认值，为 1
+     * @return 参数长度默认值
      */
     default int getDefaultLength() {
         return 1;
@@ -38,7 +38,7 @@ public interface IConverter<T> {
      * 是否为数组类型
      * @return 是否为数组类型
      */
-    default boolean isArrayType() {
+    default boolean isArrayType(){
         return false;
     }
 }

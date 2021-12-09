@@ -1,6 +1,5 @@
 package edu.sysu.pmglab.suranyi.commandParser.converter.map;
 
-import edu.sysu.pmglab.suranyi.commandParser.converter.IConverter;
 import edu.sysu.pmglab.suranyi.commandParser.exception.ParameterException;
 
 import java.util.Arrays;
@@ -10,7 +9,7 @@ import java.util.Arrays;
  * @description 范围转换器
  */
 
-public class RangeConverter implements IConverter<String[]> {
+public class RangeConverter implements IMapConverter<String[]> {
     @Override
     public String[] convert(String... params) {
         if (params.length != 1) {

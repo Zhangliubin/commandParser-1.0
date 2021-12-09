@@ -9,7 +9,7 @@ import java.util.Arrays;
  * @description 整数转换器转换器
  */
 
-public class ShortConverter implements IValueConverter<Short>{
+public class ShortConverter implements IValueConverter<Short> {
 
     @Override
     public Short convert(String... params) {

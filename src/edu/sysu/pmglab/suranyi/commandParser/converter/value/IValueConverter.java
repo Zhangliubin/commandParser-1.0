@@ -13,4 +13,9 @@ public interface IValueConverter <T> extends IConverter<T> {
     default boolean isArrayType() {
         return false;
     }
+
+    @Override
+    default int getDefaultLength() {
+        return 1;
+    }
 }

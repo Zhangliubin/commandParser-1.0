@@ -20,6 +20,16 @@ public class AbstractConverter implements IConverter<Object> {
     }
 
     @Override
+    public int getDefaultLength() {
+        return 1;
+    }
+
+    @Override
+    public boolean isArrayType() {
+        return false;
+    }
+
+    @Override
     public String toString() {
         return "built-in";
     }

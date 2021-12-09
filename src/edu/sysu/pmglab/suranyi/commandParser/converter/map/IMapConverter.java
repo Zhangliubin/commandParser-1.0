@@ -12,4 +12,9 @@ public interface IMapConverter <T> extends IConverter<T> {
     default int getDefaultLength() {
         return 1;
     }
+
+    @Override
+    default boolean isArrayType() {
+        return false;
+    }
 }

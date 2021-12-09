@@ -12,7 +12,7 @@ import java.util.HashMap;
  * @description 键值对转换器 (格式: k1=v1;k2=v2 k3=v3)
  */
 
-public abstract class KVConverter<K, V> implements IConverter<HashMap<K, V>> {
+public abstract class KVConverter<K, V> implements IMapConverter<HashMap<K, V>> {
     /**
      * 捕获的键值对关键字
      */

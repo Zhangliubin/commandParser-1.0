@@ -486,7 +486,7 @@ public class CommandItem {
                 String value = this.defaultValue.toString().replace(" ", "").replace(",", ";");
                 builder.append(value, 1, value.length() - 1);
             } else {
-                builder.append(".");
+                builder.append(this.defaultValue);
             }
         }
         builder.append("\t");
@@ -536,7 +536,7 @@ public class CommandItem {
                 String value = Arrays.toString(((boolean[]) this.defaultValue)).replace(" ", "");
                 row[2] = value.substring(1, value.length() - 1);
             } else if (this.converter instanceof ShortArrayConverter && this.defaultValue instanceof short[]) {
-                String value = Arrays.toString(((Short[]) this.defaultValue)).replace(" ", "");
+                String value = Arrays.toString(((short[]) this.defaultValue)).replace(" ", "");
                 row[2] = value.substring(1, value.length() - 1);
             } else if (this.converter instanceof IntArrayConverter && this.defaultValue instanceof int[]) {
                 String value = Arrays.toString(((int[]) this.defaultValue)).replace(" ", "");
@@ -575,7 +575,7 @@ public class CommandItem {
                 String value = this.defaultValue.toString().replace(" ", "").replace(",", ";");
                 row[2] = value.substring(1, value.length() - 1);
             } else {
-                row[2] = ".";
+                row[2] = this.defaultValue.toString();
             }
         }
 
@@ -608,170 +608,204 @@ public class CommandItem {
     static CommandItem loadFromString(String command) {
         // 将该指令导出为单行格式
         String[] options = command.split(CommandOptions.SEPARATOR, -1);
-        if (options.length != 11) {
-            throw new CommandParserException("command takes 11 positional argument (separated by \\t, " + options.length + " given)");
-        }
 
-        // 检查每一个分割组的信息
+        // 解析命令
+        CommandItem item = new CommandItem(options[0].split(","));
+
+        // 检查每一个分割组的信息，不能为空白
         for (String option : options) {
             if (option.length() == 0) {
-                throw new CommandParserException("command contains empty values (use '" + CommandOptions.MISS_VALUE + "' as placeholder)");
+                throw new CommandParserException(item.getCommandName() + ": contains empty values, please use '" + CommandOptions.MISS_VALUE + "' as placeholder");
             }
         }
 
-        CommandItem item = new CommandItem(options[0].split(","));
-        if (options[1].equals(CommandOptions.MISS_VALUE) || options[1].equals("false")) {
+        // 检验长度是否为 11
+        if (options.length != 11) {
+            throw new CommandParserException(item.getCommandName() + ": command takes 11 positional argument (separated by \\t, " + options.length + " given)");
+        }
+
+        // 是否为 . 或布尔值
+        if (options[1].equals(CommandOptions.MISS_VALUE) || options[1].equalsIgnoreCase("false")) {
             item.request = false;
-        } else if (options[1].equals("true")) {
+        } else if (options[1].equalsIgnoreCase("true")) {
             item.request = true;
         } else {
-            throw new CommandParserException(item.commandNames[0] + ": couldn't convert " + options[1] + " to a boolean value");
+            throw new CommandParserException(item.getCommandName() + ": couldn't convert " + options[1] + " to a boolean value (true/false)");
         }
 
-        // 替换空值
-        options[5] = options[5].replace(" ", "");
-        if (!options[5].equals(CommandOptions.MISS_VALUE)) {
-            // 如果没有设置长度，则会在上面的转换器设置中设置
-            if (options[5].equals(">=1") || options[5].equals("≥1")) {
-                item.arity(-1);
-            } else {
-                item.arity(Integer.parseInt(options[5]));
-            }
+        if (options[9].equals(CommandOptions.MISS_VALUE) || options[9].equalsIgnoreCase("false")) {
+            item.hide = false;
+        } else if (options[9].equalsIgnoreCase("true")) {
+            item.hide = true;
+        } else {
+            throw new CommandParserException(item.getCommandName() + ": couldn't convert " + options[9] + " to a boolean value (true/false)");
+        }
+
+        if (options[10].equals(CommandOptions.MISS_VALUE) || options[10].equalsIgnoreCase("false")) {
+            item.help = false;
+        } else if (options[10].equalsIgnoreCase("true")) {
+            item.help = true;
+        } else {
+            throw new CommandParserException(item.getCommandName() + ": couldn't convert " + options[10] + " to a boolean value (true/false)");
         }
 
         // 推断转换器及验证器
-        if (!options[3].equals(CommandOptions.MISS_VALUE)) {
-            switch (options[3]) {
-                case "boolean":
-                    item.convertTo(new BooleanConverter() {
-                    });
-                    break;
-                case "short":
-                    item.convertTo(new ShortConverter() {
-                    });
-                    break;
-                case "integer":
-                    item.convertTo(new IntConverter() {
-                    });
-                    break;
-                case "long":
-                    item.convertTo(new LongConverter() {
-                    });
-                    break;
-                case "float":
-                    item.convertTo(new FloatConverter() {
-                    });
-                    break;
-                case "double":
-                    item.convertTo(new DoubleConverter() {
-                    });
-                    break;
-                case "string":
-                    item.convertTo(new StringConverter() {
-                    });
-                    break;
-                case "passedIn":
-                    item.convertTo(new PassedInConverter() {
-                    });
-                    break;
-                case "boolean-array":
-                    item.convertTo(new BooleanArrayConverter() {
-                    });
-                    break;
-                case "short-array":
-                    item.convertTo(new ShortArrayConverter() {
-                    });
-                    break;
-                case "integer-array":
-                    item.convertTo(new IntArrayConverter() {
-                    });
-                    break;
-                case "long-array":
-                    item.convertTo(new LongArrayConverter() {
-                    });
-                    break;
-                case "string-array":
-                    item.convertTo(new StringArrayConverter() {
-                    });
-                    break;
-                case "float-array":
-                    item.convertTo(new FloatArrayConverter() {
-                    });
-                    break;
-                case "double-array":
-                    item.convertTo(new DoubleArrayConverter() {
-                    });
-                    break;
-                case "k1=v1;k2=v2;...":
-                    item.convertTo(new KVConverter<String, String>() {
-                        @Override
-                        public HashMap<String, String> convert(String... params) {
-                            return parseKV(params);
-                        }
-                    });
-                    break;
-                case "<start>-<end> (double)":
-                    item.convertTo(new NaturalDoubleRangeConverter() {
-                    });
-                    break;
-                case "<start>-<end> (integer)":
-                    item.convertTo(new NaturalIntRangeConverter() {
-                    });
-                    break;
-                case "<index>:<start>-<end> (integer)":
-                    item.convertTo(new NaturalIntRangeWithIndexConverter() {
-                    });
-                    break;
-                case "<start>-<end> (long)":
-                    item.convertTo(new NaturalLongRangeConverter() {
-                    });
-                    break;
-                case "<start>-<end> (string)":
-                    item.convertTo(new RangeConverter() {
-                    });
-                    break;
-                case "<index>:<start>-<end> (string)":
-                    item.convertTo(new RangeWithIndexConverter() {
-                    });
-                    break;
-                default:
-                    // 其他情况需要用户重新配置
-                    item.convertTo(new AbstractConverter(options[3]));
-
-                    if (!options[2].equals(CommandOptions.MISS_VALUE)) {
-                        item.defaultTo(options[2]);
-                    }
-                    break;
-            }
-
-            if (!options[2].equals(CommandOptions.MISS_VALUE) && !(item.converter instanceof AbstractConverter)) {
-                if (item.converter.isArrayType() && item.length != 0) {
-                    // 无限长度或长度大于 1 时，才进行数组切割
-                    if (options[2].contains(",")) {
-                        // 以 , 作为分隔符
-                        item.defaultTo(item.converter.convert(options[2].replace(" ", "").split(",")));
-                    } else if (options[2].contains(";")) {
-                        // 以 ; 作为分隔符
-                        item.defaultTo(item.converter.convert(options[2].replace(" ", "").split(";")));
-                    } else if (options[2].contains(" ")) {
-                        // 以 ' ' 作为分隔符
-                        item.defaultTo(item.converter.convert(options[2].split(" ")));
-                    } else {
-                        item.defaultTo(item.converter.convert(options[2]));
-                    }
+        switch (options[3]) {
+            case "boolean":
+                item.convertTo(new BooleanConverter() {
+                });
+                break;
+            case "short":
+                item.convertTo(new ShortConverter() {
+                });
+                break;
+            case "integer":
+                item.convertTo(new IntConverter() {
+                });
+                break;
+            case "long":
+                item.convertTo(new LongConverter() {
+                });
+                break;
+            case "float":
+                item.convertTo(new FloatConverter() {
+                });
+                break;
+            case "double":
+                item.convertTo(new DoubleConverter() {
+                });
+                break;
+            case "string":
+                item.convertTo(new StringConverter() {
+                });
+                break;
+            case CommandOptions.MISS_VALUE:
+                // 未指定转换器时结合其他信息推断
+                if (options[5].equals("0")) {
+                    item.convertTo(new PassedInConverter());
+                } else if (options[5].equals("1") || options[5].equals(CommandOptions.MISS_VALUE)) {
+                    item.convertTo(new StringConverter());
                 } else {
-                    item.defaultTo(item.converter.convert(options[2]));
+                    item.convertTo(new StringArrayConverter());
                 }
+                break;
+            case "passedIn":
+                item.convertTo(new PassedInConverter() {
+                });
+                break;
+            case "boolean-array":
+                item.convertTo(new BooleanArrayConverter() {
+                });
+                break;
+            case "short-array":
+                item.convertTo(new ShortArrayConverter() {
+                });
+                break;
+            case "integer-array":
+                item.convertTo(new IntArrayConverter() {
+                });
+                break;
+            case "long-array":
+                item.convertTo(new LongArrayConverter() {
+                });
+                break;
+            case "string-array":
+                item.convertTo(new StringArrayConverter() {
+                });
+                break;
+            case "float-array":
+                item.convertTo(new FloatArrayConverter() {
+                });
+                break;
+            case "double-array":
+                item.convertTo(new DoubleArrayConverter() {
+                });
+                break;
+            case "k1=v1;k2=v2;...":
+                item.convertTo(new KVConverter<String, String>() {
+                    @Override
+                    public HashMap<String, String> convert(String... params) {
+                        return parseKV(params);
+                    }
+                });
+                break;
+            case "<start>-<end> (double)":
+                item.convertTo(new NaturalDoubleRangeConverter() {
+                });
+                break;
+            case "<start>-<end> (integer)":
+                item.convertTo(new NaturalIntRangeConverter() {
+                });
+                break;
+            case "<index>:<start>-<end> (integer)":
+                item.convertTo(new NaturalIntRangeWithIndexConverter() {
+                });
+                break;
+            case "<start>-<end> (long)":
+                item.convertTo(new NaturalLongRangeConverter() {
+                });
+                break;
+            case "<start>-<end> (string)":
+                item.convertTo(new RangeConverter() {
+                });
+                break;
+            case "<index>:<start>-<end> (string)":
+                item.convertTo(new RangeWithIndexConverter() {
+                });
+                break;
+            default:
+                // built-in 或其他的转换器
+                // 其他情况需要用户重新配置
+                item.convertTo(new AbstractConverter(options[3]));
+
+                if (!options[2].equals(CommandOptions.MISS_VALUE)) {
+                    item.defaultTo(options[2]);
+                }
+                break;
+        }
+
+        // 参数长度验证
+        if (!options[5].equals(CommandOptions.MISS_VALUE)) {
+            try {
+                if (options[5].equals(">=1") || options[5].equals("≥1")) {
+                    item.arity(-1);
+                } else {
+                    item.arity(Integer.parseInt(options[5]));
+                }
+            } catch (NumberFormatException e) {
+                throw new CommandParserException(item.getCommandName() + ": couldn't identify arity=" + options[5]);
             }
         } else {
-            // 没有传入转换器，此时一律当成 string 处理
-            item.convertTo(new StringConverter() {
-            });
+            // 没有设置长度，则按照转换器的长度默认值设置
+            item.arity(item.converter.getDefaultLength());
+        }
 
-            if (!options[2].equals(CommandOptions.MISS_VALUE)) {
+        // 设定默认值
+        if (!options[2].equals(CommandOptions.MISS_VALUE)) {
+            // 使用转换器将默认值转换为对应的类型
+            if (item.converter.isArrayType()) {
+                // 无限长度或长度大于 1 时，才进行数组切割
+                if (options[2].contains(",")) {
+                    // 以 , 作为分隔符
+                    item.defaultTo(item.converter.convert(options[2].replace(" ", "").split(",")));
+                } else if (options[2].contains(";")) {
+                    // 以 ; 作为分隔符
+                    item.defaultTo(item.converter.convert(options[2].replace(" ", "").split(";")));
+                } else if (options[2].contains(" ")) {
+                    // 以 ' ' 作为分隔符
+                    item.defaultTo(item.converter.convert(options[2].split(" ")));
+                } else {
+                    // 都不包含，则该参数整体作为一个值
+                    item.defaultTo(item.converter.convert(options[2]));
+                }
+            } else if (item.converter instanceof AbstractConverter) {
+                // 抽象转换器会报错，因此只能以 string 形式保存
                 item.defaultTo(options[2]);
+            } else {
+                item.defaultTo(item.converter.convert(options[2]));
             }
         }
+
 
         // 其他规则判断: 长度
         if (item.converter instanceof PassedInConverter && item.length != 0) {
@@ -806,16 +840,16 @@ public class CommandItem {
                 // 验证器转为小写
                 String validator2LowerCase = validator.toLowerCase(Locale.ROOT);
 
-                if (validator2LowerCase.startsWith("rangeof(")) {
+                if (validator2LowerCase.startsWith("rangeof(") && validator2LowerCase.endsWith(")")) {
                     addToItem.add(new RangeValidator(Double.parseDouble(validator2LowerCase.substring(8, validator2LowerCase.indexOf(","))), Double.parseDouble(validator2LowerCase.substring(validator2LowerCase.indexOf(",") + 1, validator2LowerCase.indexOf(")")))));
                 } else if (validator2LowerCase.equals("ensurefileexists")) {
                     addToItem.add(EnsureFileExistsValidator.INSTANCE);
                 } else if (validator2LowerCase.equals("notdirectory")) {
                     addToItem.add(EnsureFileIsNotDirectoryValidator.INSTANCE);
-                } else if (validator2LowerCase.startsWith("elementof")) {
+                } else if (validator2LowerCase.startsWith("elementof(") && validator2LowerCase.endsWith(")")) {
                     addToItem.add(new ElementValidator(validator.substring(10, validator.length() - 1).split(",")));
                 } else {
-                    addToItem.add(new AbstractValidator(validator2LowerCase));
+                    addToItem.add(new AbstractValidator(validator));
                 }
             }
 
@@ -832,22 +866,6 @@ public class CommandItem {
 
         if (!options[8].equals(CommandOptions.MISS_VALUE)) {
             item.setFormat(options[8]);
-        }
-
-        if (options[9].equals(CommandOptions.MISS_VALUE) || options[9].equals("false")) {
-            item.hide = false;
-        } else if (options[9].equals("true")) {
-            item.hide = true;
-        } else {
-            throw new CommandParserException(item.commandNames[0] + ": couldn't convert " + options[9] + " to a boolean value");
-        }
-
-        if (options[10].equals(CommandOptions.MISS_VALUE) || options[10].equals("false")) {
-            item.help = false;
-        } else if (options[10].equals("true")) {
-            item.help = true;
-        } else {
-            throw new CommandParserException(item.commandNames[0] + ": couldn't convert " + options[10] + " to a boolean value");
         }
 
         return item;

@@ -37,6 +37,11 @@ public class PassedInConverter implements IConverter<Boolean> {
     }
 
     @Override
+    public boolean isArrayType() {
+        return false;
+    }
+
+    @Override
     public String toString() {
         return "passedIn";
     }
