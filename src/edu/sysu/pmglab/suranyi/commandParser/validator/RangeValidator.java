@@ -3,6 +3,8 @@ package edu.sysu.pmglab.suranyi.commandParser.validator;
 import edu.sysu.pmglab.suranyi.commandParser.exception.CommandParserException;
 import edu.sysu.pmglab.suranyi.commandParser.exception.ParameterException;
 
+import java.util.Collection;
+
 /**
  * @author suranyi
  * @description 范围验证器
@@ -93,6 +95,13 @@ public class RangeValidator implements IValidator {
             float passedInValue = (Float) params;
             if (passedInValue < MIN || passedInValue > MAX) {
                 throw new ParameterException(commandKey + " is out of range [" + MIN + ", " + MAX + "]");
+            }
+        } else if (params instanceof Collection) {
+            for (Number value: (Collection<? extends Number>) params) {
+                double passedInValue =  value.doubleValue();
+                if (passedInValue < MIN || passedInValue > MAX) {
+                    throw new ParameterException(commandKey + " is out of range [" + MIN + ", " + MAX + "]");
+                }
             }
         } else {
             throw new ParameterException("unable to infer the type of " + commandKey);

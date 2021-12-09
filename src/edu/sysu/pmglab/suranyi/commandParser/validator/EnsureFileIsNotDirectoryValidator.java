@@ -4,6 +4,7 @@ import edu.sysu.pmglab.suranyi.commandParser.exception.ParameterException;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Collection;
 import java.util.Map;
 
 /**
@@ -29,10 +30,16 @@ public enum EnsureFileIsNotDirectoryValidator implements IValidator {
             if (Files.isDirectory(Paths.get((String) params))) {
                 throw new ParameterException(commandKey + " failed validate: file is directory (" + params + ")");
             }
+        } else if (params instanceof Collection) {
+            for (String fileName : (Collection<String>) params) {
+                if (Files.isDirectory(Paths.get(fileName))) {
+                    throw new ParameterException(commandKey + " failed validate: file is directory (" + fileName + ")");
+                }
+            }
         } else if (params instanceof Map) {
             for (String fileName : ((Map<?, String>) params).values()) {
-                if (!Files.exists(Paths.get(fileName))) {
-                    throw new ParameterException(commandKey + " failed validate: no such file or directory (" + fileName + ")");
+                if (Files.isDirectory(Paths.get(fileName))) {
+                    throw new ParameterException(commandKey + " failed validate: file is directory (" + fileName + ")");
                 }
             }
         } else {

@@ -4,6 +4,8 @@ import edu.sysu.pmglab.suranyi.check.Assert;
 import edu.sysu.pmglab.suranyi.commandParser.exception.CommandParserException;
 import edu.sysu.pmglab.suranyi.commandParser.exception.ParameterException;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -44,6 +46,12 @@ public class ElementValidator implements IValidator {
         } else if (params instanceof String) {
             if (!keys.contains(((String) params))) {
                 throw new ParameterException(commandKey + ": one of the following values is supported: " + keys);
+            }
+        } else if (params instanceof Collection) {
+            for (String param : (Collection<String>) params) {
+                if (!keys.contains(param)) {
+                    throw new ParameterException(commandKey + ": one of the following values is supported: " + keys);
+                }
             }
         } else if (params instanceof Map) {
             for (String param : ((Map<?, String>) params).values()) {

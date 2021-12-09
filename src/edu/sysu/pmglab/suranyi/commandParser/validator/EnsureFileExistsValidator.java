@@ -4,6 +4,7 @@ import edu.sysu.pmglab.suranyi.commandParser.exception.ParameterException;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Collection;
 import java.util.Map;
 
 /**
@@ -29,7 +30,13 @@ public enum EnsureFileExistsValidator implements IValidator {
             if (!Files.exists(Paths.get((String) params))) {
                 throw new ParameterException(commandKey + " failed validate: no such file or directory (" + params + ")");
             }
-        } else if (params instanceof Map){
+        } else if (params instanceof Collection) {
+            for (String fileName : (Collection<String>) params) {
+                if (!Files.exists(Paths.get(fileName))) {
+                    throw new ParameterException(commandKey + " failed validate: no such file or directory (" + fileName + ")");
+                }
+            }
+        } else if (params instanceof Map) {
             for (String fileName : ((Map<?, String>) params).values()) {
                 if (!Files.exists(Paths.get(fileName))) {
                     throw new ParameterException(commandKey + " failed validate: no such file or directory (" + fileName + ")");
