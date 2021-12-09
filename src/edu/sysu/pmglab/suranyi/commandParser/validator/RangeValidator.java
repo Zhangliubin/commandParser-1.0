@@ -4,6 +4,7 @@ import edu.sysu.pmglab.suranyi.commandParser.exception.CommandParserException;
 import edu.sysu.pmglab.suranyi.commandParser.exception.ParameterException;
 
 import java.util.Collection;
+import java.util.Map;
 
 /**
  * @author suranyi
@@ -98,6 +99,13 @@ public class RangeValidator implements IValidator {
             }
         } else if (params instanceof Collection) {
             for (Number value: (Collection<? extends Number>) params) {
+                double passedInValue =  value.doubleValue();
+                if (passedInValue < MIN || passedInValue > MAX) {
+                    throw new ParameterException(commandKey + " is out of range [" + MIN + ", " + MAX + "]");
+                }
+            }
+        } else if (params instanceof Map) {
+            for (Number value: ((Map<?, ? extends Number>) params).values()) {
                 double passedInValue =  value.doubleValue();
                 if (passedInValue < MIN || passedInValue > MAX) {
                     throw new ParameterException(commandKey + " is out of range [" + MIN + ", " + MAX + "]");
