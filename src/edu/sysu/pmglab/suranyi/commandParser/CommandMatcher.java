@@ -25,21 +25,25 @@ public class CommandMatcher {
         this.commandItems = parser.registeredCommandItems;
     }
 
-    void add(CommandItem commandItem) {
-        if (isPassedIn.contains(commandItem.getCommandName())) {
+    void addAsDefault(CommandItem commandItem) {
+        String commandName = commandItem.getCommandName();
+
+        if (isPassedIn.contains(commandName)) {
             throw new ParameterException("keyword argument repeated");
         }
-        this.values.put(commandItem.getCommandName(), commandItem.getDefaultValue());
+        this.values.put(commandName, commandItem.getDefaultValue());
     }
 
     void add(CommandItem commandItem, String[] values) {
-        if (isPassedIn.contains(commandItem.getCommandName())) {
+        String commandName = commandItem.getCommandName();
+
+        if (isPassedIn.contains(commandName)) {
             throw new ParameterException("keyword argument repeated");
         }
 
-        this.values.put(commandItem.getCommandName(), commandItem.parseValue(values));
-        this.isPassedIn.add(commandItem.getCommandName());
-        this.caughtValues.add(new String[]{commandItem.getCommandName(), String.join(" ", values)});
+        this.values.put(commandName, commandItem.parseValue(values));
+        this.isPassedIn.add(commandName);
+        this.caughtValues.add(new String[]{commandName, String.join(" ", values)});
     }
 
     public boolean isPassedIn(String commandKey) {
@@ -64,15 +68,6 @@ public class CommandMatcher {
         }
 
         return this.values.get(group.getCommandName());
-    }
-
-    /**
-     * 是否包含该参数 (可以没有传入)
-     *
-     * @param commandKey 参数键
-     */
-    public boolean contain(String commandKey) {
-        return this.values.containsKey(commandKey);
     }
 
     @Override

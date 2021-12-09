@@ -291,7 +291,7 @@ public class CommandParser {
                 CommandItem matchedItem = this.registeredCommandItems.get(args[seek]);
 
                 if (matchedItem != null) {
-                    if (matcher.contain(matchedItem.getCommandName())) {
+                    if (matcher.isPassedIn.contains(matchedItem.getCommandName())) {
                         if (!passedInHelp) {
                             // 若已经包含该参数，报错
                             throw new ParameterException(matchedItem.getCommandName() + " keyword argument repeated");
@@ -359,7 +359,7 @@ public class CommandParser {
         if (!passedInHelp) {
             // 检查所有 request 参数
             for (String commandName : this.mainRegisteredCommandItems) {
-                if (this.registeredCommandItems.get(commandName).isRequest() && !matcher.contain(commandName)) {
+                if (this.registeredCommandItems.get(commandName).isRequest() && !matcher.isPassedIn.contains(commandName)) {
                     throw new ParameterException("missing required positional argument: " + commandName);
                 }
             }
@@ -392,8 +392,8 @@ public class CommandParser {
 
             // 检查所有的关联条件组
             for (CommandRule rule : this.registeredRules.values()) {
-                int flag1 = matcher.contain(rule.command1) ? 1 : 0;
-                int flag2 = matcher.contain(rule.command2) ? 1 : 0;
+                int flag1 = matcher.isPassedIn(rule.command1) ? 1 : 0;
+                int flag2 = matcher.isPassedIn(rule.command2) ? 1 : 0;
                 switch (rule.type) {
                     case AT_LEAST_ONE:
                         if (flag1 + flag2 == 0) {
@@ -422,8 +422,8 @@ public class CommandParser {
 
         // 添加默认参数
         for (String commandName : this.mainRegisteredCommandItems) {
-            if (!matcher.contain(commandName)) {
-                matcher.add(this.registeredCommandItems.get(commandName));
+            if (!matcher.isPassedIn(commandName)) {
+                matcher.addAsDefault(this.registeredCommandItems.get(commandName));
             }
         }
         return matcher;
@@ -443,7 +443,7 @@ public class CommandParser {
                 // 去除首尾空白信息, 把 \t 换为空格
                 line = line.trim().replace("\t", " ");
 
-                if (!line.startsWith("#")) {
+                if (!line.startsWith("#") && line.equals("\\")) {
                     // 以 \ 结尾，去除该字符
                     if (line.endsWith(" \\")) {
                         line = line.substring(0, line.length() - 2);
@@ -486,7 +486,6 @@ public class CommandParser {
         return parse(args.toStringArray());
     }
 
-
     /**
      * 获取注册的命令组
      *
@@ -498,6 +497,15 @@ public class CommandParser {
         }
 
         return registeredCommandItems.get(commandName);
+    }
+
+    /**
+     * 是否包含该命令
+     *
+     * @param commandName 命令名
+     */
+    public boolean containCommandItem(String commandName) {
+        return registeredCommandItems.containsKey(commandName);
     }
 
     /**
@@ -603,7 +611,6 @@ public class CommandParser {
 
         return parser;
     }
-
 
     public void toFile(String fileName) {
         try (FileStream file = new FileStream(fileName, FileOptions.CHANNEL_WRITER)) {
