@@ -379,7 +379,7 @@ public class CommandParserDesigner extends JFrame {
                 parserTestingModel.clearAll();
 
                 HashMap<String, String> commandPassedInValues = new HashMap<>();
-                for (String[] commandGroup : options.passedInValues) {
+                for (String[] commandGroup : options.caughtValues) {
                     commandPassedInValues.put(commandGroup[0], commandGroup[1]);
                 }
 

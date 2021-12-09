@@ -368,20 +368,20 @@ public class CommandParser {
             if (this.globalRules != null) {
                 switch (this.globalRules) {
                     case AT_LEAST_ONE:
-                        if (matcher.commandIsPassedIn.size() < 1) {
+                        if (matcher.isPassedIn.size() < 1) {
                             throw new ParameterException(mainRegisteredCommandItems.toString() + " must be assigned at least one ");
                         }
                         break;
                     case AT_MOST_ONE:
-                        if (matcher.commandIsPassedIn.size() > 1) {
+                        if (matcher.isPassedIn.size() > 1) {
                             throw new ParameterException(mainRegisteredCommandItems.toString() + " could be assigned at most one");
                         }
                         break;
                     case REQUEST_ONE:
-                        if (matcher.commandIsPassedIn.size() == 0) {
+                        if (matcher.isPassedIn.size() == 0) {
                             String info = mainRegisteredCommandItems.toString();
                             throw new ParameterException("program missing 1 required argument: " + info.substring(1, info.length() - 1));
-                        } else if (matcher.commandIsPassedIn.size() >= 2) {
+                        } else if (matcher.isPassedIn.size() >= 2) {
                             String info = mainRegisteredCommandItems.toString();
                             throw new ParameterException("program takes 1 required argument (" + info.substring(1, info.length() - 1) + ") but more than 1 were given");
                         }

@@ -5,6 +5,7 @@ import edu.sysu.pmglab.suranyi.container.SmartList;
 
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 
 /**
  * @author suranyi
@@ -15,33 +16,30 @@ public class CommandMatcher {
     /**
      * 参数解析列表
      */
-    HashMap<String, Object> commandValues = new HashMap<>();
-    HashMap<String, Boolean> commandIsPassedIn = new HashMap<>();
-
-    SmartList<String[]> passedInValues = new SmartList<>(1, true);
-
+    final HashMap<String, Object> values = new HashMap<>();
+    final HashSet<String> isPassedIn = new HashSet<>();
+    final SmartList<String[]> caughtValues = new SmartList<>(1, true);
     final HashMap<String, CommandItem> commandItems;
 
     CommandMatcher(CommandParser parser) {
         this.commandItems = parser.registeredCommandItems;
     }
 
-    public void add(CommandItem commandItem) {
-        if (commandIsPassedIn.containsKey(commandItem.getCommandName())) {
+    void add(CommandItem commandItem) {
+        if (isPassedIn.contains(commandItem.getCommandName())) {
             throw new ParameterException("keyword argument repeated");
         }
-        this.commandValues.put(commandItem.getCommandName(), commandItem.getDefaultValue());
-        this.commandIsPassedIn.put(commandItem.getCommandName(), false);
+        this.values.put(commandItem.getCommandName(), commandItem.getDefaultValue());
     }
 
-    public void add(CommandItem commandItem, String[] values) {
-        if (commandIsPassedIn.containsKey(commandItem.getCommandName())) {
+    void add(CommandItem commandItem, String[] values) {
+        if (isPassedIn.contains(commandItem.getCommandName())) {
             throw new ParameterException("keyword argument repeated");
         }
 
-        this.commandValues.put(commandItem.getCommandName(), commandItem.parseValue(values));
-        this.commandIsPassedIn.put(commandItem.getCommandName(), true);
-        this.passedInValues.add(new String[]{commandItem.getCommandName(), String.join(" ", values)});
+        this.values.put(commandItem.getCommandName(), commandItem.parseValue(values));
+        this.isPassedIn.add(commandItem.getCommandName());
+        this.caughtValues.add(new String[]{commandItem.getCommandName(), String.join(" ", values)});
     }
 
     public boolean isPassedIn(String commandKey) {
@@ -50,7 +48,7 @@ public class CommandMatcher {
             throw new ParameterException("undefined parameter: " + commandKey);
         }
 
-        return this.commandIsPassedIn.get(group.getCommandName());
+        return this.isPassedIn.contains(group.getCommandName());
     }
 
     /**
@@ -65,29 +63,29 @@ public class CommandMatcher {
             throw new ParameterException("undefined parameter: " + commandKey);
         }
 
-        return this.commandValues.get(group.getCommandName());
+        return this.values.get(group.getCommandName());
     }
 
     /**
-     * 是否包含该参数
+     * 是否包含该参数 (可以没有传入)
      *
      * @param commandKey 参数键
      */
     public boolean contain(String commandKey) {
-        return this.commandValues.containsKey(commandKey);
+        return this.values.containsKey(commandKey);
     }
 
     @Override
     public String toString() {
-        if (passedInValues.size() > 0) {
+        if (caughtValues.size() > 0) {
             // 按照优先级排序
-            this.passedInValues.sort(Comparator.comparingInt(o -> commandItems.get(o[0]).getPriority()));
+            this.caughtValues.sort(Comparator.comparingInt(o -> commandItems.get(o[0]).getPriority()));
 
             // 链接参数
             StringBuilder commands = new StringBuilder();
-            for (int i = 0; i < passedInValues.size() - 1; i++) {
-                commands.append(passedInValues.get(i)[0]);
-                String value = passedInValues.get(i)[1];
+            for (int i = 0; i < caughtValues.size() - 1; i++) {
+                commands.append(caughtValues.get(i)[0]);
+                String value = caughtValues.get(i)[1];
                 if (value.length() > 0) {
                     commands.append(" ").append(value);
                 }
@@ -96,9 +94,9 @@ public class CommandMatcher {
             }
 
             // 添加最后一个参数
-            commands.append(passedInValues.get(-1)[0]);
+            commands.append(caughtValues.get(-1)[0]);
 
-            String value = passedInValues.get(-1)[1];
+            String value = caughtValues.get(-1)[1];
             if (value.length() > 0) {
                 commands.append(" ").append(value);
             }
