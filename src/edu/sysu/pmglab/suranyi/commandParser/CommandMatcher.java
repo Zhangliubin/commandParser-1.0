@@ -3,9 +3,7 @@ package edu.sysu.pmglab.suranyi.commandParser;
 import edu.sysu.pmglab.suranyi.commandParser.exception.ParameterException;
 import edu.sysu.pmglab.suranyi.container.SmartList;
 
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.*;
 
 /**
  * @author suranyi
