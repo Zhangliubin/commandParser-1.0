@@ -209,8 +209,8 @@ public class CommandParserDesigner extends JFrame {
             } else if (tabbedPane.getSelectedIndex() == 1) {
                 int selectedRow = ruleTable.getSelectedRow();
                 if (selectedRow >= 0 && selectedRow <= ruleTable.getRowCount() - 1) {
-                    commandModel.insertRow(new Object[]{".", ".", CommandRuleType.AT_MOST_ONE}, selectedRow + 1);
-                    commandTable.setRowSelectionInterval(selectedRow + 1, selectedRow + 1);
+                    ruleModel.insertRow(new Object[]{".", ".", CommandRuleType.AT_MOST_ONE}, selectedRow + 1);
+                    ruleTable.setRowSelectionInterval(selectedRow + 1, selectedRow + 1);
                 } else {
                     // 追加项目
                     ruleModel.addRow(new Object[]{".", ".", CommandRuleType.AT_MOST_ONE});
