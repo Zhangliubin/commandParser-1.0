@@ -25,7 +25,12 @@ public enum CommandOptions {
     /**
      * 该指令为 help 指令
      */
-    HELP;
+    HELP,
+
+    /**
+     * 该指令为 debug 指令
+     */
+    DEBUG;
 
     /**
      * parser 版本信息
@@ -51,7 +56,7 @@ public enum CommandOptions {
     /**
      *
      */
-    final static String HEADER = "#commandName\trequest\tdefault\tconvertTo\tvalidateWith\tarity\tgroup\tdescription\tformat\thidden\thelp";
+    final static String HEADER = "#commandName\trequest\tdefault\tconvertTo\tvalidateWith\tarity\tgroup\tdescription\tformat\thidden\thelp\tdebug";
 
     /**
      * 参数默认值
@@ -59,10 +64,12 @@ public enum CommandOptions {
     final static boolean DEFAULT_REQUEST = false;
     final static boolean DEFAULT_HIDDEN = false;
     final static boolean DEFAULT_HELP = false;
+    final static boolean DEFAULT_DEBUG = false;
     final static int DEFAULT_LENGTH = 1;
     final static Object DEFAULT_VALUE = null;
-    final static IConverter DEFAULT_CONVERTER = new StringConverter() {};
-    final static IValidator[] DEFAULT_VALIDATOR = new IValidator[] {};
+    final static IConverter DEFAULT_CONVERTER = new StringConverter() {
+    };
+    final static IValidator[] DEFAULT_VALIDATOR = new IValidator[]{};
     final static String DEFAULT_DESCRIPTION = MISS_VALUE;
     final static String DEFAULT_FORMAT = MISS_VALUE;
 

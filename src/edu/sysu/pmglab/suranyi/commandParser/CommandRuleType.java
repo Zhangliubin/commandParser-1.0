@@ -6,22 +6,27 @@ package edu.sysu.pmglab.suranyi.commandParser;
  */
 public enum CommandRuleType {
     /**
-     * 至多 1 个 (<= 1)
+     * 至多 1 个 A + B <= 1
      */
     AT_MOST_ONE,
 
     /**
-     * 至少 1 个 (>= 1)
+     * 至少 1 个 A + B >= 1
      */
     AT_LEAST_ONE,
 
     /**
-     * 恰好一个 (= 1)
+     * 恰好一个 A + B == 1
      */
     REQUEST_ONE,
 
     /**
-     * 依存 (0 or 2)
+     * A 是 B 的先决条件 A <= B
      */
-    INTERDEPEND
+    PRECONDITION,
+
+    /**
+     * 依存 A + B == 0 || A + B == 2
+     */
+    SYMBIOSIS;
 }

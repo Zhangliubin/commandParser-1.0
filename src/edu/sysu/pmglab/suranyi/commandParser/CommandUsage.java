@@ -38,9 +38,7 @@ class CommandUsage {
 
         for (String command : commands) {
             CommandItem commandItem = this.parser.getCommandItem(command);
-            if (!commandItem.isHide()) {
-                commandNamesMaxLength = Math.max(commandNamesMaxLength, (commandItem.isRequest() ? requestMark.length() : 0) + Arrays.toString(commandItem.getCommandNames()).length() - 2);
-            }
+            commandNamesMaxLength = Math.max(commandNamesMaxLength, (commandItem.isRequest() ? requestMark.length() : 0) + Arrays.toString(commandItem.getCommandNames()).length() - 2);
         }
 
         commandNamesMaxLength += descriptionPrefixLength;
@@ -49,40 +47,38 @@ class CommandUsage {
         for (String command : commands) {
             CommandItem commandItem = this.parser.getCommandItem(command);
 
-            if (!commandItem.isHide()) {
-                out.append("\n");
-                out.append(generateSpaces(secondLevelPrefixLength));
-                String commandLinked = Arrays.toString(commandItem.getCommandNames());
-                int markLength = 0;
-                if (commandItem.isRequest()) {
-                    out.append(requestMark);
-                    markLength = requestMark.length();
-                }
-                out.append(commandLinked, 1, commandLinked.length() - 1);
-                out.append(generateSpaces(commandNamesMaxLength - commandLinked.length() + 2 - markLength));
-
-                String description = commandItem.getDescription().equals(CommandOptions.DEFAULT_DESCRIPTION) ? "" : commandItem.getDescription();
-
-                if (commandItem.getLength() >= 1 && commandItem.getDefaultValue() != null) {
-                    if (description.length() > 0) {
-                        description += "\n";
-                    }
-
-                    description += "default: " + getDefaultValue(commandItem);
-
-                    if (!commandItem.getFormat().equals(CommandOptions.DEFAULT_FORMAT)) {
-                        description += "; format: " + commandItem.getFormat();
-                    }
-                } else if (!commandItem.getFormat().equals(CommandOptions.DEFAULT_FORMAT)) {
-                    if (description.length() > 0) {
-                        description += "\n";
-                    }
-
-                    description += "format: " + commandItem.getFormat();
-                }
-
-                wrapDescription(out, descriptionPrefixLength, description);
+            out.append("\n");
+            out.append(generateSpaces(secondLevelPrefixLength));
+            String commandLinked = Arrays.toString(commandItem.getCommandNames());
+            int markLength = 0;
+            if (commandItem.isRequest()) {
+                out.append(requestMark);
+                markLength = requestMark.length();
             }
+            out.append(commandLinked, 1, commandLinked.length() - 1);
+            out.append(generateSpaces(commandNamesMaxLength - commandLinked.length() + 2 - markLength));
+
+            String description = commandItem.getDescription().equals(CommandOptions.DEFAULT_DESCRIPTION) ? "" : commandItem.getDescription();
+
+            if (commandItem.getLength() >= 1 && commandItem.getDefaultValue() != null) {
+                if (description.length() > 0) {
+                    description += "\n";
+                }
+
+                description += "default: " + getDefaultValue(commandItem);
+
+                if (!commandItem.getFormat().equals(CommandOptions.DEFAULT_FORMAT)) {
+                    description += "; format: " + commandItem.getFormat();
+                }
+            } else if (!commandItem.getFormat().equals(CommandOptions.DEFAULT_FORMAT)) {
+                if (description.length() > 0) {
+                    description += "\n";
+                }
+
+                description += "format: " + commandItem.getFormat();
+            }
+
+            wrapDescription(out, descriptionPrefixLength, description);
         }
 
         return out.toString();
@@ -156,13 +152,16 @@ class CommandUsage {
         StringBuilder out = new StringBuilder();
 
         out.append("Usage: " + programName + " [options]");
+        boolean showDebugParam = parser.debug;
 
         // 对命令进行分组
         SmartList<String> optionGroups = new SmartList<>();
         for (String commandName : this.parser.mainRegisteredCommandItems) {
             CommandItem commandItem = this.parser.getCommandItem(commandName);
             if (!optionGroups.contains(commandItem.getOptionGroup()) && !commandItem.isHide()) {
-                optionGroups.add(commandItem.getOptionGroup());
+                if (showDebugParam || !commandItem.isDebug()) {
+                    optionGroups.add(commandItem.getOptionGroup());
+                }
             }
         }
 
@@ -170,7 +169,9 @@ class CommandUsage {
         for (String optionGroup : optionGroups) {
             commands.clear();
             for (String command : this.parser.mainRegisteredCommandItems) {
-                if (this.parser.getCommandItem(command).getOptionGroup().equals(optionGroup)) {
+                CommandItem commandItem = this.parser.getCommandItem(command);
+
+                if (commandItem.getOptionGroup().equals(optionGroup) && (showDebugParam || !commandItem.isDebug())) {
                     commands.add(command);
                 }
             }

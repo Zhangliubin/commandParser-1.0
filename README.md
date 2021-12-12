@@ -282,7 +282,7 @@ CommandParser 内置的 4 种验证器如下：
 - parser.registerRule(String item1, String[] items, CommandRuleType ruleType)
 - parser.registerRule(String[] items1, String[] items2, CommandRuleType ruleType)
 
-指令项目必须先进行注册，才能添加指令规则。指令规则 CommandRuleType 支持:  AT_MOST_ONE (至多包含 1 个参数)、AT_LEAST_ONE (至少包含 1 个参数)、REQUEST_ONE (恰好 1 个参数)、INTERDEPEND (同时传入或同时不传入)
+指令项目必须先进行注册，才能添加指令规则。指令规则 CommandRuleType 支持:  AT_MOST_ONE (至多包含 1 个参数)、AT_LEAST_ONE (至少包含 1 个参数)、REQUEST_ONE (恰好 1 个参数)、PRECONDITION (前置, command2 只有在 command1 传入时才能被指定)、SYMBIOSIS (共生, 同时传入或同时不传入)
 
 ```java
 // 注册指令 --no-qc 与其他质控参数的规则，含义为：指令了 --no-qc (不质控) 时，禁止用户传入其他质控参数

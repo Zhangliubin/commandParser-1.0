@@ -21,6 +21,7 @@ public class CommandItem {
     private boolean request = CommandOptions.DEFAULT_REQUEST;
     private boolean help = CommandOptions.DEFAULT_HELP;
     private boolean hide = CommandOptions.DEFAULT_HIDDEN;
+    private boolean debug = CommandOptions.DEFAULT_DEBUG;
     private int length = CommandOptions.DEFAULT_LENGTH;
     private boolean lengthSet = false;
     private Object defaultValue = CommandOptions.DEFAULT_VALUE;
@@ -59,6 +60,7 @@ public class CommandItem {
         this.request = optionsHashSet.contains(CommandOptions.REQUEST);
         this.help = optionsHashSet.contains(CommandOptions.HELP);
         this.hide = optionsHashSet.contains(CommandOptions.HIDDEN);
+        this.debug = optionsHashSet.contains(CommandOptions.DEBUG);
 
         return this;
     }
@@ -76,6 +78,8 @@ public class CommandItem {
                 this.hide = true;
             } else if (option == CommandOptions.REQUEST) {
                 this.request = true;
+            } else if (option == CommandOptions.DEBUG) {
+                this.debug = true;
             }
         }
 
@@ -375,6 +379,13 @@ public class CommandItem {
     }
 
     /**
+     * 是否为调试参数
+     */
+    public boolean isDebug() {
+        return this.debug;
+    }
+
+    /**
      * 获取转换器
      */
     IConverter getConverter() {
@@ -515,12 +526,14 @@ public class CommandItem {
         builder.append(this.hide);
         builder.append("\t");
         builder.append(this.help);
+        builder.append("\t");
+        builder.append(this.debug);
 
         return builder.toString();
     }
 
     Object[] toObject() {
-        Object[] row = new Object[11];
+        Object[] row = new Object[12];
         String commandNames = Arrays.toString(getCommandNames()).replace(" ", "");
 
         row[0] = commandNames.substring(1, commandNames.length() - 1);
@@ -601,6 +614,7 @@ public class CommandItem {
         row[8] = format;
         row[9] = hide;
         row[10] = help;
+        row[11] = debug;
 
         return row;
     }
@@ -619,8 +633,8 @@ public class CommandItem {
             }
         }
 
-        // 检验长度是否为 11
-        if (options.length != 11) {
+        // 检验长度是否为 12
+        if (options.length != 12) {
             throw new CommandParserException(item.getCommandName() + ": command takes 11 positional argument (separated by \\t, " + options.length + " given)");
         }
 
@@ -647,6 +661,14 @@ public class CommandItem {
             item.help = true;
         } else {
             throw new CommandParserException(item.getCommandName() + ": couldn't convert " + options[10] + " to a boolean value (true/false)");
+        }
+
+        if (options[11].equals(CommandOptions.MISS_VALUE) || options[11].equalsIgnoreCase("false")) {
+            item.debug = false;
+        } else if (options[11].equalsIgnoreCase("true")) {
+            item.debug = true;
+        } else {
+            throw new CommandParserException(item.getCommandName() + ": couldn't convert " + options[11] + " to a boolean value (true/false)");
         }
 
         // 推断转换器及验证器

@@ -35,9 +35,10 @@ public class CommandParser {
     SmartList<String> mainRegisteredCommandItems = new SmartList<>(1, true);
 
     /**
-     * 注册的规则
+     * 注册的规则及其顺序表
      */
     HashMap<Integer, CommandRule> registeredRules = new HashMap<>(1);
+    SmartList<Integer> registeredRulesOrder = new SmartList<>(1, true);
 
     int priority = 0;
     String optionGroup = CommandOptions.DEFAULT_OPTION_GROUP;
@@ -56,6 +57,11 @@ public class CommandParser {
      * 程序帮助文档
      */
     CommandUsage usage = new CommandUsage(this);
+
+    /**
+     * 是否解析 debug 指令
+     */
+    boolean debug = false;
 
     public CommandParser() {
         this(true, "<main class>");
@@ -92,8 +98,8 @@ public class CommandParser {
      */
     public void registerGlobalRule(CommandRuleType ruleType) {
         // 全局规则 (至少有一个、至多一个、依存)
-        if (ruleType.equals(CommandRuleType.INTERDEPEND)) {
-            throw new CommandParserException("INTERDEPEND cannot be defined in a global-rule because it may raise some controversial issues");
+        if (ruleType.equals(CommandRuleType.SYMBIOSIS) || ruleType.equals(CommandRuleType.PRECONDITION)) {
+            throw new CommandParserException(ruleType + " cannot be defined in a global-rule because it may raise some controversial issues");
         } else {
             this.globalRules = ruleType;
         }
@@ -107,6 +113,21 @@ public class CommandParser {
 
         this.offset = length;
         return this;
+    }
+
+    /**
+     * debug 模式
+     */
+    public CommandParser debug(boolean enable) {
+        this.debug = enable;
+        return this;
+    }
+
+    /**
+     * debug 模式
+     */
+    public CommandParser debug() {
+        return debug(true);
     }
 
     /**
@@ -189,10 +210,12 @@ public class CommandParser {
             throw new CommandParserException(item2 + " is not defined in Parser");
         }
 
-        if (this.registeredCommandItems.get(item1).getPriority() > this.registeredCommandItems.get(item2).getPriority()) {
-            String temp = item2;
-            item2 = item1;
-            item1 = temp;
+        if (ruleType != CommandRuleType.PRECONDITION) {
+            if (this.registeredCommandItems.get(item1).getPriority() > this.registeredCommandItems.get(item2).getPriority()) {
+                String temp = item2;
+                item2 = item1;
+                item1 = temp;
+            }
         }
 
         if (this.registeredCommandItems.get(item1).isRequest()) {
@@ -210,6 +233,7 @@ public class CommandParser {
             throw new CommandParserException(item1 + " and " + item2 + " have already defined rules and cannot be set repeatedly");
         } else {
             this.registeredRules.put(registeredMark, new CommandRule(this.registeredCommandItems.get(item1).getCommandName(), this.registeredCommandItems.get(item2).getCommandName(), ruleType));
+            this.registeredRulesOrder.add(registeredMark);
         }
     }
 
@@ -260,10 +284,27 @@ public class CommandParser {
 
         // 查看是否包含 help 指令, 如果包含 help 指令，则不进行强制的参数解析工作
         boolean passedInHelp = false;
-        for (String arg : args) {
-            CommandItem matchedItem = this.registeredCommandItems.get(arg);
-            if (matchedItem != null && matchedItem.isHelp()) {
-                passedInHelp = true;
+
+        if (this.debug) {
+            for (String arg : args) {
+                CommandItem matchedItem = this.registeredCommandItems.get(arg);
+                if (matchedItem != null && matchedItem.isHelp()) {
+                    passedInHelp = true;
+                    break;
+                }
+            }
+        } else {
+            for (String arg : args) {
+                CommandItem matchedItem = this.registeredCommandItems.get(arg);
+                if (matchedItem != null) {
+                    if (matchedItem.isDebug()) {
+                        throw new ParameterException("debug parameter " + matchedItem.getCommandName() + " is used in non-debug mode.");
+                    }
+
+                    if (matchedItem.isHelp()) {
+                        passedInHelp = true;
+                    }
+                }
             }
         }
 
@@ -291,6 +332,7 @@ public class CommandParser {
                 CommandItem matchedItem = this.registeredCommandItems.get(args[seek]);
 
                 if (matchedItem != null) {
+
                     if (matcher.isPassedIn.contains(matchedItem.getCommandName())) {
                         if (!passedInHelp) {
                             // 若已经包含该参数，报错
@@ -400,7 +442,7 @@ public class CommandParser {
                             throw new ParameterException(rule.command1 + " and " + rule.command2 + " should be assigned at least one");
                         }
                         break;
-                    case INTERDEPEND:
+                    case SYMBIOSIS:
                         if (flag1 + flag2 == 1) {
                             throw new ParameterException(rule.command1 + " and " + rule.command2 + " should be assigned (or not) at the same time");
                         }
@@ -413,6 +455,10 @@ public class CommandParser {
                     case REQUEST_ONE:
                         if (flag1 + flag2 != 1) {
                             throw new ParameterException("one of " + rule.command1 + " and " + rule.command2 + " must be assigned");
+                        }
+                    case PRECONDITION:
+                        if (flag1 > flag2) {
+                            throw new ParameterException(rule.command1 + " should be assigned together with " + rule.command2);
                         }
                     default:
                         break;
@@ -584,6 +630,16 @@ public class CommandParser {
                     // 先保存，之后再添加
                     registeredRules.add(new CommandRule(converted.get("command1").replace("\"", ""), converted.get("command2").replace("\"", ""), CommandRuleType.valueOf(converted.get("value").replace("\"", ""))));
                 }
+
+                if (line.startsWith("##debugMode=")) {
+                    if ("false".equals(line.substring(12))) {
+                        parser.debug = false;
+                    } else if ("true".equals(line.substring(12))) {
+                        parser.debug = true;
+                    } else {
+                        throw new CommandParserException("debugMode with an unrecognized value (supported: false/true)");
+                    }
+                }
             } else {
                 if (!line.equals(HEADER)) {
                     throw new CommandParserException("no header found");
@@ -617,15 +673,19 @@ public class CommandParser {
             // 写入注释行
             file.write("##" + VERSION + "\n");
             file.write("##programName=<value=\"" + usage.programName + "\";description=\"when '-h' were passed in, would be show 'Usage: $value [options]'\">\n");
+            file.write("##debugMode=" + this.debug + "\n");
             file.write("##offset=<value=" + offset + ";description=\"skip the $value arguments before the command argument passed in\">\n");
             if (globalRules == null) {
                 file.write("##globalRule=<value=\".\";description=\"one of the following rules is supported: {'.','AT_MOST_ONE','AT_LEAST_ONE','REQUEST_ONE'}\">\n");
             } else {
                 file.write("##globalRule=<value=\"" + globalRules + "\";description=\"one of the following rules is supported: {'.','AT_MOST_ONE','AT_LEAST_ONE','REQUEST_ONE'}\">\n");
             }
-            for (CommandRule rule : registeredRules.values()) {
-                file.write("##commandRule=<command1=\"" + rule.command1 + "\";command2=\"" + rule.command2 + "\";value=\"" + rule.type + "\";description=\"one of the following rules is supported: {'AT_MOST_ONE','AT_LEAST_ONE','REQUEST_ONE','INTERDEPEND'}>\n");
+
+            for (int order : this.registeredRulesOrder) {
+                CommandRule rule = this.registeredRules.get(order);
+                file.write("##commandRule=<command1=\"" + rule.command1 + "\";command2=\"" + rule.command2 + "\";value=\"" + rule.type + "\";description=\"one of the following rules is supported: {'AT_MOST_ONE','AT_LEAST_ONE','REQUEST_ONE','PRECONDITION','SYMBIOSIS'}>\n");
             }
+
             // 写入标题行
             file.write(HEADER);
             for (String commandName : this.mainRegisteredCommandItems) {

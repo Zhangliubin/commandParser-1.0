@@ -55,6 +55,7 @@ public class CommandParserDesigner extends JFrame {
     private JButton parserTestingClearButton;
     private JButton parserTestingOpenButton;
     private JButton checkButton;
+    private JCheckBox debugModeCheckBox;
 
     CommandParserDesigner() {
         setTitle("Command Parser Designer");
@@ -110,7 +111,7 @@ public class CommandParserDesigner extends JFrame {
                 if ((e.getClickCount() == 2 && commandModel.getRowCount() >= 1 && !commandModel.getValueAt(commandModel.getRowCount() - 1, 0).equals(".")) ||
                         commandTable.getRowCount() == 0) {
                     // 双击创建新行
-                    commandModel.addRow(new Object[]{".", Boolean.FALSE, ".", "passedIn", ".", 0, "Options", ".", ".", Boolean.FALSE, Boolean.FALSE});
+                    commandModel.addRow(new Object[]{".", Boolean.FALSE, ".", "passedIn", ".", 0, "Options", ".", ".", Boolean.FALSE, Boolean.FALSE, Boolean.FALSE});
 
                     int selectRowIndex = commandModel.getRowCount() - 1;
                     commandTable.setRowSelectionInterval(selectRowIndex, selectRowIndex);
@@ -171,7 +172,7 @@ public class CommandParserDesigner extends JFrame {
             }
         });
 
-        ruleModel.addCellEditor(ruleTable, "ruleType", new DefaultCellEditor(new JComboBox<>(new CommandRuleType[]{CommandRuleType.AT_MOST_ONE, CommandRuleType.AT_LEAST_ONE, CommandRuleType.REQUEST_ONE, CommandRuleType.INTERDEPEND})));
+        ruleModel.addCellEditor(ruleTable, "ruleType", new DefaultCellEditor(new JComboBox<>(new CommandRuleType[]{CommandRuleType.AT_MOST_ONE, CommandRuleType.AT_LEAST_ONE, CommandRuleType.REQUEST_ONE, CommandRuleType.PRECONDITION, CommandRuleType.SYMBIOSIS})));
 
         deleteButton.addActionListener(e -> {
             // 删除后光标失焦
@@ -198,9 +199,9 @@ public class CommandParserDesigner extends JFrame {
                 } else {
                     // 追加项目
                     if (commandModel.getRowCount() == 0) {
-                        commandModel.addRow(new Object[]{".", Boolean.FALSE, ".", "passedIn", ".", 0, "Options", ".", ".", Boolean.FALSE, Boolean.FALSE});
+                        commandModel.addRow(new Object[]{".", Boolean.FALSE, ".", "passedIn", ".", 0, "Options", ".", ".", Boolean.FALSE, Boolean.FALSE, Boolean.FALSE});
                     } else {
-                        commandModel.addRow(new Object[]{".", Boolean.FALSE, ".", "passedIn", ".", 0, commandModel.getValueAt(commandModel.getRowCount() - 1, 6), ".", ".", Boolean.FALSE, Boolean.FALSE});
+                        commandModel.addRow(new Object[]{".", Boolean.FALSE, ".", "passedIn", ".", 0, commandModel.getValueAt(commandModel.getRowCount() - 1, 6), ".", ".", Boolean.FALSE, Boolean.FALSE, Boolean.FALSE});
                     }
 
                     int selectRowIndex = commandModel.getRowCount() - 1;
@@ -413,6 +414,7 @@ public class CommandParserDesigner extends JFrame {
         mainClassTextField.setText(parser.usage.programName);
         offsetSpinner.setValue(parser.offset);
         globalRuleComboBox.setSelectedItem(parser.globalRules == null ? "." : String.valueOf(parser.globalRules));
+        debugModeCheckBox.setSelected(parser.debug);
 
         for (String commandName : parser.mainRegisteredCommandItems) {
             CommandItem item = parser.getCommandItem(commandName);
@@ -428,6 +430,7 @@ public class CommandParserDesigner extends JFrame {
 
     CommandParser transToParser() {
         CommandParser parser = new CommandParser(false, mainClassTextField.getText().trim());
+        parser.debug = debugModeCheckBox.isSelected();
         parser.offset((Integer) offsetSpinner.getValue());
         // 设置了 global rule
         switch ((String) globalRuleComboBox.getSelectedItem()) {
@@ -439,9 +442,6 @@ public class CommandParserDesigner extends JFrame {
                 break;
             case "REQUEST_ONE":
                 parser.registerGlobalRule(CommandRuleType.REQUEST_ONE);
-                break;
-            case "INTERDEPEND":
-                parser.registerGlobalRule(CommandRuleType.INTERDEPEND);
                 break;
             default:
                 // "." 不做任何事情
@@ -475,6 +475,8 @@ public class CommandParserDesigner extends JFrame {
             builder.append((boolean) row[9]);
             builder.append("\t");
             builder.append((boolean) row[10]);
+            builder.append("\t");
+            builder.append((boolean) row[11]);
             parser.register(CommandItem.loadFromString(builder.toString()));
         }
 
@@ -490,8 +492,8 @@ public class CommandParserDesigner extends JFrame {
     }
 
     private void createUIComponents() {
-        commandTable = new JTable(commandModel = new CommandTableModel("commandName", "request", "default", "convertTo", "validateWith", "arity", "group", "description", "format", "hidden", "help"));
-        commandModel.addRow(new Object[]{"--help,-help,-h", Boolean.FALSE, ".", "passedIn", ".", 0, "Options", ".", ".", Boolean.TRUE, Boolean.TRUE});
+        commandTable = new JTable(commandModel = new CommandTableModel("commandName", "request", "default", "convertTo", "validateWith", "arity", "group", "description", "format", "hidden", "help", "debug"));
+        commandModel.addRow(new Object[]{"--help,-help,-h", Boolean.FALSE, ".", "passedIn", ".", 0, "Options", ".", ".", Boolean.TRUE, Boolean.TRUE, Boolean.FALSE});
         commandTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
         ruleTable = new JTable(ruleModel = new CommandTableModel("command1", "command2", "ruleType"));
