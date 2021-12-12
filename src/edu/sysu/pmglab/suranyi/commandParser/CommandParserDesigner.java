@@ -421,7 +421,8 @@ public class CommandParserDesigner extends JFrame {
             commandModel.addRow(item.toObject());
         }
 
-        for (CommandRule rule : parser.registeredRules.values()) {
+        for (int order : parser.registeredRulesOrder) {
+            CommandRule rule = parser.registeredRules.get(order);
             ruleModel.addRow(new Object[]{rule.command1, rule.command2, rule.type});
         }
 
