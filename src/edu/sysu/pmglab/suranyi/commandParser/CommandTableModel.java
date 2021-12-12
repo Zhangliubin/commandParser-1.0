@@ -43,6 +43,11 @@ class CommandTableModel extends AbstractTableModel {
         }
     }
 
+    void flush() {
+        fireTableChanged(new TableModelEvent(this, 0, 256,
+                TableModelEvent.ALL_COLUMNS, TableModelEvent.INSERT));
+    }
+
     public void addRow(Object[] row) {
         synchronized (this) {
             int currentRowCount = getRowCount();

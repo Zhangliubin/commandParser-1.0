@@ -3,6 +3,7 @@ package edu.sysu.pmglab.suranyi.commandParser;
 import com.formdev.flatlaf.FlatLightLaf;
 import dev.BGZIPParserFromFile;
 import edu.sysu.pmglab.suranyi.commandParser.exception.CommandParserException;
+import edu.sysu.pmglab.suranyi.container.SmartList;
 import edu.sysu.pmglab.suranyi.unifyIO.FileStream;
 
 import javax.swing.*;
@@ -56,6 +57,9 @@ public class CommandParserDesigner extends JFrame {
     private JButton parserTestingOpenButton;
     private JButton checkButton;
     private JCheckBox debugModeCheckBox;
+    private JTextField searchBox;
+    private SmartList<Object[]> commandBackupList;
+    private SmartList<Object[]> ruleBackupList;
 
     CommandParserDesigner() {
         setTitle("Command Parser Designer");
@@ -108,7 +112,7 @@ public class CommandParserDesigner extends JFrame {
         commandScrollPane.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if ((e.getClickCount() == 2 && commandModel.getRowCount() >= 1 && !commandModel.getValueAt(commandModel.getRowCount() - 1, 0).equals(".")) ||
+                if (commandBackupList == null && (e.getClickCount() == 2 && commandModel.getRowCount() >= 1 && !commandModel.getValueAt(commandModel.getRowCount() - 1, 0).equals(".")) ||
                         commandTable.getRowCount() == 0) {
                     // 双击创建新行
                     commandModel.addRow(new Object[]{".", Boolean.FALSE, ".", "passedIn", ".", 0, "Options", ".", ".", Boolean.FALSE, Boolean.FALSE, Boolean.FALSE});
@@ -161,7 +165,7 @@ public class CommandParserDesigner extends JFrame {
         ruleScrollPane.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if ((e.getClickCount() == 2 && ruleModel.getRowCount() >= 1 && !ruleModel.getValueAt(ruleModel.getRowCount() - 1, 0).equals(".")) ||
+                if (ruleBackupList == null && (e.getClickCount() == 2 && ruleModel.getRowCount() >= 1 && !ruleModel.getValueAt(ruleModel.getRowCount() - 1, 0).equals(".")) ||
                         ruleModel.getRowCount() == 0) {
                     // 双击创建新行
                     ruleModel.addRow(new Object[]{".", ".", CommandRuleType.AT_MOST_ONE});
@@ -173,6 +177,54 @@ public class CommandParserDesigner extends JFrame {
         });
 
         ruleModel.addCellEditor(ruleTable, "ruleType", new DefaultCellEditor(new JComboBox<>(new CommandRuleType[]{CommandRuleType.AT_MOST_ONE, CommandRuleType.AT_LEAST_ONE, CommandRuleType.REQUEST_ONE, CommandRuleType.PRECONDITION, CommandRuleType.SYMBIOSIS})));
+
+        searchBox.addActionListener(e -> {
+            String filter = searchBox.getText().trim();
+            if (filter.length() == 0) {
+                if (commandBackupList == null && ruleBackupList == null) {
+                    // 说明没有备份数据
+                } else {
+                    // 恢复数据
+                    commandModel.data = commandBackupList;
+                    ruleModel.data = ruleBackupList;
+                    commandModel.flush();
+                    ruleModel.flush();
+                    commandBackupList = null;
+                    ruleBackupList = null;
+                    addButton.setEnabled(true);
+                    deleteButton.setEnabled(true);
+                    upButton.setEnabled(true);
+                    downButton.setEnabled(true);
+                }
+            } else {
+                // 执行搜索
+                addButton.setEnabled(false);
+                deleteButton.setEnabled(false);
+                upButton.setEnabled(false);
+                downButton.setEnabled(false);
+
+                if (commandBackupList == null && ruleBackupList == null) {
+                    commandBackupList = commandModel.data;
+                    ruleBackupList = ruleModel.data;
+                }
+
+                commandModel.data = new SmartList<>();
+                ruleModel.data = new SmartList<>();
+                commandModel.flush();
+                ruleModel.flush();
+                for (Object[] row : commandBackupList) {
+                    if (((String) row[0]).contains(filter)) {
+                        commandModel.addRow(row);
+                    }
+                }
+
+                for (Object[] row : ruleBackupList) {
+                    if (((String) row[0]).contains(filter) || ((String) row[1]).contains(filter)) {
+                        ruleModel.addRow(row);
+                    }
+                }
+            }
+        });
 
         deleteButton.addActionListener(e -> {
             // 删除后光标失焦
@@ -194,7 +246,7 @@ public class CommandParserDesigner extends JFrame {
             if (tabbedPane.getSelectedIndex() == 0) {
                 int selectedRow = commandTable.getSelectedRow();
                 if (selectedRow >= 0 && selectedRow <= commandTable.getRowCount() - 1) {
-                    commandModel.insertRow(new Object[]{".", commandModel.getValueAt(selectedRow, 1), commandModel.getValueAt(selectedRow, 2), commandModel.getValueAt(selectedRow, 3), commandModel.getValueAt(selectedRow, 4), commandModel.getValueAt(selectedRow, 5), commandModel.getValueAt(selectedRow, 6), ".", ".", commandModel.getValueAt(selectedRow, 9), Boolean.FALSE}, selectedRow + 1);
+                    commandModel.insertRow(new Object[]{".", commandModel.getValueAt(selectedRow, 1), commandModel.getValueAt(selectedRow, 2), commandModel.getValueAt(selectedRow, 3), commandModel.getValueAt(selectedRow, 4), commandModel.getValueAt(selectedRow, 5), commandModel.getValueAt(selectedRow, 6), ".", ".", commandModel.getValueAt(selectedRow, 9), Boolean.FALSE, Boolean.FALSE}, selectedRow + 1);
                     commandTable.setRowSelectionInterval(selectedRow + 1, selectedRow + 1);
                 } else {
                     // 追加项目
@@ -297,6 +349,15 @@ public class CommandParserDesigner extends JFrame {
             commandModel.clearAll();
             ruleModel.clearAll();
 
+            // 清除搜索信息
+            searchBox.setText("");
+            addButton.setEnabled(true);
+            deleteButton.setEnabled(true);
+            upButton.setEnabled(true);
+            downButton.setEnabled(true);
+            ruleBackupList = null;
+            commandBackupList = null;
+
             // 设置主程序名、偏移量、全局规则
             mainClassTextField.setText("<main class>");
             offsetSpinner.setValue(0);
@@ -305,7 +366,7 @@ public class CommandParserDesigner extends JFrame {
             setTitle("Command Parser Designer");
 
             // 添加默认信息
-            commandModel.addRow(new Object[]{"--help,-help,-h", Boolean.FALSE, ".", "passedIn", ".", 0, "Options", ".", ".", Boolean.TRUE, Boolean.TRUE});
+            commandModel.addRow(new Object[]{"--help,-help,-h", Boolean.FALSE, ".", "passedIn", ".", 0, "Options", ".", ".", Boolean.TRUE, Boolean.TRUE, Boolean.FALSE});
         });
 
         checkButton.addActionListener(e -> {
@@ -400,6 +461,13 @@ public class CommandParserDesigner extends JFrame {
     void loadFromFile(String fileName) {
         commandModel.clearAll();
         ruleModel.clearAll();
+        searchBox.setText("");
+        addButton.setEnabled(true);
+        deleteButton.setEnabled(true);
+        upButton.setEnabled(true);
+        downButton.setEnabled(true);
+        ruleBackupList = null;
+        commandBackupList = null;
 
         // 将解析器映射为 GUI 组件
         CommandParser parser;
