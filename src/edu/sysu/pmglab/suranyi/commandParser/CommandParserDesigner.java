@@ -516,8 +516,10 @@ public class CommandParserDesigner extends JFrame {
                 // "." 不做任何事情
                 break;
         }
+
         // 添加命令
-        for (Object[] row : commandModel.data) {
+        SmartList<Object[]> copy = commandBackupList == null ? commandModel.data : commandBackupList;
+        for (Object[] row : copy) {
             if (".".equals(row[0])) {
                 continue;
             }
@@ -550,7 +552,8 @@ public class CommandParserDesigner extends JFrame {
         }
 
         // 遍历写入规则
-        for (Object[] row : ruleModel.data) {
+        copy = ruleBackupList == null ? ruleModel.data : ruleBackupList;
+        for (Object[] row : copy) {
             if (".".equals(row[0]) || ".".equals(row[1]) || ".".equals(row[2])) {
                 continue;
             }

@@ -487,7 +487,7 @@ public class CommandParser {
             String line;
             while ((line = file.readLineToString()) != null) {
                 // 去除首尾空白信息, 把 \t 换为空格
-                line = line.trim().replace("\t", " ");
+                line = line.replace("\t", " ").trim();
 
                 if (!line.startsWith("#") && line.equals("\\")) {
                     // 以 \ 结尾，去除该字符
@@ -495,7 +495,11 @@ public class CommandParser {
                         line = line.substring(0, line.length() - 2);
                     }
 
-                    args.add(line.split(" "));
+                    for (String arg: line.split(" ")) {
+                        if (arg.length() > 0) {
+                            args.add(arg);
+                        }
+                    }
                 }
             }
             return parse(args.toStringArray());
@@ -517,7 +521,7 @@ public class CommandParser {
 
         for (String line : lines) {
             // 去除首尾空白信息, 把 \t 换为空格
-            line = line.trim().replace("\t", " ");
+            line = line.replace("\t", " ").trim();
 
             if (!line.startsWith("#") && line.length() > 0) {
                 // 以 \ 结尾，去除该字符
@@ -525,7 +529,11 @@ public class CommandParser {
                     line = line.substring(0, line.length() - 2);
                 }
 
-                args.add(line.split(" "));
+                for (String arg: line.split(" ")) {
+                    if (arg.length() > 0) {
+                        args.add(arg);
+                    }
+                }
             }
         }
 
