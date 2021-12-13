@@ -171,7 +171,7 @@ class CommandUsage {
             for (String command : this.parser.mainRegisteredCommandItems) {
                 CommandItem commandItem = this.parser.getCommandItem(command);
 
-                if (commandItem.getOptionGroup().equals(optionGroup) && (showDebugParam || !commandItem.isDebug())) {
+                if (commandItem.getOptionGroup().equals(optionGroup) && (showDebugParam || !commandItem.isDebug()) && !commandItem.isHide()) {
                     commands.add(command);
                 }
             }

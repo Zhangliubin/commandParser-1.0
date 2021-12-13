@@ -189,6 +189,8 @@ public class CommandParserDesigner extends JFrame {
                     ruleModel.data = ruleBackupList;
                     commandModel.flush();
                     ruleModel.flush();
+                    commandTable.clearSelection();
+                    ruleTable.clearSelection();
                     commandBackupList = null;
                     ruleBackupList = null;
                     addButton.setEnabled(true);
@@ -202,7 +204,8 @@ public class CommandParserDesigner extends JFrame {
                 deleteButton.setEnabled(false);
                 upButton.setEnabled(false);
                 downButton.setEnabled(false);
-
+                commandTable.clearSelection();
+                ruleTable.clearSelection();
                 if (commandBackupList == null && ruleBackupList == null) {
                     commandBackupList = commandModel.data;
                     ruleBackupList = ruleModel.data;
@@ -235,12 +238,18 @@ public class CommandParserDesigner extends JFrame {
                 if (selectedRow >= 0 && selectedRow <= commandTable.getRowCount() - 1) {
                     commandModel.deleteRow(selectedRow);
                 }
+
+                commandTable.clearSelection();
+                ruleTable.clearSelection();
             } else if (tabbedPane.getSelectedIndex() == 1) {
                 int selectedRow = ruleTable.getSelectedRow();
 
                 if (selectedRow >= 0 && selectedRow <= ruleTable.getRowCount() - 1) {
                     ruleModel.deleteRow(selectedRow);
                 }
+
+                commandTable.clearSelection();
+                ruleTable.clearSelection();
             }
         });
 
@@ -350,6 +359,8 @@ public class CommandParserDesigner extends JFrame {
             // 将解析器映射为 GUI 组件
             commandModel.clearAll();
             ruleModel.clearAll();
+            commandTable.clearSelection();
+            ruleTable.clearSelection();
 
             // 清除搜索信息
             searchBox.setText("");
@@ -451,7 +462,9 @@ public class CommandParserDesigner extends JFrame {
                     if (options.isPassedIn(commandName)) {
                         parserTestingModel.addRow(new Object[]{commandNames.substring(1, commandNames.length() - 1), options.isPassedIn(commandName), commandPassedInValues.get(commandName)});
                     } else {
-                        parserTestingModel.addRow(new Object[]{commandNames.substring(1, commandNames.length() - 1), options.isPassedIn(commandName), ""});
+                        if (parser.debug || !parser.getCommandItem(commandName).isDebug()) {
+                            parserTestingModel.addRow(new Object[]{commandNames.substring(1, commandNames.length() - 1), options.isPassedIn(commandName), ""});
+                        }
                     }
                 }
             } catch (Exception exception) {

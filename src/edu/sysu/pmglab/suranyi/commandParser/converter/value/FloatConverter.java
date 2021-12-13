@@ -22,6 +22,6 @@ public class FloatConverter implements IValueConverter<Float> {
 
     @Override
     public String toString() {
-        return "double";
+        return "float";
     }
 }
