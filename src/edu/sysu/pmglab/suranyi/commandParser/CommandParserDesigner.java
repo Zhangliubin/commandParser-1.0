@@ -215,6 +215,98 @@ public class CommandParserDesigner extends JFrame {
                 ruleModel.data = new SmartList<>();
                 commandModel.flush();
                 ruleModel.flush();
+                if (filter.contains(":")) {
+                    // 识别为 列名:值 形式
+                    String[] values = filter.split(":");
+                    if (values.length == 2) {
+                        if ("command".equalsIgnoreCase(values[0]) || "commandname".equalsIgnoreCase(values[0])) {
+                            for (Object[] row : commandBackupList) {
+                                if (((String) row[0]).contains(values[1])) {
+                                    commandModel.addRow(row);
+                                }
+                            }
+                            return;
+                        } else if ("request".equalsIgnoreCase(values[0])) {
+                            for (Object[] row : commandBackupList) {
+                                if (row[1].equals(Boolean.parseBoolean(values[1]))) {
+                                    commandModel.addRow(row);
+                                }
+                            }
+                            return;
+                        } else if ("default".equalsIgnoreCase(values[0])) {
+                            for (Object[] row : commandBackupList) {
+                                if (((String) row[2]).contains(values[1])) {
+                                    commandModel.addRow(row);
+                                }
+                            }
+                            return;
+                        } else if ("convert".equalsIgnoreCase(values[0]) || "convertto".equalsIgnoreCase(values[0])) {
+                            for (Object[] row : commandBackupList) {
+                                if (((String) row[3]).contains(values[1])) {
+                                    commandModel.addRow(row);
+                                }
+                            }
+                            return;
+                        } else if ("validate".equalsIgnoreCase(values[0]) || "validatewith".equalsIgnoreCase(values[0])) {
+                            for (Object[] row : commandBackupList) {
+                                if (((String) row[4]).contains(values[1])) {
+                                    commandModel.addRow(row);
+                                }
+                            }
+                            return;
+                        } else if ("arity".equalsIgnoreCase(values[0]) || "length".equalsIgnoreCase(values[0])) {
+                            for (Object[] row : commandBackupList) {
+                                if ((row[5].toString()).contains(values[1])) {
+                                    commandModel.addRow(row);
+                                }
+                            }
+                            return;
+                        } else if ("group".equalsIgnoreCase(values[0])) {
+                            for (Object[] row : commandBackupList) {
+                                if ((row[6].toString()).contains(values[1])) {
+                                    commandModel.addRow(row);
+                                }
+                            }
+                            return;
+                        } else if ("description".equalsIgnoreCase(values[0])) {
+                            for (Object[] row : commandBackupList) {
+                                if ((row[7].toString()).contains(values[1])) {
+                                    commandModel.addRow(row);
+                                }
+                            }
+                            return;
+                        } else if ("format".equalsIgnoreCase(values[0])) {
+                            for (Object[] row : commandBackupList) {
+                                if ((row[8].toString()).contains(values[1])) {
+                                    commandModel.addRow(row);
+                                }
+                            }
+                            return;
+                        } else if ("hide".equalsIgnoreCase(values[0]) || "hidden".equalsIgnoreCase(values[0])) {
+                            for (Object[] row : commandBackupList) {
+                                if (row[9].equals(Boolean.parseBoolean(values[1]))) {
+                                    commandModel.addRow(row);
+                                }
+                            }
+                            return;
+                        } else if ("help".equalsIgnoreCase(values[0])) {
+                            for (Object[] row : commandBackupList) {
+                                if (row[10].equals(Boolean.parseBoolean(values[1]))) {
+                                    commandModel.addRow(row);
+                                }
+                            }
+                            return;
+                        } else if ("debug".equalsIgnoreCase(values[0])) {
+                            for (Object[] row : commandBackupList) {
+                                if (row[11].equals(Boolean.parseBoolean(values[1]))) {
+                                    commandModel.addRow(row);
+                                }
+                            }
+                            return;
+                        }
+                    }
+                }
+
                 for (Object[] row : commandBackupList) {
                     if (((String) row[0]).contains(filter) || ((String) row[2]).contains(filter) || ((String) row[3]).contains(filter)
                             || ((String) row[4]).contains(filter) || ((String) row[6]).contains(filter) || ((String) row[7]).contains(filter) ||
