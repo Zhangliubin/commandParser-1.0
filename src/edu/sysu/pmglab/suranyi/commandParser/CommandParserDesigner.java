@@ -213,7 +213,9 @@ public class CommandParserDesigner extends JFrame {
                 commandModel.flush();
                 ruleModel.flush();
                 for (Object[] row : commandBackupList) {
-                    if (((String) row[0]).contains(filter)) {
+                    if (((String) row[0]).contains(filter) || ((String) row[2]).contains(filter) || ((String) row[3]).contains(filter)
+                            || ((String) row[4]).contains(filter) || ((String) row[6]).contains(filter) || ((String) row[7]).contains(filter) ||
+                            ((String) row[8]).contains(filter)) {
                         commandModel.addRow(row);
                     }
                 }

@@ -565,7 +565,7 @@ public class CommandItem {
                 row[2] = value.substring(1, value.length() - 1);
             } else if (this.defaultValue instanceof Boolean || this.defaultValue instanceof Integer || this.defaultValue instanceof String ||
                     this.defaultValue instanceof Short || this.defaultValue instanceof Long || this.defaultValue instanceof Float || this.defaultValue instanceof Double) {
-                row[2] = this.defaultValue;
+                row[2] = this.defaultValue.toString();
             } else if (this.converter instanceof NaturalLongRangeConverter && this.defaultValue instanceof long[] && ((long[]) this.defaultValue).length == 2) {
                 String value = Arrays.toString(((long[]) this.defaultValue)).replace(" ", "");
                 row[2] = value;
