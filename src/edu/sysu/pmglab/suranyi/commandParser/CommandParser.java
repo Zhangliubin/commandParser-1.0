@@ -457,7 +457,7 @@ public class CommandParser {
                             throw new ParameterException("one of " + rule.command1 + " and " + rule.command2 + " must be assigned");
                         }
                     case PRECONDITION:
-                        if (flag1 > flag2) {
+                        if (flag1 < flag2) {
                             throw new ParameterException(rule.command1 + " should be assigned together with " + rule.command2);
                         }
                     default:

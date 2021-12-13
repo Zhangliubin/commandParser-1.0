@@ -70,7 +70,7 @@ public class CommandParserDesigner extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         // 设置窗口大小
-        initSize(1200, 600);
+        initSize(1000, 600);
 
         // 添加监听器
         addListener();

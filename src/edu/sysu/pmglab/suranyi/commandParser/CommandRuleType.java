@@ -21,12 +21,12 @@ public enum CommandRuleType {
     REQUEST_ONE,
 
     /**
-     * A 是 B 的先决条件 A <= B
+     * A 是 B 的先决条件 A >= B
      */
     PRECONDITION,
 
     /**
-     * 依存 A + B == 0 || A + B == 2
+     * 依存 A = B
      */
     SYMBIOSIS;
 }
