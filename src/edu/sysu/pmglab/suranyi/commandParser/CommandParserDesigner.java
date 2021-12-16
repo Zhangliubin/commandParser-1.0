@@ -4,6 +4,7 @@ import com.formdev.flatlaf.FlatLightLaf;
 import dev.BGZIPParserFromFile;
 import edu.sysu.pmglab.suranyi.commandParser.exception.CommandParserException;
 import edu.sysu.pmglab.suranyi.container.SmartList;
+import edu.sysu.pmglab.suranyi.easytools.FileUtils;
 import edu.sysu.pmglab.suranyi.unifyIO.FileStream;
 
 import javax.swing.*;
@@ -60,6 +61,7 @@ public class CommandParserDesigner extends JFrame {
     private JTextField searchBox;
     private SmartList<Object[]> commandBackupList;
     private SmartList<Object[]> ruleBackupList;
+    private String openFileName;
 
     CommandParserDesigner() {
         setTitle("Command Parser Designer");
@@ -412,26 +414,67 @@ public class CommandParserDesigner extends JFrame {
         });
 
         saveButton.addActionListener(e -> {
-            JFileChooser jfc = new JFileChooser();
-            jfc.setCurrentDirectory(new File(System.getProperty("user.dir")).getParentFile());
+            if (openFileName != null) {
+                int status;
+                if (FileUtils.exists(openFileName)) {
+                    status = JOptionPane.showOptionDialog(this, openFileName + " already exists; do you want to overwrite it?", "Information", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, null, new String[]{"Yes", "Save as...", "Cancel"}, "Yes");
+                } else {
+                    status = JOptionPane.showOptionDialog(this, "Would you want to save as " + openFileName + "?", "Information", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, null, new String[]{"Yes", "Save as...", "Cancel"}, "Yes");
+                }
 
-            jfc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
-            if (jfc.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
-                try {
+                if (status == 0) {
                     CommandParser parser = transToParser();
                     if (parser != null) {
-                        parser.toFile(jfc.getSelectedFile().getAbsolutePath());
+                        parser.toFile(openFileName);
                         JOptionPane.showOptionDialog(this, "Finish!", "Information", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, null, new String[]{"OK"}, "OK");
                     }
-                } catch (Exception exception) {
-                    JOptionPane.showOptionDialog(this, exception.getMessage(), "Error", JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE, null, new String[]{"OK"}, "OK");
+                } else if (status == 1) {
+                    JFileChooser jfc = new JFileChooser();
+                    jfc.setCurrentDirectory(new File(openFileName).getParentFile());
+
+                    jfc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+                    if (jfc.showSaveDialog(this) == 0) {
+                        try {
+                            CommandParser parser = transToParser();
+                            if (parser != null) {
+                                openFileName = jfc.getSelectedFile().getAbsolutePath();
+                                parser.toFile(openFileName);
+                                setTitle("Command Parser Designer: " + jfc.getSelectedFile().getName());
+                                JOptionPane.showOptionDialog(this, "Finish!", "Information", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, null, new String[]{"OK"}, "OK");
+                            }
+                        } catch (Exception exception) {
+                            JOptionPane.showOptionDialog(this, exception.getMessage(), "Error", JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE, null, new String[]{"OK"}, "OK");
+                        }
+                    }
+                }
+            } else {
+                JFileChooser jfc = new JFileChooser();
+                jfc.setCurrentDirectory(new File(System.getProperty("user.dir")).getParentFile());
+
+                jfc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+                if (jfc.showSaveDialog(this) == 0) {
+                    try {
+                        CommandParser parser = transToParser();
+                        if (parser != null) {
+                            openFileName = jfc.getSelectedFile().getAbsolutePath();
+                            parser.toFile(openFileName);
+                            setTitle("Command Parser Designer: " + jfc.getSelectedFile().getName());
+                            JOptionPane.showOptionDialog(this, "Finish!", "Information", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, null, new String[]{"OK"}, "OK");
+                        }
+                    } catch (Exception exception) {
+                        JOptionPane.showOptionDialog(this, exception.getMessage(), "Error", JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE, null, new String[]{"OK"}, "OK");
+                    }
                 }
             }
         });
 
         openButton.addActionListener(e -> {
             JFileChooser jfc = new JFileChooser();
-            jfc.setCurrentDirectory(new File(System.getProperty("user.dir")).getParentFile());
+            if (openFileName == null) {
+                jfc.setCurrentDirectory(new File(System.getProperty("user.dir")).getParentFile());
+            } else {
+                jfc.setCurrentDirectory(new File(openFileName).getParentFile());
+            }
 
             jfc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
             if (jfc.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
@@ -456,6 +499,7 @@ public class CommandParserDesigner extends JFrame {
 
             // 清除搜索信息
             searchBox.setText("");
+            openFileName = null;
             addButton.setEnabled(true);
             deleteButton.setEnabled(true);
             upButton.setEnabled(true);
@@ -600,7 +644,7 @@ public class CommandParserDesigner extends JFrame {
             CommandRule rule = parser.registeredRules.get(order);
             ruleModel.addRow(new Object[]{rule.command1, rule.command2, rule.type});
         }
-
+        openFileName = fileName;
         JOptionPane.showOptionDialog(this, "Finish!", "Information", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, null, new String[]{"OK"}, "OK");
     }
 
