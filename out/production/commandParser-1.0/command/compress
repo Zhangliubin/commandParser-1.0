@@ -7,6 +7,6 @@
 --help,-help,-h	false	.	passedIn	.	0	Options	.	.	true	true	false
 compress	true	string	string	built-in	1	Options	.	.	true	false	false
 --output,-o	false	.	string	.	1	Options	Set the output file.	'-o <file>'	false	false	false
---threads,-t	false	4	integer	RangeOf(1.0,10.0)	1	Options	Set the number of threads for bgzip compression.	'-t <int>' (1~10)	false	false	true
+--threads,-t	false	4	integer	RangeOf(1.0,10.0)	1	Options	Set the number of threads for bgzip compression.	'-t <int>' (1~10)	false	false	false
 --level,-l	false	5	integer	RangeOf(0.0,9.0)	1	Options	Compression level to use for bgzip compression.	'-l <int>' (0~9)	false	false	false
 --yes,-y	false	.	passedIn	.	0	Options	Overwrite output file without asking.	.	false	false	false
