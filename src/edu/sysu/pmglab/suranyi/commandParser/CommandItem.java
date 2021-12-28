@@ -810,12 +810,6 @@ public class CommandItem {
                 if (options[2].contains(",")) {
                     // 以 , 作为分隔符
                     item.defaultTo(item.converter.convert(options[2].replace(" ", "").split(",")));
-                } else if (options[2].contains(";")) {
-                    // 以 ; 作为分隔符
-                    item.defaultTo(item.converter.convert(options[2].replace(" ", "").split(";")));
-                } else if (options[2].contains(" ")) {
-                    // 以 ' ' 作为分隔符
-                    item.defaultTo(item.converter.convert(options[2].split(" ")));
                 } else {
                     // 都不包含，则该参数整体作为一个值
                     item.defaultTo(item.converter.convert(options[2]));
