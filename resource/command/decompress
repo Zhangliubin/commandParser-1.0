@@ -5,6 +5,6 @@
 ##globalRule=<value=".";description="one of the following rules is supported: {'.','AT_MOST_ONE','AT_LEAST_ONE','REQUEST_ONE'}">
 #commandName	request	default	convertTo	validateWith	arity	group	description	format	hidden	help	debug
 --help,-help,-h	false	.	passedIn	.	0	Options	.	.	true	true	false
-decompress	true	string	string	built-in	1	Options	.	.	true	false	false
+decompress	true	string	string	EnsureFileExists;NotDirectory	1	Options	.	.	true	false	false
 --output,-o	false	.	string	.	1	Options	Set the output file.	'-o <file>'	false	false	false
 --yes,-y	false	.	passedIn	.	0	Options	Overwrite output file without asking.	.	false	false	false

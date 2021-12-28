@@ -855,7 +855,6 @@ public class CommandItem {
 
                 // 验证器转为小写
                 String validator2LowerCase = validator.toLowerCase(Locale.ROOT);
-
                 if (validator2LowerCase.startsWith("rangeof(") && validator2LowerCase.endsWith(")")) {
                     addToItem.add(new RangeValidator(Double.parseDouble(validator2LowerCase.substring(8, validator2LowerCase.indexOf(","))), Double.parseDouble(validator2LowerCase.substring(validator2LowerCase.indexOf(",") + 1, validator2LowerCase.indexOf(")")))));
                 } else if (validator2LowerCase.equals("ensurefileexists")) {

@@ -5,4 +5,4 @@
 ##globalRule=<value=".";description="one of the following rules is supported: {'.','AT_MOST_ONE','AT_LEAST_ONE','REQUEST_ONE'}">
 #commandName	request	default	convertTo	validateWith	arity	group	description	format	hidden	help	debug
 --help,-help,-h	false	.	passedIn	.	0	Options	.	.	true	true	false
-md5	true	string-array	string	built-in	1	Options	.	.	true	false	false
+md5	true	string-array	string	EnsureFileExists;NotDirectory	1	Options	.	.	true	false	false

@@ -36,16 +36,24 @@ CommandParser 在 JDK 8 中开发完成，得益于 Java 跨平台的特性，�
 
 ![image-20211228170406232](https://tva1.sinaimg.cn/large/008i3skNgy1gxtnoa9c7fj31e00u040j.jpg)
 
-### 3. 配置参数属性
+### 3. 配置参数属性 (Command 面板)
 
-每个参数都有 12 个基本属性，其中 commandName, convertTo 和 arity 是建议设置的属性。每个属性的含义如下表：
+在经典的命令行中
+
+```shell
+java -jar ./commandParser-1.0.jar bgzip compress ./README.md
+```
+
+
+
+每个参数都有 12 个基本属性，其中 commandName, convertTo 和 arity 是建议设置的属性。每个属性的含义如下：
 
 | 属性         | 含义                                                    | 描述                                                         |
 | ------------ | ------------------------------------------------------- | ------------------------------------------------------------ |
-| commandName  | 识别的参数名                                            | 参数名支持的字符类型: 阿拉伯数字 `0-9`、大小写字母 `a-zA-z`、部分特殊字符 `+-_@` ；多个参数名定位到同一参数时，使用 `,` 进行分隔；第一个参数名将识别为主参数名 |
+| commandName  | 识别的参数名 (关键字)                                   | 参数名支持的字符类型: 阿拉伯数字 `0-9`、大小写字母 `a-zA-z`、部分特殊字符 `+-_@` ；多个参数名定位到同一参数时，使用 `,` 进行分隔；第一个参数名将识别为主参数名 |
 | request      | 是否为必备参数                                          |                                                              |
 | default      | 默认值                                                  | convertTo 为数组类型时，使用 `,` 作为数组不同元素的分隔符    |
-| convertTo    | 参数转换的数据类型                                      | default                                                      |
+| convertTo    | 参数转换的数据类型                                      | 默认值 (default) 和输入的参数值都会被 convertTo 转为对应的 Java 对象 |
 | validateWith | 设置验证器                                              |                                                              |
 | arity        | 参数长度                                                |                                                              |
 | group        | 参数组                                                  |                                                              |
@@ -53,9 +61,9 @@ CommandParser 在 JDK 8 中开发完成，得益于 Java 跨平台的特性，�
 | format       | 格式                                                    |                                                              |
 | hidden       | 在文档中隐藏该参数                                      |                                                              |
 | help         | 该参数是否识别为帮助指令 (帮助指令下允许输入错误的参数) |                                                              |
-| debug        | 是否为 debug 模式下可用的参数                           |                                                              |
+| debug        | 是否为 debug 模式下可用的参数                           | commandParser 在非 debug 模式下无法使用 debug=true 的参数。该属性用于标记一些未完成开发或内部测试的方法 |
 
-### 4. 
+### 4. 配置参数规则 (Other Option 面板)
 
 
 

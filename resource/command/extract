@@ -5,7 +5,7 @@
 ##globalRule=<value=".";description="one of the following rules is supported: {'.','AT_MOST_ONE','AT_LEAST_ONE','REQUEST_ONE'}">
 #commandName	request	default	convertTo	validateWith	arity	group	description	format	hidden	help	debug
 --help,-help,-h	false	.	passedIn	.	0	Options	.	.	true	true	false
-extract	true	.	string	built-in	1	Options	.	.	true	false	false
+extract	true	.	string	EnsureFileExists;NotDirectory	1	Options	.	.	true	false	false
 --range,-r	true	.	<start>-<end> (long)	.	1	Options	Set the range of the file pointer (decompressed file).	-r <start>-<end>	false	false	false
 --output,-o	false	.	string	.	1	Options	Set the output file.	'-o <file>'	false	false	false
 --threads,-t	false	4	integer	RangeOf(1.0,10.0)	1	Options	Set the number of threads for bgzip compression.	'-t <int>' (1~10)	false	false	false
