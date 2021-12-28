@@ -809,7 +809,7 @@ public class CommandItem {
                 // 无限长度或长度大于 1 时，才进行数组切割
                 if (options[2].contains(",")) {
                     // 以 , 作为分隔符
-                    item.defaultTo(item.converter.convert(options[2].replace(" ", "").split(",")));
+                    item.defaultTo(item.converter.convert(options[2].split(",")));
                 } else {
                     // 都不包含，则该参数整体作为一个值
                     item.defaultTo(item.converter.convert(options[2]));
