@@ -676,7 +676,7 @@ public class CommandParserDesigner extends JFrame {
             }
 
             StringBuilder builder = new StringBuilder();
-            builder.append(((String) row[0]).replace(" ", ""));
+            builder.append(((String) row[0]));
             builder.append("\t");
             builder.append((boolean) row[1]);
             builder.append("\t");
