@@ -26,7 +26,7 @@ public class BGZIPParserFromFile {
             if (options.isPassedIn("-h")) {
                 System.out.println(subParser);
             } else {
-                if (options.isPassedIn("compress")) {
+                if (subParser.containCommandItem("compress")) {
                     String realOutputFileName = options.isPassedIn("-o") ? (String) options.get("-o") : options.get("compress") + ".gz";
 
                     // 切割文件模式
@@ -51,7 +51,7 @@ public class BGZIPParserFromFile {
                     // 结束任务，输出日志信息
                     System.out.printf("INFO    Total Processing time: %.3f s; BGZ format size: %s%n",
                             (float) (end - start) / 1000, FileUtils.sizeTransformer(FileUtils.sizeOf(realOutputFileName), 3));
-                } else if (options.isPassedIn("decompress")) {
+                } else if (subParser.containCommandItem("decompress")) {
                     String realOutputFileName;
 
                     if (!options.isPassedIn("-o")) {
@@ -89,10 +89,10 @@ public class BGZIPParserFromFile {
                     System.out.printf("INFO    Total Processing time: %.3f s; Output size: %s%n",
                             (float) (end - start) / 1000,
                             FileUtils.sizeTransformer(FileUtils.sizeOf(realOutputFileName), 3));
-                } else if (options.isPassedIn("md5")) {
+                } else if (subParser.containCommandItem("md5")) {
                     // 获取 md5 计算器
                     System.out.printf("MD5 (%s, decompressed file) = %s%n", options.get("md5"), BGZTools.md5((String) options.get("md5")));
-                } else if (options.isPassedIn("convert")) {
+                } else if (subParser.containCommandItem("convert")) {
                     String realOutputFileName = options.isPassedIn("-o") ? (String) options.get("-o") : (String) options.get("convert");
 
                     // 切割文件模式
@@ -119,7 +119,7 @@ public class BGZIPParserFromFile {
                     System.out.printf("INFO    Total Processing time: %.3f s; BGZ format size: %s%n",
                             (float) (end - start) / 1000,
                             FileUtils.sizeTransformer(FileUtils.sizeOf(realOutputFileName), 3));
-                } else if (options.isPassedIn("concat")) {
+                } else if (subParser.containCommandItem("concat")) {
                     String realOutputFileName = options.isPassedIn("-o") ? (String) options.get("-o") : ((String[]) options.get("concat"))[0];
 
                     // 连接多个子文件模式
@@ -146,7 +146,7 @@ public class BGZIPParserFromFile {
                     System.out.printf("INFO    Total Processing time: %.3f s; BGZ format size: %s%n",
                             (float) (end - start) / 1000,
                             FileUtils.sizeTransformer(FileUtils.sizeOf(realOutputFileName), 3));
-                } else if (options.isPassedIn("extract")) {
+                } else if (subParser.containCommandItem("extract")) {
                     String realOutputFileName = options.isPassedIn("-o") ? (String) options.get("-o") : (String) options.get("extract");
 
                     // 切割文件模式
