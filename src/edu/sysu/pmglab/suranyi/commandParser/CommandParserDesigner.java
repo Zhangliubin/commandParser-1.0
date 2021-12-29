@@ -257,9 +257,17 @@ public class CommandParserDesigner extends JFrame {
                             }
                             return;
                         } else if ("arity".equalsIgnoreCase(values[0]) || "length".equalsIgnoreCase(values[0])) {
-                            for (Object[] row : commandBackupList) {
-                                if ((row[5].toString()).contains(values[1])) {
-                                    commandModel.addRow(row);
+                            if ("-1".equals(values[1]) || ">=1".equals(values[1])) {
+                                for (Object[] row : commandBackupList) {
+                                    if ((row[5].toString()).contains("≥1")) {
+                                        commandModel.addRow(row);
+                                    }
+                                }
+                            } else {
+                                for (Object[] row : commandBackupList) {
+                                    if ((row[5].toString()).contains(values[1])) {
+                                        commandModel.addRow(row);
+                                    }
                                 }
                             }
                             return;

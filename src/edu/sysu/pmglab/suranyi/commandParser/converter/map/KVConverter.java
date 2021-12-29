@@ -1,6 +1,5 @@
 package edu.sysu.pmglab.suranyi.commandParser.converter.map;
 
-import edu.sysu.pmglab.suranyi.commandParser.converter.IConverter;
 import edu.sysu.pmglab.suranyi.commandParser.exception.ParameterException;
 import edu.sysu.pmglab.suranyi.container.SmartList;
 

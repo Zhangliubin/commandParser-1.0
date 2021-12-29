@@ -28,5 +28,5 @@ public enum CommandRuleType {
     /**
      * 依存 A = B
      */
-    SYMBIOSIS;
+    SYMBIOSIS
 }
