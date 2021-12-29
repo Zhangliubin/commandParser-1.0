@@ -459,7 +459,7 @@ public class CommandParser {
                         if (flag1 + flag2 == 1) {
                             break;
                         } else {
-                            throw new ParameterException("one of " + rule.command1 + " and " + rule.command2 + " must be assigned");
+                            throw new ParameterException("one of " + rule.command1 + " and " + rule.command2 + " must be assigned" + (flag1 + flag2 == 0 ? " (missing)": " (more than 1)"));
                         }
                     case PRECONDITION:
                         if (flag1 >= flag2) {
