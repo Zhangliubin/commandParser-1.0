@@ -2,9 +2,11 @@
 
 ## 简介
 
+将程序封装为可运行的 jar 包，能够方便不同平台之间传输、使用，而不需要考虑 IDE 环境而进行繁琐的配置。通常 jar 包就包含了完成一套计算/分析/服务所需的全部代码，为了让 jar 包可以根据不同的输入参数执行不同的任务，以提升开发效率、用户交互体验，就需要进行命令行开发。
+
 CommandParser 是一个基于 Java 平台开发的小型框架，用于解析、管理命令行参数。CommandParser 提供了脚本指令设计方式及图形化设计方式，便于用户方便地设计、管理命令行程序。
 
-CommandParser 兼有传统命令行设计工具 Jcommander 的特点及独特的 GUI 图形化设计功能，在实践阶段已证实可以有效降低 Java 开发者的使用门槛，降低代码耦合度。
+CommandParser 兼有传统命令行设计工具 Jcommander 的特点及独特的 GUI 图形化设计功能，在内测阶段已证实可以有效降低 Java 开发者编写命令行工具的门槛，降低代码耦合度。
 
 > 技术问题请联系 张柳彬 (suranyi.sysu@gmail.com, 一定能看到，但是时效性不保证)
 >
@@ -27,12 +29,14 @@ CommandParser 在 JDK 8 中开发完成，得益于 Java 跨平台的特性，�
 
 ### 0. 写在前面
 
-我们在 github 上传了[本项目的源码](#安装与使用 CommandParser)，在 resource/command 中提供了 7 个可供测试的指令文件 （动动你的手，将他们拖动到 commandParser 窗口中吧！），以及指令文件的使用方式 (src/dev/BGZIPParser.java 和 BGZIPParserFromFile.java)
+我们在 github 上传了[本项目的源码](#安装与使用 CommandParser)，在 resource/command 中提供了 7 个可供测试的指令文件 （动动你的手，将他们拖动到 commandParser 窗口中吧！），以及指令文件的使用方式 (src/dev/BGZIPParser.java 和 BGZIPParserFromFile.java) 提供参考。
 
 - src/dev/BGZIPParserFromFile.java: 从指令文件中加载参数解析器，并进行后续开发的实例
 - src/dev/BGZIPParser.java: 使用纯 Java 脚本编写指令文件，并进行后续开发的实例
 
-请注意，这两份文件仅需关注如何导入/创建一个解析器，如何使用解析器解析值，如何获得解析的结果，而无需关注业务细节！
+请注意，这两份文件仅需关注如何导入/创建一个解析器、如何使用解析器解析值、如何获得解析的结果，而无需关注业务细节！
+
+我们建议阅读本文 “快速入门” 部分，以了解 commandParser 的使用方式。当你熟练掌握 commandParser 后，开发一个程序所需的命令行工具，甚至只需要几分钟时间。我们也鼓励现有的项目使用我们的 commandParser，尽管刚开始的迁移会有一点点痛苦 （主要是复制、粘贴，但我保证这是最轻松的迁移方式了！），但后续的扩展、管理会获得极大的收益。
 
 ### 1. 启动参数管理界面
 
@@ -59,7 +63,7 @@ CommandParser 在 JDK 8 中开发完成，得益于 Java 跨平台的特性，�
 | commandName  | <details><summary>识别的参数名 (关键字)</summary>1. 参数名支持的字符类型: 阿拉伯数字 `0-9`、大小写字母 `a-zA-z`、部分特殊字符 `+-_@` <br />2. 多个参数名定位到同一参数时，使用 `,` 进行分隔，第一个参数名将注册为主参数名<br />3. 所有的参数名 (无论是否为主参数名) 都不可重复</details> |
 | request      | <details><summary>是否为必备参数</summary>1. 在文档提示中，必备参数前有 `*` 标记<br />2. 设置为 request 的参数是必须传入的，若缺少必备参数则会抛出异常</details> |
 | default      | <details><summary>设置默认值</summary>1. convertTo 为数组类型时，使用 `,` 作为不同元素的分隔符<br />2. 未指定默认值时，将设置为 `null`</details> |
-| convertTo    | <details><summary>参数转换的数据类型</summary>1. 默认值 (default) 和输入的参数值都会被 convertTo 转为对应的 Java 对象 (例如 `string-array` 类型在 Java 中对应 `String[]`)<br />2. built-in 类型需要在 Java 脚本中重新调用 `parser.getCommandItem($commandName).convertTo($myConvertor)`进行设置<br />3. `passedIn` 类型为传入类型，即仅验证参数是否被传入，而不捕获任何值</details> |
+| convertTo    | <details><summary>参数转换的数据类型</summary>1. 默认值 (default) 和输入的参数值都会被 convertTo 转为对应的 Java 对象 (例如 `string-array` 类型在 Java 中对应 `String[]`。有关各个转换器对应的参数类型，请阅读 [开发文档](#设置指令的参数))<br />2. built-in 类型需要在 Java 脚本中重新调用 `parser.getCommandItem($commandName).convertTo($myConvertor)`进行设置<br />3. `passedIn` 类型为传入类型，即仅验证参数是否被传入，而不捕获任何值</details> |
 | validateWith | <details><summary>使用验证器验证参数值</summary>1. 多个验证器使用 `;` 进行分隔<br />2. built-in 类型需要在 Java 脚本中重新调用 `parser.getCommandItem($commandName).validateWith($myValidator)`进行设置<br />3. `passedIn` 类型禁止设置验证器 (即该项必须为`.`)<br />4. `ElementOf($value,$value,...)` 为限定元素验证器，即元素的值必须在列出的项目中。它的元素值被识别为字符串类型，即 `string`, `string-array`, `k1=v1;k2=v2;...`, `<start>-<end> (string)`, `<index>:<start>-<end> (string)` 类型支持此验证器，其余类型需要用户在命令脚本中定义规则。此外，元素值支持的字符类型为：阿拉伯数字 `0-9`、大小写字母 `a-zA-z`、部分特殊字符 `+-_@./` </details> |
 | arity        | <details><summary>参数长度</summary>1. 捕获到参数关键字时，之后的 arity 个字段都识别为它的值<br />2. 参数长度为 `≥1` 时，将捕捉随后的多个字段，直到遇到下一个参数关键字<br />3.  `convertTo` 为数组类型时 (如: `string-array`)：当 `arity=1` 时，输入的字段将按照 `,` 进行切割 (例: `--model lr,lasso,svm` 识别为 `String[]{"lr", "lasso", "svm"})`；`arity` 为 `≥1` 或 `2,3,...` 时，传入的值直接作为数组元素，而不进行分隔 (例: `--model lr lasso,svm 识别为 String[]{"lr", "lasso,svm"}`)<br />4. `passedIn` 类型参数长度必须为 0；`boolean`, `short`, `integer`, `long`, `string`, `float`, `double` 类型参数长度必须为 1; `<start>-<end>`,`<index>:<start>-<end>`,`k1=v1;k2=v2;...`类型参数长度必须为 1；`array` 类型参数长度不能为 0<br /></details> |
 | group        | <details><summary>参数组</summary>文档提示：设置参数所在的参数组</details> |
@@ -73,13 +77,13 @@ CommandParser 在 JDK 8 中开发完成，得益于 Java 跨平台的特性，�
 
 参数之间若存在搭配规则，建议在 Other Option 面板中进行配置。目前 commandParser 支持 5 种类型的参数规则：
 
-| 规则         | 含义                                                         | 表达式        |
-| ------------ | ------------------------------------------------------------ | ------------- |
-| AT_MOST_ONE  | command1 和 command2 至多传入一个                            | $p_1+p_2\le1$ |
-| AT_LEAST_ONE | command1 和 command2 至少传入一个                            | $p_1+p_2\ge1$ |
-| REQUEST_ONE  | command1 和 command2 需要有其中的一个                        | $p_1+p_2=1$   |
-| PRECONDITION | 传入了 command1 才能 command2 <br />即: command1 是 command2 的前置条件 | $p_1\ge p_2$  |
-| SYMBIOSIS    | command1 和 command2 同时传入或同时不传入                    | $p_1+p_2\ne1$ |
+| 规则         | 含义                                                         | 表达式 ( $p_i=1$ 表示传入了该参数) |
+| ------------ | ------------------------------------------------------------ | ---------------------------------- |
+| AT_MOST_ONE  | command1 和 command2 至多传入一个                            | $p_1+p_2\le1$                      |
+| AT_LEAST_ONE | command1 和 command2 至少传入一个                            | $p_1+p_2\ge1$                      |
+| REQUEST_ONE  | command1 和 command2 需要有其中的一个                        | $p_1+p_2=1$                        |
+| PRECONDITION | 传入了 command1 才能传入 command2 <br />即: command1 是 command2 的前置条件 | $p_1\ge p_2$                       |
+| SYMBIOSIS    | command1 和 command2 同时传入或同时不传入                    | $p_1+p_2\ne1$                      |
 
 <details><summary><b>案例1</b> 程序的输出格式可以为 <code>--o-bgz</code>(使用 bgzip 压缩输出的数据) 或 <code>--o-text</code> (纯文本输出), 两者不能同时使用</summary>指令设计如下: </br><img src="https://tva1.sinaimg.cn/large/008i3skNgy1gxv15bisrjj31jk0e8n0h.jpg" alt="案例1-1" style="zoom:100%;" /> </br></br>规则设计如下: </br><img src="https://tva1.sinaimg.cn/large/008i3skNgy1gxuujgz73jj31jk08l3zg.jpg" alt="案例1-2" style="zoom:100%;" /> </br> 仅当输出格式为 <code>--o-bgz</code> 时才能指定并行压缩的线程数 (-t) 和压缩级别 (-l)；<code>--o-bgz</code> 和 <code>--o-text</code> 必须指定其中的一个</br></br> 文档预览: <img src="https://tva1.sinaimg.cn/large/008i3skNgy1gxv19106huj31jk0i0wgy.jpg" alt="案例1-3" style="zoom:100%;" /></details>
 
@@ -104,16 +108,18 @@ CommandParser 在 JDK 8 中开发完成，得益于 Java 跨平台的特性，�
 窗口左下角可以进行参数搜索，支持两种规则的查找方式：
 
 - `string`: 从 `commandName`, `default`, `convertTo`, `validateWith`, `group`, `description`, `format` 中查找包含 (区分大小写) 指定内容的参数项目
-- `key:value`: 查找 `key` 列 （不区分大小写）值为 `value` 的参数项目
+- `key:value`: 查找 `key` 列 （不区分大小写）值包含 `value` 的参数项目
   - `request`, `hidden`, `help`, `debug` 列的可选值为 true 或 false
 
-搜索状态下只能修改参数的属性，而不允许新增、删除、移动参数，需要手动清空搜索框后才能回复编辑状态。
+搜索状态下只能修改参数的属性，而不允许新增、删除、移动参数，需要手动清空搜索框后才能恢复编辑状态。
 
 ![图3](https://tva1.sinaimg.cn/large/008i3skNgy1gxv1rz679pj31e00u0gpq.jpg)
 
-### 7. 预览指令 (Preview 面板)
+### 7. 预览文档 (Preview 面板)
 
-点击 `Preview` 生成当前参数对应的指令文档
+点击 `Preview` 生成当前参数对应的指令文档，在 Java 脚本中使用 `parser.toString()` 获取文档
+
+> 通常会使用 options.isPassedIn("-h") 判断是否传入了 help 指令，如果传入了，则使用 parser.toString() 打印文档，否则进行业务
 
 ### 8. 测试指令 (Parser Testing 面板)
 
@@ -163,13 +169,36 @@ int threadNum = (int) options.get("-t");
 - 获取该指令解析器中是否包含某参数：`parser.containCommandItem($commandName)`
 - 修改为开发人员/用户模式：`parser.debug(true)` 或 `parser.debug(false)`
 - 获取解析器的捕获情况：`options.toString()`
+- 导出当前解析器为指令文件：`parser.toFile($fileName);`
+
+### 11. 打包项目为 jar 包 —— 以 IDEA 为例
+
+**Step1:** 在 IDEA 中点击 File > Project Structure 打开窗口
+
+**Step2:** 在 Modules 中将包含参数文件的父目录设置为 Resources (也可以将文件放在 src 目录下)
+
+![图](https://tva1.sinaimg.cn/large/008i3skNgy1gxv6tg7t1dj310l0u076i.jpg)
+
+**Step3:** 点击 Artifacts > + > JAR > From modules with dependencies...
+
+![图](https://tva1.sinaimg.cn/large/008i3skNgy1gxv6viqfp9j312w0kg41e.jpg)
+
+**Step4:** 设置入口函数 (包含 public static void main(String[] args) 方法的类)
+
+![图](https://tva1.sinaimg.cn/large/008i3skNgy1gxv6wbklz4j30s20hujt7.jpg)
+
+> 建议将 Output directory 修改为项目根目录，这样编译后的 jar 包就在项目根目录
+>
+> ![图](https://tva1.sinaimg.cn/large/008i3skNgy1gxv6z78aiqj31he0i6dig.jpg)
+
+**Step5:** 关闭 Project Structure 窗口，点击 Build > Build Artifacts > Build (或 Rebuild) 编译 jar 包
 
 ## Command 文件格式
 
 Command 文件是 CommandParser 用于储存命令信息的格式。Command 文件包含注释信息行、标题行、数据行。其中：
 
 - 注释信息行的行首为“##”，内容是键值对的形式，通常包含 Command 文件版本信息、运行模式、程序名、指令偏移量、全局规则、指令规则等
-- 标题行的行首为“#”，包含 11 个顺序固定的字段，分别为 commandName (指令名)，request (是否为必备参数)，default (默认值, 该值默认为字符串格式, 并按照 convertTo 进行格式转换), convertTo (指令值的格式, 内置 19 种常见格式，详见 API 文档), validateWith (验证器, 内置 4 种常见格式), arity (参数长度), group (参数组), description (描述信息), format (指令使用格式), hidden (是否在 -h 帮助文档中隐藏该参数), help (是否捕获为帮助指令)
+- 标题行的行首为“#”，包含 11 个顺序固定的字段，分别为 commandName (指令名)，request (是否为必备参数)，default (默认值, 该值默认为字符串格式, 并按照 convertTo 进行格式转换), convertTo (指令值的格式, 内置 21 种常见格式，详见[开发文档](#设置指令的参数)), validateWith (验证器, 内置 4 种常见格式), arity (参数长度), group (参数组), description (描述信息), format (指令使用格式), hidden (是否在 -h 帮助文档中隐藏该参数), help (是否捕获为帮助指令)
 - 之后的数据行中每一个指令占用一行，指令的参数按照标题行顺序进行填写，使用制表符分割数据，缺失信息使用“.”占位
 
 ```shell
@@ -188,7 +217,11 @@ concat	false	.	string-array	.	-1	Options	Concatenate multiple files.	'concat <fi
 md5	false	.	string-array	.	-1	Options	Calculate a message-digest fingerprint (checksum) for decompressed file.	'md5 <file>'	false	false	false
 ```
 
+尽管从原理上可以直接修改 command 文件，以更改参数/文件属性，但我们建议使用 commandParser 图形界面进行（我们内置了一些检查规则，可以规避错误的格式输入）。
+
 ## 开发文档
+
+我们建议有高级开发需求的用户阅读开发文档（如自定义转换器、验证器，追求纯脚本开发，而不希望通过外部资源导入的方式进行）。
 
 ### 创建解析器
 
