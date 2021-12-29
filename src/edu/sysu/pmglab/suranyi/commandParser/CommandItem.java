@@ -9,6 +9,7 @@ import edu.sysu.pmglab.suranyi.commandParser.exception.CommandParserException;
 import edu.sysu.pmglab.suranyi.commandParser.validator.*;
 import edu.sysu.pmglab.suranyi.container.SmartList;
 
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -671,6 +672,22 @@ public class CommandItem {
             throw new CommandParserException(item.getCommandName() + ": couldn't convert " + options[11] + " to a boolean value (true/false)");
         }
 
+        // 参数长度验证
+        if (!options[5].equals(CommandOptions.MISS_VALUE)) {
+            try {
+                if (options[5].equals(">=1") || options[5].equals("≥1")) {
+                    item.arity(-1);
+                } else {
+                    item.arity(Integer.parseInt(options[5]));
+                }
+            } catch (NumberFormatException e) {
+                throw new CommandParserException(item.getCommandName() + ": couldn't identify arity=" + options[5]);
+            }
+        } else {
+            // 没有设置长度，则按照转换器的长度默认值设置
+            item.arity(1);
+        }
+
         // 推断转换器及验证器
         switch (options[3]) {
             case "boolean":
@@ -716,32 +733,67 @@ public class CommandItem {
                 });
                 break;
             case "boolean-array":
-                item.convertTo(new BooleanArrayConverter() {
-                });
+                if (item.length == 1) {
+                    item.convertTo(new BooleanArrayConverter(",") {
+                    });
+                } else {
+                    item.convertTo(new BooleanArrayConverter() {
+                    });
+                }
                 break;
             case "short-array":
-                item.convertTo(new ShortArrayConverter() {
-                });
+                if (item.length == 1) {
+                    item.convertTo(new ShortArrayConverter(",") {
+                    });
+                } else {
+                    item.convertTo(new ShortArrayConverter() {
+                    });
+                }
                 break;
             case "integer-array":
-                item.convertTo(new IntArrayConverter() {
-                });
+                if (item.length == 1) {
+                    item.convertTo(new IntArrayConverter(",") {
+                    });
+                } else {
+                    item.convertTo(new IntArrayConverter() {
+                    });
+                }
                 break;
             case "long-array":
-                item.convertTo(new LongArrayConverter() {
-                });
+                if (item.length == 1) {
+                    item.convertTo(new LongArrayConverter(",") {
+                    });
+                } else {
+                    item.convertTo(new LongArrayConverter() {
+                    });
+                }
                 break;
             case "string-array":
-                item.convertTo(new StringArrayConverter() {
-                });
+                if (item.length == 1) {
+                    item.convertTo(new StringArrayConverter(",") {
+                    });
+                } else {
+                    item.convertTo(new StringArrayConverter() {
+                    });
+                }
                 break;
             case "float-array":
-                item.convertTo(new FloatArrayConverter() {
-                });
+                if (item.length == 1) {
+                    item.convertTo(new FloatArrayConverter(",") {
+                    });
+                } else {
+                    item.convertTo(new FloatArrayConverter() {
+                    });
+                }
                 break;
             case "double-array":
-                item.convertTo(new DoubleArrayConverter() {
-                });
+                if (item.length == 1) {
+                    item.convertTo(new DoubleArrayConverter(",") {
+                    });
+                } else {
+                    item.convertTo(new DoubleArrayConverter() {
+                    });
+                }
                 break;
             case "k1=v1;k2=v2;...":
                 item.convertTo(new KVConverter<String, String>() {
@@ -784,22 +836,6 @@ public class CommandItem {
                     item.defaultTo(options[2]);
                 }
                 break;
-        }
-
-        // 参数长度验证
-        if (!options[5].equals(CommandOptions.MISS_VALUE)) {
-            try {
-                if (options[5].equals(">=1") || options[5].equals("≥1")) {
-                    item.arity(-1);
-                } else {
-                    item.arity(Integer.parseInt(options[5]));
-                }
-            } catch (NumberFormatException e) {
-                throw new CommandParserException(item.getCommandName() + ": couldn't identify arity=" + options[5]);
-            }
-        } else {
-            // 没有设置长度，则按照转换器的长度默认值设置
-            item.arity(item.converter.getDefaultLength());
         }
 
         // 设定默认值

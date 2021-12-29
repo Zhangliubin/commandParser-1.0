@@ -26,7 +26,7 @@ CommandParser 在 JDK 8 中开发完成，得益于 Java 跨平台的特性，�
 
 **方法2:** 在具有图形界面的操作系统上使用终端 (terminal)，输入 `java -jar ./commandParser.jar `
 
-![image-20211228165317779](https://tva1.sinaimg.cn/large/008i3skNgy1gxtnd2n1u1j31e00u00uh.jpg)
+![图1](https://tva1.sinaimg.cn/large/008i3skNgy1gxtnd2n1u1j31e00u00uh.jpg)
 
 ### 2. 添加参数
 
@@ -34,36 +34,44 @@ CommandParser 在 JDK 8 中开发完成，得益于 Java 跨平台的特性，�
 
 **方法2:** 点击左下角 `+`，在选中位置插入新的参数
 
-![image-20211228170406232](https://tva1.sinaimg.cn/large/008i3skNgy1gxtnoa9c7fj31e00u040j.jpg)
+**方法3:** 点击右下角 `Open` 或拖拽一个文件到窗口中，将导入该参数文件中所有的参数
 
 ### 3. 配置参数属性 (Command 面板)
 
-在经典的命令行中
-
-```shell
-java -jar ./commandParser-1.0.jar bgzip compress ./README.md
-```
-
-
-
 每个参数都有 12 个基本属性，其中 commandName, convertTo 和 arity 是建议设置的属性。每个属性的含义如下：
 
-| 属性         | 含义                                                    | 描述                                                         |
-| ------------ | ------------------------------------------------------- | ------------------------------------------------------------ |
-| commandName  | 识别的参数名 (关键字)                                   | 参数名支持的字符类型: 阿拉伯数字 `0-9`、大小写字母 `a-zA-z`、部分特殊字符 `+-_@` ；多个参数名定位到同一参数时，使用 `,` 进行分隔；第一个参数名将识别为主参数名 |
-| request      | 是否为必备参数                                          |                                                              |
-| default      | 默认值                                                  | convertTo 为数组类型时，使用 `,` 作为数组不同元素的分隔符    |
-| convertTo    | 参数转换的数据类型                                      | 默认值 (default) 和输入的参数值都会被 convertTo 转为对应的 Java 对象 |
-| validateWith | 设置验证器                                              |                                                              |
-| arity        | 参数长度                                                |                                                              |
-| group        | 参数组                                                  |                                                              |
-| description  | 描述文档                                                |                                                              |
-| format       | 格式                                                    |                                                              |
-| hidden       | 在文档中隐藏该参数                                      |                                                              |
-| help         | 该参数是否识别为帮助指令 (帮助指令下允许输入错误的参数) |                                                              |
-| debug        | 是否为 debug 模式下可用的参数                           | commandParser 在非 debug 模式下无法使用 debug=true 的参数。该属性用于标记一些未完成开发或内部测试的方法 |
+| 属性         | 含义                          | 描述                                                         |
+| ------------ | ----------------------------- | ------------------------------------------------------------ |
+| commandName  | 识别的参数名 (关键字)         | 1. 参数名支持的字符类型: 阿拉伯数字 `0-9`、大小写字母 `a-zA-z`、部分特殊字符 `+-_@` <br />2. 多个参数名定位到同一参数时，使用 `,` 进行分隔，第一个参数名将注册为主参数名<br />3. 所有的参数名 (无论是否为主参数名) 都不可重复 |
+| request      | 是否为必备参数                | 在输出文档中，必备参数前有 `*` 标记                          |
+| default      | 默认值                        | 1. convertTo 为数组类型时，使用 `,` 作为不同元素的分隔符<br />2. 未指定默认值时，将设置为 `null` |
+| convertTo    | 参数转换的数据类型            | 1. 默认值 (default) 和输入的参数值都会被 convertTo 转为对应的 Java 对象<br />2. built-in 类型需要在 Java 脚本中重新调用 `parser.getCommandItem($commandName).convertTo($myConvertor)`进行设置 |
+| validateWith | 使用验证器验证参数值          | 1. 多个验证器使用 `;` 进行分隔<br />2. built-in 类型需要在 Java 脚本中重新调用 `parser.getCommandItem($commandName).validateWith()($myValidator)`进行设置 |
+| arity        | 参数长度                      | 1. 捕获到参数关键字时，之后的 arity 个字段都识别为它的值<br />2. 参数长度为 `≥1` 时，将一直捕捉随后的字段，直到遇到下一个参数关键字 |
+| group        | 参数组                        | 文档提示：设置参数所在的参数组                               |
+| description  | 描述文档                      | 文档提示：设置参数的描述文档                                 |
+| format       | 格式                          | 文档提示：设置参数的输入格式                                 |
+| hidden       | 在文档中隐藏该参数            | 被隐藏的参数可以使用，但是不会在文档中显示                   |
+| help         | 该参数是否识别为帮助指令      | 用户传入帮助指令时，允许输入错误的参数，并且不会对参数的规则进行检验 |
+| debug        | 是否为 debug 模式下可用的参数 | 在非 debug 模式下无法使用勾选了该项的参数，该属性建议用于标记一些未完成开发或内部测试的参数 |
 
 ### 4. 配置参数规则 (Other Option 面板)
+
+参数之间若存在搭配规则，建议在 Other Option 面板中进行配置。目前 commandParser 支持 5 种类型的参数规则：
+
+| 规则         | 含义                                                         | 表达式        |
+| ------------ | ------------------------------------------------------------ | ------------- |
+| AT_MOST_ONE  | command1 和 command2 至多传入一个                            | $p_1+p_2\le1$ |
+| AT_LEAST_ONE | command1 和 command2 至少传入一个                            | $p_1+p_2\ge1$ |
+| REQUEST_ONE  | command1 和 command2 需要有其中的一个                        | $p_1+p_2=1$   |
+| PRECONDITION | 传入了 command1 才能 command2 <br />即: command1 是 command2 的前置条件 | $p_1\ge p_2$  |
+| SYMBIOSIS    | command1 和 command2 同时传入或同时不传入                    | $p_1+p_2\ne1$ |
+
+<details><summary><b>案例1</b> 程序的输出格式可以为 <code>--o-bgz</code>(使用 bgzip 压缩输出的数据) 或 <code>--o-text</code> (纯文本输出), 两者不能同时使用</summary>指令设计如下: </br><img src="https://tva1.sinaimg.cn/large/008i3skNgy1gxuuiqdolhj31jk0c640m.jpg" alt="案例1-1" style="zoom:100%;" /> </br></br>规则设计如下: </br><img src="https://tva1.sinaimg.cn/large/008i3skNgy1gxuujgz73jj31jk08l3zg.jpg" alt="案例1-2" style="zoom:100%;" /> </br> 输出格式为 <code>--o-bgz</code> 时，可以指定并行压缩的线程数 (-t) 和压缩级别 (-l)</details>
+
+### 5. 配置全局规则 (Other Option 面板)
+
+
 
 
 
@@ -391,8 +399,3 @@ parser.register("--model", "-m")
 
 - [GBC-1.1](https://pmglab.top/gbc)
 - 本示例程序中的 bgzip-tools
-
-## TODO List
-
-1. 图形界面中增加搜索功能
-2. 支持更多的参数类型
