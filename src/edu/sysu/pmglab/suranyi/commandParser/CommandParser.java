@@ -438,26 +438,33 @@ public class CommandParser {
                 int flag2 = matcher.isPassedIn(rule.command2) ? 1 : 0;
                 switch (rule.type) {
                     case AT_LEAST_ONE:
-                        if (flag1 + flag2 == 0) {
+                        if (flag1 + flag2 >= 1) {
+                            break;
+                        } else {
                             throw new ParameterException(rule.command1 + " and " + rule.command2 + " should be assigned at least one");
                         }
-                        break;
                     case SYMBIOSIS:
-                        if (flag1 + flag2 == 1) {
+                        if (flag1 + flag2 != 1) {
+                            break;
+                        } else {
                             throw new ParameterException(rule.command1 + " and " + rule.command2 + " should be assigned (or not) at the same time");
                         }
-                        break;
                     case AT_MOST_ONE:
-                        if (flag1 + flag2 == 2) {
-                            throw new ParameterException(rule.command1 + " or " + rule.command2 + " could be assigned at most one");
+                        if (flag1 + flag2 <= 1) {
+                            break;
+                        } else {
+                            throw new ParameterException(rule.command1 + " and " + rule.command2 + " could be assigned at most one");
                         }
-                        break;
                     case REQUEST_ONE:
-                        if (flag1 + flag2 != 1) {
+                        if (flag1 + flag2 == 1) {
+                            break;
+                        } else {
                             throw new ParameterException("one of " + rule.command1 + " and " + rule.command2 + " must be assigned");
                         }
                     case PRECONDITION:
-                        if (flag1 < flag2) {
+                        if (flag1 >= flag2) {
+                            break;
+                        } else {
                             throw new ParameterException(rule.command1 + " should be assigned together with " + rule.command2);
                         }
                     default:

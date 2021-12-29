@@ -40,20 +40,20 @@ CommandParser 在 JDK 8 中开发完成，得益于 Java 跨平台的特性，�
 
 每个参数都有 12 个基本属性，其中 commandName, convertTo 和 arity 是建议设置的属性。每个属性的含义如下：
 
-| 属性         | 含义                          | 描述                                                         |
-| ------------ | ----------------------------- | ------------------------------------------------------------ |
-| commandName  | 识别的参数名 (关键字)         | 1. 参数名支持的字符类型: 阿拉伯数字 `0-9`、大小写字母 `a-zA-z`、部分特殊字符 `+-_@` <br />2. 多个参数名定位到同一参数时，使用 `,` 进行分隔，第一个参数名将注册为主参数名<br />3. 所有的参数名 (无论是否为主参数名) 都不可重复 |
-| request      | 是否为必备参数                | 在输出文档中，必备参数前有 `*` 标记                          |
-| default      | 默认值                        | 1. convertTo 为数组类型时，使用 `,` 作为不同元素的分隔符<br />2. 未指定默认值时，将设置为 `null` |
-| convertTo    | 参数转换的数据类型            | 1. 默认值 (default) 和输入的参数值都会被 convertTo 转为对应的 Java 对象<br />2. built-in 类型需要在 Java 脚本中重新调用 `parser.getCommandItem($commandName).convertTo($myConvertor)`进行设置 |
-| validateWith | 使用验证器验证参数值          | 1. 多个验证器使用 `;` 进行分隔<br />2. built-in 类型需要在 Java 脚本中重新调用 `parser.getCommandItem($commandName).validateWith()($myValidator)`进行设置 |
-| arity        | 参数长度                      | 1. 捕获到参数关键字时，之后的 arity 个字段都识别为它的值<br />2. 参数长度为 `≥1` 时，将一直捕捉随后的字段，直到遇到下一个参数关键字 |
-| group        | 参数组                        | 文档提示：设置参数所在的参数组                               |
-| description  | 描述文档                      | 文档提示：设置参数的描述文档                                 |
-| format       | 格式                          | 文档提示：设置参数的输入格式                                 |
-| hidden       | 在文档中隐藏该参数            | 被隐藏的参数可以使用，但是不会在文档中显示                   |
-| help         | 该参数是否识别为帮助指令      | 用户传入帮助指令时，允许输入错误的参数，并且不会对参数的规则进行检验 |
-| debug        | 是否为 debug 模式下可用的参数 | 在非 debug 模式下无法使用勾选了该项的参数，该属性建议用于标记一些未完成开发或内部测试的参数 |
+| 属性         | 含义                                                         |
+| ------------ | ------------------------------------------------------------ |
+| commandName  | <details><summary>识别的参数名 (关键字)</summary>1. 参数名支持的字符类型: 阿拉伯数字 `0-9`、大小写字母 `a-zA-z`、部分特殊字符 `+-_@` <br />2. 多个参数名定位到同一参数时，使用 `,` 进行分隔，第一个参数名将注册为主参数名<br />3. 所有的参数名 (无论是否为主参数名) 都不可重复</details> |
+| request      | <details><summary>是否为必备参数</summary>1. 在文档提示中，必备参数前有 `*` 标记<br />2. 设置为 request 的参数是必须传入的，非 -h 模式下，若缺少必备参数则会抛出异常</details> |
+| default      | <details><summary>设置默认值</summary>1. convertTo 为数组类型时，使用 `,` 作为不同元素的分隔符<br />2. 未指定默认值时，将设置为 `null`</details> |
+| convertTo    | <details><summary>参数转换的数据类型</summary>1. 默认值 (default) 和输入的参数值都会被 convertTo 转为对应的 Java 对象 (例如 `string-array` 类型在 Java 中对应 `String[]`)<br />2. built-in 类型需要在 Java 脚本中重新调用 `parser.getCommandItem($commandName).convertTo($myConvertor)`进行设置<br />3. `convertTo=passedIn` 类型意为传入类型，即仅验证参数是否被传入，而不捕获任何值</details> |
+| validateWith | <details><summary>使用验证器验证参数值</summary>1. 多个验证器使用 `;` 进行分隔<br />2. built-in 类型需要在 Java 脚本中重新调用 `parser.getCommandItem($commandName).validateWith($myValidator)`进行设置<br />3. `convertTo=passedIn` 类型禁止设置验证器 (即该项必须为`.`)<br />4. `ElementOf($value,$value,...)` 为限定元素验证器，仅 `string`,`string-array`,`k1=v1;k2=v2;...`,'' </details> |
+| arity        | <details><summary>参数长度</summary>1. 捕获到参数关键字时，之后的 arity 个字段都识别为它的值<br />2. 参数长度为 `≥1` 时，将捕捉随后的多个字段，直到遇到下一个参数关键字<br />3. 当 `arity=1` 且 `convertTo` 为数组类型时 (如: `string-array`)，输入的字段将按照 `,` 进行切割;<br />4. `convertTo=passedIn` 类型禁止设置非 0 的参数长度 (即该项必须为`0`)  </details> |
+| group        | <details><summary>参数组</summary>文档提示：设置参数所在的参数组</details> |
+| description  | <details><summary>描述文档</summary>文档提示：设置参数的描述文档</details> |
+| format       | <details><summary>参数输入的参考格式</summary>文档提示：设置参数的输入格式</details> |
+| hidden       | <details><summary>在文档中隐藏该参数</summary>被隐藏的参数可以使用，但是不会在文档中显示</details> |
+| help         | <details><summary>该参数是否识别为帮助指令</summary>用户传入帮助指令时，允许输入错误的参数，并且不会对参数的规则进行检验</details> |
+| debug        | <details><summary>是否为 debug 模式下可用的参数</summary>在非 debug 模式下无法使用勾选了该项的参数，该属性建议用于标记一些未完成开发或内部测试的参数</details> |
 
 ### 4. 配置参数规则 (Other Option 面板)
 
@@ -197,6 +197,12 @@ md5	false	.	string-array	.	-1	Options	Calculate a message-digest fingerprint (ch
 ```
 
 ## 开发文档
+
+### 转换器
+
+
+
+
 
 指令的解析与使用分四步进行：用户传入指令 `args` $\to$ 创建解析器 `parser` $\to$ 使用解析器解析用户指令，并得到参数集 `matcher` $\to$ 从参数集中获取参数信息。
 
