@@ -396,10 +396,18 @@ parser.registerRule("--no-qc", new String[]{"--gty-gq", "--gty-dp", "--seq-qual"
 
 ### 使用解析器解析指令
 
-创建完成的解析器使用 `parser.parse(args)` 解析指令，并获得 `CommandMatcher` 对象。CommandMatcher 对象包含 2 个方法：
+创建完成的解析器使用以下方法之一
+
+- `parser.parse(args)` 
+- `parser.parseFromString(strings)` 
+- `parser.parseFromFile(fileName)` 
+
+解析指令，并获得 `CommandMatcher` 对象。CommandMatcher 对象主要包含 2 个方法：
 
 - matcher.isPassedIn(String commandKey): 是否传入 commandKey 参数
 - matcher.get(String commandKey): 获取 commandKey 对应的参数值，未传入时将获得参数的 defaultValue (默认为 null)
+
+此外，使用 matcher.toString() 可以获得输入参数的格式化文本。
 
 ### 高级语法: 自定义转换器与验证器
 
