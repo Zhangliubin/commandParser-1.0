@@ -131,8 +131,6 @@ CommandParser 在 JDK 8 中开发完成，得益于 Java 跨平台的特性，�
 
 点击 `Save` 按钮保存当前指令文件，CommandParser 中支持两种导出格式：Java 脚本文件和 Command 命令文件。
 
-<img src="/Users/suranyi/Library/Application Support/typora-user-images/image-20220102001009532.png" alt="image-20220102001009532" style="zoom:50%;" />
-
 Command 命令文件的格式见 [本节](#Command 文件格式)，Java 脚本文件则是指令转为[使用 Java 语言创建 Parser 的格式](#开发文档)。两种文件的区别如下：
 
 - Java 脚本文件无法直接拖拽进入 CommandParser 图形窗口进行编辑，但可以通过调用 `MyParser.toFile(String fileName)` 转为 Command 命令文件，再拽拖进入 CommandParser 图形窗口进行编辑
