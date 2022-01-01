@@ -129,7 +129,11 @@ CommandParser 在 JDK 8 中开发完成，得益于 Java 跨平台的特性，�
 
 ### 9. 导出指令文件
 
-点击 `Save` 按钮保存当前指令文件
+点击 `Save` 按钮保存当前指令文件，CommandParser 中支持两种导出格式：Java 脚本文件和 Command 命令文件。
+
+<img src="/Users/suranyi/Library/Application Support/typora-user-images/image-20220102001009532.png" alt="image-20220102001009532" style="zoom:50%;" />
+
+Command 命令文件的格式见 [本节](#Command 文件格式)，Java 脚本文件则是指令转为 Java 语言的格式。请注意，Java 脚本文件需要用户手动设置 `package` 的路径。
 
 ### 10. 在 Java 脚本中使用当前指令文件
 
@@ -195,7 +199,7 @@ int threadNum = (int) options.get("-t");
 
 ## Command 文件格式
 
-Command 文件是 CommandParser 用于储存命令信息的格式。Command 文件包含注释信息行、标题行、数据行。其中：
+Command 文件是 CommandParser 用于储存命令信息的格式，以 `cp` 作为扩展名。Command 文件包含注释信息行、标题行、数据行。其中：
 
 - 注释信息行的行首为“##”，内容是键值对的形式，通常包含 Command 文件版本信息、运行模式、程序名、指令偏移量、全局规则、指令规则等
 - 标题行的行首为“#”，包含 11 个顺序固定的字段，分别为 commandName (指令名)，request (是否为必备参数)，default (默认值, 该值默认为字符串格式, 并按照 convertTo 进行格式转换), convertTo (指令值的格式, 内置 21 种常见格式，详见[开发文档](#设置指令的参数)), validateWith (验证器, 内置 4 种常见格式), arity (参数长度), group (参数组), description (描述信息), format (指令使用格式), hidden (是否在 -h 帮助文档中隐藏该参数), help (是否捕获为帮助指令)

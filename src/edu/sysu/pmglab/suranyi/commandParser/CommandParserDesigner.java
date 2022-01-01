@@ -3,6 +3,7 @@ package edu.sysu.pmglab.suranyi.commandParser;
 import com.formdev.flatlaf.FlatLightLaf;
 import dev.BGZIPParserFromFile;
 import edu.sysu.pmglab.suranyi.commandParser.exception.CommandParserException;
+import edu.sysu.pmglab.suranyi.commandParser.exception.ParameterException;
 import edu.sysu.pmglab.suranyi.container.SmartList;
 import edu.sysu.pmglab.suranyi.easytools.FileUtils;
 import edu.sysu.pmglab.suranyi.unifyIO.FileStream;
@@ -701,7 +702,7 @@ public class CommandParserDesigner extends JFrame {
     void toJavaFile(String outputFileName) {
         // imports
         SmartList<String> imports = new SmartList<>();
-        imports.add("// TODO\npackage ;\n");
+        imports.add("// TODO: package path\npackage ;\n");
         imports.add("import edu.sysu.pmglab.suranyi.commandParser.CommandParser;");
         imports.add("import edu.sysu.pmglab.suranyi.commandParser.CommandMatcher;");
         imports.add("import edu.sysu.pmglab.suranyi.commandParser.converter.*;");
@@ -729,6 +730,9 @@ public class CommandParserDesigner extends JFrame {
                 "    }\n\n" +
                 "    public static CommandMatcher parse(String... args) {\n" +
                 "        return INSTANCE.parser.parse(args);\n" +
+                "    }\n\n" +
+                "    public static void toFile(String fileName) {\n" +
+                "        INSTANCE.parser.toFile(fileName);\n" +
                 "    }\n\n" +
                 "    " + className + "() {\n" +
                 "        // global options\n" +
@@ -875,10 +879,10 @@ public class CommandParserDesigner extends JFrame {
                 default:
                     // built-in 或其他的转换器
                     // 其他情况需要用户重新配置
-                    commandScript.add("              .convertTo(new IConverter<String>() {\n" +
+                    commandScript.add("              .convertTo(new IConverter<Object>() {\n" +
                             "                  @Override\n" +
-                            "                  public String convert(String... params) {\n" +
-                            "                      // TODO\n" +
+                            "                  public Object convert(String... params) {\n" +
+                            "                      // TODO: method body and type of the return value\n" +
                             "                      return null;\n" +
                             "                  }\n" +
                             "              })");
@@ -912,7 +916,8 @@ public class CommandParserDesigner extends JFrame {
                         cache.add("new IValidator() {\n" +
                                 "                  @Override\n" +
                                 "                  public void validate(String commandKey, Object params) {\n" +
-                                "                      // TODO\n" +
+                                "                      // TODO: method body\n" +
+                                "                      throw new ParameterException()" +
                                 "                  }\n" +
                                 "              }");
                     }
