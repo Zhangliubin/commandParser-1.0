@@ -133,11 +133,20 @@ CommandParser 在 JDK 8 中开发完成，得益于 Java 跨平台的特性，�
 
 <img src="/Users/suranyi/Library/Application Support/typora-user-images/image-20220102001009532.png" alt="image-20220102001009532" style="zoom:50%;" />
 
-Command 命令文件的格式见 [本节](#Command 文件格式)，Java 脚本文件则是指令转为 Java 语言的格式。请注意，Java 脚本文件需要用户手动设置 `package` 的路径。
+Command 命令文件的格式见 [本节](#Command 文件格式)，Java 脚本文件则是指令转为[使用 Java 语言创建 Parser 的格式](#开发文档)。两种文件的区别如下：
+
+- Java 脚本文件无法直接拖拽进入 CommandParser 图形窗口进行编辑，但可以通过调用 `MyParser.toFile(String fileName)` 转为 Command 命令文件，再拽拖进入 CommandParser 图形窗口进行编辑
+- Command 命令文件通过拖拽进入 CommandParser 图形窗口，再选择导出为 Java 脚本文件
+
+> <details><summary>Java 脚本文件示例</summary>指令设计如下: </br><img src="https://tva1.sinaimg.cn/large/008i3skNgy1gxyoldyxomj30ve0u00xb.jpg" alt="案例1-1" style="zoom:100%;" /></br>MyParser 是一个单例，通过 `MyParser.getParser()` 获得 CommandParser 对象。</details>
 
 ### 10. 在 Java 脚本中使用当前指令文件
 
 指令的解析与使用分四步进行：用户传入指令 `args` $\to$ 创建解析器 `parser` $\to$ 使用解析器解析用户指令，并得到参数集 `matcher` $\to$ 从参数集中获取参数信息。
+
+CommandParser 支持两种格式的文件导出，两种方式的区别仅在加载解析器部分，我们分别介绍两种格式文件的使用方法。
+
+#### 10.1 使用 Command 命令文件
 
 **Step1:** 从指令文件中创建解析器
 
@@ -173,7 +182,42 @@ int threadNum = (int) options.get("-t");
 - 获取该指令解析器中是否包含某参数：`parser.containCommandItem($commandName)`
 - 修改为开发人员/用户模式：`parser.debug(true)` 或 `parser.debug(false)`
 - 获取解析器的捕获情况：`options.toString()`
-- 导出当前解析器为指令文件：`parser.toFile($fileName);`
+- 导出当前解析器为指令文件：`parser.toFile($fileName)`
+
+#### 10.2 使用 Java 脚本文件
+
+**Step1:** 获取解析器 (MyParser 是导出的 Java 文件的类名)
+
+```java
+CommandParser parser = MyParser.getParser();
+```
+
+**Step2:** 解析用户输入的参数
+
+```java
+CommandMatcher options = parser.parse(args);
+
+// 或直接通过 MyParser 进行访问
+CommandMatcher options = MyParser.parse(args);
+```
+
+**Step3:** 通过参数名获取解析结果
+
+```java
+// 判断用户是否传入了指定的参数
+boolean noqc = options.isPassedIn("--no-qc");
+
+// 获取参数 --thread,-t 对应的值 (若用户没有传入该参数，则获得默认值)
+int threadNum = (int) options.get("-t");
+```
+
+其他常用方法：
+
+- 获取指令文档：`parser.toString()`
+- 获取该指令解析器中是否包含某参数：`parser.containCommandItem($commandName)`
+- 修改为开发人员/用户模式：`parser.debug(true)` 或 `parser.debug(false)`
+- 获取解析器的捕获情况：`options.toString()`
+- 导出当前解析器为指令文件：`parser.toFile($fileName)` 或 `MyParer.toFile($fileName)` 
 
 ### 11. 打包项目为 jar 包 —— 以 IDEA 为例
 
