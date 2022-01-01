@@ -917,7 +917,7 @@ public class CommandParserDesigner extends JFrame {
                                 "                  @Override\n" +
                                 "                  public void validate(String commandKey, Object params) {\n" +
                                 "                      // TODO: method body\n" +
-                                "                      throw new ParameterException()" +
+                                "                      throw new ParameterException()\n" +
                                 "                  }\n" +
                                 "              }");
                     }
