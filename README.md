@@ -215,7 +215,7 @@ int threadNum = (int) options.get("-t");
 - 获取该指令解析器中是否包含某参数：`parser.containCommandItem($commandName)`
 - 修改为开发人员/用户模式：`parser.debug(true)` 或 `parser.debug(false)`
 - 获取解析器的捕获情况：`options.toString()`
-- 导出当前解析器为指令文件：`parser.toFile($fileName)` 或 `MyParer.toFile($fileName)` 
+- 导出当前解析器为指令文件：`parser.toFile($fileName)` 或 `MyParser.toFile($fileName)` 
 
 ### 11. 打包项目为 jar 包 —— 以 IDEA 为例
 

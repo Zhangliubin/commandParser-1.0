@@ -1,6 +1,5 @@
 package edu.sysu.pmglab.suranyi.commandParser;
 
-import dev.BGZIPParser;
 import edu.sysu.pmglab.suranyi.check.Assert;
 import edu.sysu.pmglab.suranyi.commandParser.converter.map.KVConverter;
 import edu.sysu.pmglab.suranyi.commandParser.converter.value.PassedInConverter;
@@ -18,7 +17,8 @@ import java.util.HashMap;
 import java.util.Objects;
 
 import static edu.sysu.pmglab.suranyi.commandParser.CommandOptions.*;
-import static edu.sysu.pmglab.suranyi.commandParser.CommandRuleType.*;
+import static edu.sysu.pmglab.suranyi.commandParser.CommandRuleType.PRECONDITION;
+import static edu.sysu.pmglab.suranyi.commandParser.CommandRuleType.SYMBIOSIS;
 
 /**
  * @author suranyi

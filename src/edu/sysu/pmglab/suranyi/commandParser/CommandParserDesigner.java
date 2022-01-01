@@ -3,7 +3,6 @@ package edu.sysu.pmglab.suranyi.commandParser;
 import com.formdev.flatlaf.FlatLightLaf;
 import dev.BGZIPParserFromFile;
 import edu.sysu.pmglab.suranyi.commandParser.exception.CommandParserException;
-import edu.sysu.pmglab.suranyi.commandParser.exception.ParameterException;
 import edu.sysu.pmglab.suranyi.container.SmartList;
 import edu.sysu.pmglab.suranyi.easytools.FileUtils;
 import edu.sysu.pmglab.suranyi.unifyIO.FileStream;
@@ -21,8 +20,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 /**
  * @author suranyi
