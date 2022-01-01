@@ -67,6 +67,10 @@ public class ElementValidator implements IValidator {
         return commandName != null && commandName.length() != 0 && COMMAND_NAME_RULE.matcher(commandName).matches();
     }
 
+    public String[] getKeys() {
+        return keys.toArray(new String[]{});
+    }
+
     @Override
     public String toString() {
         String values = keys.toString().replace(" ", "");

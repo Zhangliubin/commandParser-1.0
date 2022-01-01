@@ -16,11 +16,11 @@ public class RangeValidator implements IValidator {
     double MAX;
 
     public RangeValidator(float MIN, float MAX) {
-        this((long) MIN, (long) MAX);
+        this((double) MIN, (double) MAX);
     }
 
-    public RangeValidator(double MIN, double MAX) {
-        this((long) MIN, (long) MAX);
+    public RangeValidator(long MIN, long MAX) {
+        this((double) MIN, (double) MAX);
     }
 
     public RangeValidator(short MIN, short MAX) {
@@ -31,7 +31,7 @@ public class RangeValidator implements IValidator {
         this(MIN, (long) MAX);
     }
 
-    public RangeValidator(long MIN, long MAX) {
+    public RangeValidator(double MIN, double MAX) {
         this.MIN = MIN;
         this.MAX = MAX;
 
@@ -114,6 +114,14 @@ public class RangeValidator implements IValidator {
         } else {
             throw new ParameterException("unable to infer the type of " + commandKey);
         }
+    }
+
+    public double getMIN() {
+        return MIN;
+    }
+
+    public double getMAX() {
+        return MAX;
     }
 
     @Override

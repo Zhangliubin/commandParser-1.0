@@ -181,6 +181,21 @@ public class CommandItem {
         return this;
     }
 
+    /**
+     * 设置默认值 (根据默认值自动推断参数类型)
+     *
+     * @param defaultValue 默认值
+     */
+    public CommandItem setDefaultByConverter(String... defaultValue) {
+        if (!this.converterSet) {
+            throw new CommandParserException("please set converter before using 'setDefaultByConverter'");
+        }
+
+
+        this.defaultValue = this.converter.convert(defaultValue);
+        return this;
+    }
+
     public CommandItem validateWith(IValidator... validators) {
         if (validators == null || validators.length == 0) {
             this.validators = new IValidator[]{};
@@ -315,7 +330,7 @@ public class CommandItem {
      *
      * @param optionGroup 参数组
      */
-    CommandItem setOptionGroup(String optionGroup) {
+    public CommandItem setOptionGroup(String optionGroup) {
         if (optionGroup == null || optionGroup.length() == 0) {
             this.optionGroup = CommandOptions.DEFAULT_OPTION_GROUP;
         } else {
@@ -392,7 +407,14 @@ public class CommandItem {
      * 获取转换器
      */
     IConverter getConverter() {
-        return converter;
+        return this.converter;
+    }
+
+    /**
+     * 获取验证器
+     */
+    IValidator[] getValidator() {
+        return this.validators;
     }
 
     /**
@@ -673,7 +695,6 @@ public class CommandItem {
         } else {
             throw new CommandParserException(item.getCommandName() + ": couldn't convert " + options[11] + " to a boolean value (true/false)");
         }
-
         // 参数长度验证
         if (!options[5].equals(CommandOptions.MISS_VALUE)) {
             try {
@@ -689,6 +710,7 @@ public class CommandItem {
             // 没有设置长度，则按照转换器的长度默认值设置
             item.arity(1);
         }
+
 
         // 推断转换器及验证器
         switch (options[3]) {
@@ -806,8 +828,7 @@ public class CommandItem {
                 });
                 break;
             case "<start>-<end> (double)":
-                item.convertTo(new NaturalDoubleRangeConverter() {
-                });
+                item.convertTo(new NaturalDoubleRangeConverter() {});
                 break;
             case "<start>-<end> (integer)":
                 item.convertTo(new NaturalIntRangeConverter() {
@@ -847,16 +868,16 @@ public class CommandItem {
                 // 无限长度或长度大于 1 时，才进行数组切割
                 if (options[2].contains(",")) {
                     // 以 , 作为分隔符
-                    item.defaultTo(item.converter.convert(options[2].split(",")));
+                    item.setDefaultByConverter(options[2].split(","));
                 } else {
                     // 都不包含，则该参数整体作为一个值
-                    item.defaultTo(item.converter.convert(options[2]));
+                    item.setDefaultByConverter(options[2]);
                 }
             } else if (item.converter instanceof AbstractConverter) {
                 // 抽象转换器会报错，因此只能以 string 形式保存
                 item.defaultTo(options[2]);
             } else {
-                item.defaultTo(item.converter.convert(options[2]));
+                item.setDefaultByConverter(options[2]);
             }
         }
 
@@ -883,8 +904,8 @@ public class CommandItem {
         }
 
         // 设定验证器
-        String[] validators = options[4].split(";");
         if (!options[4].equals(CommandOptions.MISS_VALUE)) {
+            String[] validators = options[4].split(";");
             SmartList<IValidator> addToItem = new SmartList<>();
 
             for (String validator : validators) {

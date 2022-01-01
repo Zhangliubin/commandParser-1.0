@@ -1,5 +1,6 @@
 package edu.sysu.pmglab.suranyi.commandParser;
 
+import dev.BGZIPParser;
 import edu.sysu.pmglab.suranyi.check.Assert;
 import edu.sysu.pmglab.suranyi.commandParser.converter.map.KVConverter;
 import edu.sysu.pmglab.suranyi.commandParser.converter.value.PassedInConverter;
@@ -17,6 +18,7 @@ import java.util.HashMap;
 import java.util.Objects;
 
 import static edu.sysu.pmglab.suranyi.commandParser.CommandOptions.*;
+import static edu.sysu.pmglab.suranyi.commandParser.CommandRuleType.*;
 
 /**
  * @author suranyi
@@ -96,13 +98,15 @@ public class CommandParser {
      *
      * @param ruleType 命令规则
      */
-    public void registerGlobalRule(CommandRuleType ruleType) {
+    public CommandParser registerGlobalRule(CommandRuleType ruleType) {
         // 全局规则 (至少有一个、至多一个、依存)
-        if (ruleType.equals(CommandRuleType.SYMBIOSIS) || ruleType.equals(CommandRuleType.PRECONDITION)) {
+        if (SYMBIOSIS.equals(ruleType) || PRECONDITION.equals(ruleType)) {
             throw new CommandParserException(ruleType + " cannot be defined in a global-rule because it may raise some controversial issues");
         } else {
             this.globalRules = ruleType;
         }
+
+        return this;
     }
 
     /**
@@ -135,8 +139,9 @@ public class CommandParser {
      *
      * @param optionGroup 参数组
      */
-    public void createOptionGroup(String optionGroup) {
+    public CommandParser createOptionGroup(String optionGroup) {
         this.optionGroup = optionGroup.trim();
+        return this;
     }
 
     /**
@@ -210,7 +215,7 @@ public class CommandParser {
             throw new CommandParserException(item2 + " is not defined in Parser");
         }
 
-        if (ruleType != CommandRuleType.PRECONDITION) {
+        if (ruleType != PRECONDITION) {
             if (this.registeredCommandItems.get(item1).getPriority() > this.registeredCommandItems.get(item2).getPriority()) {
                 String temp = item2;
                 item2 = item1;
@@ -244,8 +249,10 @@ public class CommandParser {
      * @param items    命令组
      * @param ruleType 命令规则
      */
-    public void registerRule(String item1, String[] items, CommandRuleType ruleType) {
+    public CommandParser registerRule(String item1, String[] items, CommandRuleType ruleType) {
         registerRule(new String[]{item1}, items, ruleType);
+
+        return this;
     }
 
     /**
@@ -255,7 +262,7 @@ public class CommandParser {
      * @param items2   命令组 2
      * @param ruleType 命令规则
      */
-    public void registerRule(String[] items1, String[] items2, CommandRuleType ruleType) {
+    public CommandParser registerRule(String[] items1, String[] items2, CommandRuleType ruleType) {
         for (String item1 : items1) {
             for (String item2 : items2) {
                 if (item1.equals(item2)) {
@@ -269,6 +276,8 @@ public class CommandParser {
                 registerRule(item1, item2, ruleType);
             }
         }
+
+        return this;
     }
 
     /**
@@ -459,7 +468,7 @@ public class CommandParser {
                         if (flag1 + flag2 == 1) {
                             break;
                         } else {
-                            throw new ParameterException("one of " + rule.command1 + " and " + rule.command2 + " must be assigned" + (flag1 + flag2 == 0 ? " (missing)": " (more than 1)"));
+                            throw new ParameterException("one of " + rule.command1 + " and " + rule.command2 + " must be assigned" + (flag1 + flag2 == 0 ? " (missing)" : " (more than 1)"));
                         }
                     case PRECONDITION:
                         if (flag1 >= flag2) {
@@ -502,7 +511,7 @@ public class CommandParser {
                         line = line.substring(0, line.length() - 2);
                     }
 
-                    for (String arg: line.split(" ")) {
+                    for (String arg : line.split(" ")) {
                         if (arg.length() > 0) {
                             args.add(arg);
                         }
@@ -536,7 +545,7 @@ public class CommandParser {
                     line = line.substring(0, line.length() - 2);
                 }
 
-                for (String arg: line.split(" ")) {
+                for (String arg : line.split(" ")) {
                     if (arg.length() > 0) {
                         args.add(arg);
                     }
@@ -708,8 +717,8 @@ public class CommandParser {
                 file.write(this.registeredCommandItems.get(commandName).toString());
             }
 
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            throw new CommandParserException(e.getMessage());
         }
     }
 

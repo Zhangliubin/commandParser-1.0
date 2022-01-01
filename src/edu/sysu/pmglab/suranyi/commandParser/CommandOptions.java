@@ -67,7 +67,7 @@ public enum CommandOptions {
     final static boolean DEFAULT_DEBUG = false;
     final static int DEFAULT_LENGTH = 1;
     final static Object DEFAULT_VALUE = null;
-    final static IConverter DEFAULT_CONVERTER = new StringConverter() {
+    final static IConverter<String> DEFAULT_CONVERTER = new StringConverter() {
     };
     final static IValidator[] DEFAULT_VALIDATOR = new IValidator[]{};
     final static String DEFAULT_DESCRIPTION = MISS_VALUE;
