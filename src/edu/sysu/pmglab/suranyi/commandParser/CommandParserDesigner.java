@@ -1,7 +1,7 @@
 package edu.sysu.pmglab.suranyi.commandParser;
 
 import com.formdev.flatlaf.FlatLightLaf;
-import dev.fromcommandfile.BGZIPParserFromFile;
+import dev.fromcommandfile.BGZIPCommandEntry;
 import edu.sysu.pmglab.suranyi.commandParser.exception.CommandParserException;
 import edu.sysu.pmglab.suranyi.container.SmartList;
 import edu.sysu.pmglab.suranyi.easytools.FileUtils;
@@ -1087,7 +1087,7 @@ public class CommandParserDesigner extends JFrame {
         parserTestingTable.setEnabled(false);
     }
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         if (args.length == 0) {
             // 神秘 bug: 放在 CommandParserDesigner 里面就会报错，放在外面就不会
             try {
@@ -1098,8 +1098,11 @@ public class CommandParserDesigner extends JFrame {
 
             new CommandParserDesigner();
         } else if (args[0].equals("bgzip")) {
-            // BGZIPParser.submit(args);
-            BGZIPParserFromFile.submit(args);
+            try {
+                BGZIPCommandEntry.submit(args);
+            } catch (Exception e) {
+                System.out.println("ERROR   " + e.getMessage());
+            }
         }
     }
 }

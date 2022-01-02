@@ -3,7 +3,7 @@ package dev.fromcommandfile;
 import edu.sysu.pmglab.suranyi.commandParser.CommandMatcher;
 import edu.sysu.pmglab.suranyi.commandParser.CommandParser;
 
-public enum MD5Parser {
+enum MD5Parser {
     /**
      * single instance
      */

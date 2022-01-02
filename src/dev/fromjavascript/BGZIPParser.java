@@ -1,19 +1,16 @@
 // TODO: package path
 package dev.fromjavascript;
 
-import edu.sysu.pmglab.suranyi.commandParser.CommandParser;
 import edu.sysu.pmglab.suranyi.commandParser.CommandMatcher;
-import edu.sysu.pmglab.suranyi.commandParser.converter.*;
-import edu.sysu.pmglab.suranyi.commandParser.validator.*;
-import edu.sysu.pmglab.suranyi.commandParser.converter.array.*;
-import edu.sysu.pmglab.suranyi.commandParser.converter.map.*;
-import edu.sysu.pmglab.suranyi.commandParser.converter.value.*;
+import edu.sysu.pmglab.suranyi.commandParser.CommandParser;
+import edu.sysu.pmglab.suranyi.commandParser.converter.array.StringArrayConverter;
+import edu.sysu.pmglab.suranyi.commandParser.converter.value.PassedInConverter;
 
+import static edu.sysu.pmglab.suranyi.commandParser.CommandOptions.HELP;
+import static edu.sysu.pmglab.suranyi.commandParser.CommandOptions.HIDDEN;
+import static edu.sysu.pmglab.suranyi.commandParser.CommandRuleType.REQUEST_ONE;
 
-import static edu.sysu.pmglab.suranyi.commandParser.CommandOptions.*;
-import static edu.sysu.pmglab.suranyi.commandParser.CommandRuleType.*;
-
-public enum BGZIPParser {
+enum BGZIPParser {
     /**
      * single instance
      */

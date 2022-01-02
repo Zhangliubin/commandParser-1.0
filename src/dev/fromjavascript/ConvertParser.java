@@ -1,19 +1,17 @@
-// TODO: package path
 package dev.fromjavascript;
 
-import edu.sysu.pmglab.suranyi.commandParser.CommandParser;
 import edu.sysu.pmglab.suranyi.commandParser.CommandMatcher;
-import edu.sysu.pmglab.suranyi.commandParser.converter.*;
-import edu.sysu.pmglab.suranyi.commandParser.validator.*;
-import edu.sysu.pmglab.suranyi.commandParser.converter.array.*;
-import edu.sysu.pmglab.suranyi.commandParser.converter.map.*;
-import edu.sysu.pmglab.suranyi.commandParser.converter.value.*;
-
+import edu.sysu.pmglab.suranyi.commandParser.CommandParser;
+import edu.sysu.pmglab.suranyi.commandParser.converter.value.IntConverter;
+import edu.sysu.pmglab.suranyi.commandParser.converter.value.PassedInConverter;
+import edu.sysu.pmglab.suranyi.commandParser.converter.value.StringConverter;
+import edu.sysu.pmglab.suranyi.commandParser.validator.EnsureFileExistsValidator;
+import edu.sysu.pmglab.suranyi.commandParser.validator.EnsureFileIsNotDirectoryValidator;
+import edu.sysu.pmglab.suranyi.commandParser.validator.RangeValidator;
 
 import static edu.sysu.pmglab.suranyi.commandParser.CommandOptions.*;
-import static edu.sysu.pmglab.suranyi.commandParser.CommandRuleType.*;
 
-public enum ConvertParser {
+enum ConvertParser {
     /**
      * single instance
      */

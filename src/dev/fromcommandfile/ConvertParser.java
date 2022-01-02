@@ -3,7 +3,7 @@ package dev.fromcommandfile;
 import edu.sysu.pmglab.suranyi.commandParser.CommandMatcher;
 import edu.sysu.pmglab.suranyi.commandParser.CommandParser;
 
-public enum ConvertParser {
+enum ConvertParser {
     /**
      * single instance
      */
