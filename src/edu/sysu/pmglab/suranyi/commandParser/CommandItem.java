@@ -660,7 +660,7 @@ public class CommandItem {
 
         // 检验长度是否为 12
         if (options.length != 12) {
-            throw new CommandParserException(item.getCommandName() + ": command takes 11 positional argument (separated by \\t, " + options.length + " given)");
+            throw new CommandParserException(item.getCommandName() + ": command takes 12 positional argument (separated by \\t, " + options.length + " given)");
         }
 
         // 是否为 . 或布尔值
@@ -710,7 +710,6 @@ public class CommandItem {
             // 没有设置长度，则按照转换器的长度默认值设置
             item.arity(1);
         }
-
 
         // 推断转换器及验证器
         switch (options[3]) {
@@ -828,7 +827,8 @@ public class CommandItem {
                 });
                 break;
             case "<start>-<end> (double)":
-                item.convertTo(new NaturalDoubleRangeConverter() {});
+                item.convertTo(new NaturalDoubleRangeConverter() {
+                });
                 break;
             case "<start>-<end> (integer)":
                 item.convertTo(new NaturalIntRangeConverter() {
@@ -864,23 +864,16 @@ public class CommandItem {
         // 设定默认值
         if (!options[2].equals(CommandOptions.MISS_VALUE)) {
             // 使用转换器将默认值转换为对应的类型
-            if (item.converter.isArrayType()) {
-                // 无限长度或长度大于 1 时，才进行数组切割
-                if (options[2].contains(",")) {
-                    // 以 , 作为分隔符
-                    item.setDefaultByConverter(options[2].split(","));
-                } else {
-                    // 都不包含，则该参数整体作为一个值
-                    item.setDefaultByConverter(options[2]);
-                }
-            } else if (item.converter instanceof AbstractConverter) {
+            if (item.converter instanceof AbstractConverter) {
                 // 抽象转换器会报错，因此只能以 string 形式保存
                 item.defaultTo(options[2]);
+            } else if (options[2].contains(",") && item.length != 0 && item.length != 1) {
+                item.setDefaultByConverter(options[2].split(","));
             } else {
+                // 都不包含，则该参数整体作为一个值
                 item.setDefaultByConverter(options[2]);
             }
         }
-
 
         // 其他规则判断: 长度
         if (item.converter instanceof PassedInConverter && item.length != 0) {

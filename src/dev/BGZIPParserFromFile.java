@@ -15,7 +15,7 @@ import java.util.Scanner;
 
 public class BGZIPParserFromFile {
     public static int submit(String... args) throws IOException {
-        CommandParser mainParser = CommandParser.loadFromInnerResource(BGZIPParserFromFile.class, "/command/bgzip");
+        CommandParser mainParser = CommandParser.loadFromInnerResource(BGZIPParserFromFile.class, "/command/bgzip.cp");
         CommandMatcher options = mainParser.parse(args);
         CommandParser subParser = getSubParser(options);
 
@@ -183,22 +183,22 @@ public class BGZIPParserFromFile {
 
     static CommandParser getSubParser(CommandMatcher options) throws IOException {
         if (options.isPassedIn("compress")) {
-            CommandParser subParser = CommandParser.loadFromInnerResource(BGZIPParserFromFile.class, "/command/compress");
+            CommandParser subParser = CommandParser.loadFromInnerResource(BGZIPParserFromFile.class, "/command/compress.cp");
             return subParser;
         } else if (options.isPassedIn("decompress")) {
-            CommandParser subParser = CommandParser.loadFromInnerResource(BGZIPParserFromFile.class, "/command/decompress");
+            CommandParser subParser = CommandParser.loadFromInnerResource(BGZIPParserFromFile.class, "/command/decompress.cp");
             return subParser;
         } else if (options.isPassedIn("md5")) {
-            CommandParser subParser = CommandParser.loadFromInnerResource(BGZIPParserFromFile.class, "/command/md5");
+            CommandParser subParser = CommandParser.loadFromInnerResource(BGZIPParserFromFile.class, "/command/md5.cp");
             return subParser;
         } else if (options.isPassedIn("convert")) {
-            CommandParser subParser = CommandParser.loadFromInnerResource(BGZIPParserFromFile.class, "/command/convert");
+            CommandParser subParser = CommandParser.loadFromInnerResource(BGZIPParserFromFile.class, "/command/convert.cp");
             return subParser;
         } else if (options.isPassedIn("concat")) {
-            CommandParser subParser = CommandParser.loadFromInnerResource(BGZIPParserFromFile.class, "/command/concat");
+            CommandParser subParser = CommandParser.loadFromInnerResource(BGZIPParserFromFile.class, "/command/concat.cp");
             return subParser;
         } else if (options.isPassedIn("extract")) {
-            CommandParser subParser = CommandParser.loadFromInnerResource(BGZIPParserFromFile.class, "/command/extract");
+            CommandParser subParser = CommandParser.loadFromInnerResource(BGZIPParserFromFile.class, "/command/extract.cp");
             return subParser;
         }
         return null;

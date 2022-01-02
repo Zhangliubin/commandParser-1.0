@@ -890,7 +890,11 @@ public class CommandParserDesigner extends JFrame {
             }
 
             if (!row[2].equals(CommandOptions.MISS_VALUE)) {
-                commandScript.add("              .setDefaultByConverter(\"" + row[2] + "\")");
+                if (((String) row[2]).contains(",") && length != 0 && length != 1) {
+                    commandScript.add("              .setDefaultByConverter(" + merge(true, ((String) row[2]).split(",")) + ")");
+                } else {
+                    commandScript.add("              .setDefaultByConverter(\"" + row[2] + "\")");
+                }
             }
 
             // 设定验证器

@@ -62,7 +62,7 @@ CommandParser 在 JDK 8 中开发完成，得益于 Java 跨平台的特性，�
 | ------------ | ------------------------------------------------------------ |
 | commandName  | <details><summary>识别的参数名 (关键字)</summary>1. 参数名支持的字符类型: 阿拉伯数字 `0-9`、大小写字母 `a-zA-z`、部分特殊字符 `+-_@` <br />2. 多个参数名定位到同一参数时，使用 `,` 进行分隔，第一个参数名将注册为主参数名<br />3. 所有的参数名 (无论是否为主参数名) 都不可重复</details> |
 | request      | <details><summary>是否为必备参数</summary>1. 在文档提示中，必备参数前有 `*` 标记<br />2. 设置为 request 的参数是必须传入的，若缺少必备参数则会抛出异常</details> |
-| default      | <details><summary>设置默认值</summary>1. convertTo 为数组类型时，使用 `,` 作为不同元素的分隔符<br />2. 未指定默认值时，将设置为 `null`</details> |
+| default      | <details><summary>设置默认值</summary>1. 当 default 包含`,`并且捕获的参数值个数不为 1 或 0 时，default 将按照 `,` 切割为数组<br />2. 未指定默认值时，将设置为 `null`</details> |
 | convertTo    | <details><summary>参数转换的数据类型</summary>1. 默认值 (default) 和输入的参数值都会被 convertTo 转为对应的 Java 对象 (例如 `string-array` 类型在 Java 中对应 `String[]`。有关各个转换器对应的参数类型，请阅读 [开发文档](#设置指令的参数))<br />2. built-in 类型需要在 Java 脚本中重新调用 `parser.getCommandItem($commandName).convertTo($myConvertor)`进行设置<br />3. `passedIn` 类型为传入类型，即仅验证参数是否被传入，而不捕获任何值</details> |
 | validateWith | <details><summary>使用验证器验证参数值</summary>1. 多个验证器使用 `;` 进行分隔<br />2. built-in 类型需要在 Java 脚本中重新调用 `parser.getCommandItem($commandName).validateWith($myValidator)`进行设置<br />3. `passedIn` 类型禁止设置验证器 (即该项必须为`.`)<br />4. `ElementOf($value,$value,...)` 为限定元素验证器，即元素的值必须在列出的项目中。它的元素值被识别为字符串类型，即 `string`, `string-array`, `k1=v1;k2=v2;...`, `<start>-<end> (string)`, `<index>:<start>-<end> (string)` 类型支持此验证器，其余类型需要用户在命令脚本中定义规则。此外，元素值支持的字符类型为：阿拉伯数字 `0-9`、大小写字母 `a-zA-z`、部分特殊字符 `+-_@./` </details> |
 | arity        | <details><summary>参数长度</summary>1. 捕获到参数关键字时，之后的 arity 个字段都识别为它的值<br />2. 参数长度为 `≥1` 时，将捕捉随后的多个字段，直到遇到下一个参数关键字<br />3.  `convertTo` 为数组类型时 (如: `string-array`)：当 `arity=1` 时，输入的字段将按照 `,` 进行切割 (例: `--model lr,lasso,svm` 识别为 `String[]{"lr", "lasso", "svm"})`；`arity` 为 `≥1` 或 `2,3,...` 时，传入的值直接作为数组元素，而不进行分隔 (例: `--model lr lasso,svm 识别为 String[]{"lr", "lasso,svm"}`)<br />4. `passedIn` 类型参数长度必须为 0；`boolean`, `short`, `integer`, `long`, `string`, `float`, `double` 类型参数长度必须为 1; `<start>-<end>`,`<index>:<start>-<end>`,`k1=v1;k2=v2;...`类型参数长度必须为 1；`array` 类型参数长度不能为 0<br /></details> |
@@ -278,10 +278,10 @@ md5	false	.	string-array	.	-1	Options	Calculate a message-digest fingerprint (ch
 CommandParser parser = new CommandParser("bgzip <input>");
 
 // 从文件中导入解析器 (不建议使用该语句)
-CommandParser parser = CommandParser.loadFromFile("/command/bgzip");
+CommandParser parser = CommandParser.loadFromFile("/command/bgzip.cp");
 
 // 从文件中导入解析器 (建议使用该语句)
-CommandParser parser = CommandParser.loadFromInnerResource(BGZIPParserFromFile.class, "/command/bgzip");
+CommandParser parser = CommandParser.loadFromInnerResource(BGZIPParserFromFile.class, "/command/bgzip.cp");
 ```
 
 CommandParser 包含三个注册器:
