@@ -1,7 +1,7 @@
 package edu.sysu.pmglab.suranyi.commandParser;
 
 import com.formdev.flatlaf.FlatLightLaf;
-import dev.BGZIPParserFromFile;
+import dev.fromcommandfile.BGZIPParserFromFile;
 import edu.sysu.pmglab.suranyi.commandParser.exception.CommandParserException;
 import edu.sysu.pmglab.suranyi.container.SmartList;
 import edu.sysu.pmglab.suranyi.easytools.FileUtils;
@@ -222,7 +222,7 @@ public class CommandParserDesigner extends JFrame {
                     // 识别为 列名:值 形式
                     String[] values = filter.split(":");
                     if (values.length == 2) {
-                        if ("command".equalsIgnoreCase(values[0]) || "commandname".equalsIgnoreCase(values[0])) {
+                        if ("dev/fromcommandfile/command".equalsIgnoreCase(values[0]) || "commandname".equalsIgnoreCase(values[0])) {
                             for (Object[] row : commandBackupList) {
                                 if (((String) row[0]).contains(values[1])) {
                                     commandModel.addRow(row);

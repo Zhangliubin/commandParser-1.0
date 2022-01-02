@@ -6,8 +6,9 @@ import java.util.Objects;
 
 /**
  * @author suranyi
- * @description
+ * @description 命令规则
  */
+
 class CommandRule {
     final String command1;
     final String command2;
