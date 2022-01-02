@@ -1099,7 +1099,8 @@ public class CommandParserDesigner extends JFrame {
             new CommandParserDesigner();
         } else if (args[0].equals("bgzip")) {
             try {
-                BGZIPCommandEntry.submit(args);
+                dev.fromcommandfile.BGZIPCommandEntry.submit(args);
+                // dev.fromjavascript.BGZIPCommandEntry.submit(args);
             } catch (Exception e) {
                 System.out.println("ERROR   " + e.getMessage());
             }
