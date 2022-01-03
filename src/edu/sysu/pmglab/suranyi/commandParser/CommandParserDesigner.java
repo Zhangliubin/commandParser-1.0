@@ -423,24 +423,24 @@ public class CommandParserDesigner extends JFrame {
         });
 
         saveButton.addActionListener(e -> {
-            if (openFileName != null) {
-                int status;
-                if (FileUtils.exists(openFileName)) {
-                    status = JOptionPane.showOptionDialog(this, openFileName + " already exists; do you want to overwrite it?", "Information", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, null, new String[]{"Yes", "Save as...", "Cancel"}, "Yes");
-                } else {
-                    status = JOptionPane.showOptionDialog(this, "Would you want to save as " + openFileName + "?", "Information", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, null, new String[]{"Yes", "Save as...", "Cancel"}, "Yes");
-                }
-
-                if (status == 0) {
-                    CommandParser parser = transToParser();
-                    if (openFileName.endsWith(".java")) {
-                        toJavaFile(openFileName);
+            try {
+                if (openFileName != null) {
+                    int status;
+                    if (FileUtils.exists(openFileName)) {
+                        status = JOptionPane.showOptionDialog(this, openFileName + " already exists; do you want to overwrite it?", "Information", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, null, new String[]{"Yes", "Save as...", "Cancel"}, "Yes");
                     } else {
-                        parser.toFile(openFileName);
+                        status = JOptionPane.showOptionDialog(this, "Would you want to save as " + openFileName + "?", "Information", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, null, new String[]{"Yes", "Save as...", "Cancel"}, "Yes");
                     }
-                    JOptionPane.showOptionDialog(this, "Finish!", "Information", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, null, new String[]{"OK"}, "OK");
-                } else if (status == 1) {
-                    try {
+
+                    if (status == 0) {
+                        CommandParser parser = transToParser();
+                        if (openFileName.endsWith(".java")) {
+                            toJavaFile(openFileName);
+                        } else {
+                            parser.toFile(openFileName);
+                        }
+                        JOptionPane.showOptionDialog(this, "Finish!", "Information", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE, null, new String[]{"OK"}, "OK");
+                    } else if (status == 1) {
                         JFileChooser jfc = new JFileChooser();
                         jfc.removeChoosableFileFilter(jfc.getChoosableFileFilters()[0]);
                         jfc.addChoosableFileFilter(new FileNameExtensionFilter("Java Script Format (*.java)", "java"));
@@ -473,12 +473,8 @@ public class CommandParserDesigner extends JFrame {
                                 }
                             }
                         }
-                    } catch (Exception exception) {
-                        JOptionPane.showOptionDialog(this, exception.getMessage(), "Error", JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE, null, new String[]{"OK"}, "OK");
                     }
-                }
-            } else {
-                try {
+                } else {
                     JFileChooser jfc = new JFileChooser();
                     jfc.removeChoosableFileFilter(jfc.getChoosableFileFilters()[0]);
                     jfc.addChoosableFileFilter(new FileNameExtensionFilter("Java Script Format (*.java)", "java"));
@@ -512,9 +508,9 @@ public class CommandParserDesigner extends JFrame {
                             }
                         }
                     }
-                } catch (Exception exception) {
-                    JOptionPane.showOptionDialog(this, exception.getMessage(), "Error", JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE, null, new String[]{"OK"}, "OK");
                 }
+            } catch (Exception exception) {
+                JOptionPane.showOptionDialog(this, exception.getMessage(), "Error", JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE, null, new String[]{"OK"}, "OK");
             }
         });
 
