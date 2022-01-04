@@ -98,7 +98,7 @@ CommandParser 在 JDK 8 中开发完成，得益于 Java 跨平台的特性，�
 - Debug Mode: 解析器是否为 Debug 模式。建议开发人员在 `Debug 模式` 下进行工具开发，对外发布时再使用 `非 Debug 模式`的命令行文件（或 Java 脚本中使用 `parser.debug(boolean debug)` 控制模式）
   - 非 Debug 模式 (用户模式): 包含 `debug` 项的参数将不可使用，并且不会在文档中显示
   - Debug 模式 (开发人员模式): 包含 `debug` 项的参数可以使用，并且会在文档中显示
-- @ Syntax: 将 `@` 开头的符号识别为取地址符，该地址对应的文件作为参数进行传入
+- @ Syntax: 将 `@` 开头的符号识别为取地址符，该地址对应的文件内容作为参数进行传入
 
 ![图2](https://tva1.sinaimg.cn/large/008i3skNgy1gy1rjn2jnxj31je03gdg6.jpg)
 
@@ -299,7 +299,8 @@ CommandParser 包含三个注册器:
 - parser.offset(int length): 设置偏移量 (偏移量指对于用户传入的指令 `args`，将忽略前面的 length 个参数)
 - parser.registerGlobalRule(CommandRuleType ruleType): 设置全局规则。全局规则接受一个 CommandRuleType 参数 (这是一个枚举类)，支持 AT_MOST_ONE (至多包含 1 个参数)、AT_LEAST_ONE (至少包含 1 个参数)、REQUEST_ONE (恰好 1 个参数)
 - parser.createOptionGroup(String optionGroup): 创建参数组
-- parser.debug(boolean debug): 是否为 debug 模式
+- parser.debug(boolean enable): 是否为 debug 模式
+- parser.ustingAt(boolean enable): 是否将 `@` 转译为取地址符 (地址对应的文件内容作为参数传入)
 
 <img src="https://tva1.sinaimg.cn/large/008i3skNgy1gwpc7o2zdsj30lx0dw40k.jpg" alt="image-20211123155539971" style="zoom: 67%;" />
 
