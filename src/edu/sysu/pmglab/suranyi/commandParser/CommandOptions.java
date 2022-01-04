@@ -45,7 +45,7 @@ public enum CommandOptions {
     /**
      * 参数名规则: 数字、大小写字母、横杠-、下划线_、加号+、@
      */
-    final static Pattern COMMAND_NAME_RULE = Pattern.compile("(^[a-zA-Z0-9+_\\-@]+$)");
+    final static Pattern COMMAND_NAME_RULE = Pattern.compile("(^[a-zA-Z0-9+_\\-]+$)");
 
     /**
      * 帮助文档中的预留关键字

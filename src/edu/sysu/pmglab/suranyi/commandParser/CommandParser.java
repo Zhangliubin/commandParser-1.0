@@ -65,6 +65,11 @@ public class CommandParser {
      */
     boolean debug = false;
 
+    /**
+     * 使用 @ 表示转译字符内容
+     */
+    boolean usingAtSymbol = true;
+
     public CommandParser() {
         this(true, "<main class>");
     }
@@ -131,6 +136,21 @@ public class CommandParser {
      * debug 模式
      */
     public CommandParser debug() {
+        return debug(true);
+    }
+
+    /**
+     * 使用 @ 识别路径信息
+     */
+    public CommandParser usingAt(boolean enable) {
+        this.usingAtSymbol = enable;
+        return this;
+    }
+
+    /**
+     * 使用 @ 识别路径信息
+     */
+    public CommandParser usingAt() {
         return debug(true);
     }
 
@@ -289,6 +309,69 @@ public class CommandParser {
     public CommandMatcher parse(String... args) {
         if (this.offset > args.length) {
             throw new ParameterException("program takes at least " + this.offset + " positional argument (" + args.length + " given)");
+        }
+
+        // 查看是否包含 @ 指令，如果包含则将内容解析出来
+        if (usingAtSymbol) {
+            boolean containAtSymbol = false;
+
+            // 先确定存在 @ 符号
+            for (String arg : args) {
+                if (arg.startsWith("@")) {
+                    containAtSymbol = true;
+                    break;
+                }
+            }
+
+            if (containAtSymbol) {
+                SmartList<String> oldArgs = new SmartList<>(args);
+
+                while (containAtSymbol) {
+                    containAtSymbol = false;
+
+                    // 再进行转换
+                    SmartList<String> newArgs = new SmartList<>();
+                    for (String arg : oldArgs) {
+                        if (arg.startsWith("@")) {
+                            arg = arg.substring(1);
+
+                            try (FileStream file = new FileStream(arg, FileOptions.DEFAULT_READER)) {
+                                String line;
+                                while ((line = file.readLineToString()) != null) {
+                                    // 去除首尾空白信息, 把 \t 换为空格
+                                    line = line.replace("\t", " ").trim();
+
+                                    // 不是注释行和空行
+                                    if (line.length() > 0 && !line.startsWith("#") && !line.equals("\\")) {
+                                        // 以 \ 结尾，去除该字符
+                                        if (line.endsWith(" \\")) {
+                                            line = line.substring(0, line.length() - 2);
+                                        }
+
+                                        for (String element : line.split(" ")) {
+                                            if (element.length() > 0) {
+                                                if (element.startsWith("@")) {
+                                                    containAtSymbol = true;
+                                                }
+
+                                                newArgs.add(element);
+                                            }
+                                        }
+                                    }
+                                }
+                            } catch (IOException e) {
+                                throw new ParameterException(e.getMessage());
+                            }
+                        } else {
+                            newArgs.add(arg);
+                        }
+                    }
+
+                    oldArgs = newArgs;
+                }
+
+                args = oldArgs.toStringArray();
+            }
         }
 
         // 查看是否包含 help 指令, 如果包含 help 指令，则不进行强制的参数解析工作
@@ -505,7 +588,7 @@ public class CommandParser {
                 // 去除首尾空白信息, 把 \t 换为空格
                 line = line.replace("\t", " ").trim();
 
-                if (!line.startsWith("#") && line.equals("\\")) {
+                if (line.length() > 0 && !line.startsWith("#") && !line.equals("\\")) {
                     // 以 \ 结尾，去除该字符
                     if (line.endsWith(" \\")) {
                         line = line.substring(0, line.length() - 2);
@@ -539,7 +622,7 @@ public class CommandParser {
             // 去除首尾空白信息, 把 \t 换为空格
             line = line.replace("\t", " ").trim();
 
-            if (!line.startsWith("#") && line.length() > 0) {
+            if (line.length() > 0 && !line.startsWith("#") && !line.equals("\\")) {
                 // 以 \ 结尾，去除该字符
                 if (line.endsWith(" \\")) {
                     line = line.substring(0, line.length() - 2);
@@ -664,6 +747,16 @@ public class CommandParser {
                         throw new CommandParserException("debugMode with an unrecognized value (supported: false/true)");
                     }
                 }
+
+                if (line.startsWith("##@syntax=")) {
+                    if ("false".equals(line.substring(10))) {
+                        parser.usingAtSymbol = false;
+                    } else if ("true".equals(line.substring(10))) {
+                        parser.usingAtSymbol = true;
+                    } else {
+                        throw new CommandParserException("@syntax with an unrecognized value (supported: false/true)");
+                    }
+                }
             } else {
                 if (!line.equals(HEADER)) {
                     throw new CommandParserException("no header found");
@@ -698,6 +791,7 @@ public class CommandParser {
             file.write("##" + VERSION + "\n");
             file.write("##programName=<value=\"" + usage.programName + "\";description=\"when '-h' were passed in, would be show 'Usage: $value [options]'\">\n");
             file.write("##debugMode=" + this.debug + "\n");
+            file.write("##@syntax=" + this.usingAtSymbol + "\n");
             file.write("##offset=<value=" + offset + ";description=\"skip the $value arguments before the command argument passed in\">\n");
             if (globalRules == null) {
                 file.write("##globalRule=<value=\".\";description=\"one of the following rules is supported: {'.','AT_MOST_ONE','AT_LEAST_ONE','REQUEST_ONE'}\">\n");

@@ -87,7 +87,7 @@ CommandParser 在 JDK 8 中开发完成，得益于 Java 跨平台的特性，�
 
 ### 5. 配置全局规则 (Other Option 面板)
 
-命令解析器有 4 项全局参数，位于 `Other Option` 面板下部，每一项的含义为：
+命令解析器有 5 项全局参数，位于 `Other Option` 面板下部，每一项的含义为：
 
 - Usage: 如 “案例1” 所示，此窗口的内容对应于文档中的第一句程序用法
 - offset: 跳过输入的参数个数（例如: `bgzip compress <input> -t 5 -l 5` 而 `offset=3` 时，将跳过 3 个参数，从 `-t 5 -l 5` 开始解析）
@@ -98,8 +98,9 @@ CommandParser 在 JDK 8 中开发完成，得益于 Java 跨平台的特性，�
 - Debug Mode: 解析器是否为 Debug 模式。建议开发人员在 `Debug 模式` 下进行工具开发，对外发布时再使用 `非 Debug 模式`的命令行文件（或 Java 脚本中使用 `parser.debug(boolean debug)` 控制模式）
   - 非 Debug 模式 (用户模式): 包含 `debug` 项的参数将不可使用，并且不会在文档中显示
   - Debug 模式 (开发人员模式): 包含 `debug` 项的参数可以使用，并且会在文档中显示
+- @ Syntax: 将 `@` 开头的符号识别为取地址符，该地址对应的文件作为参数进行传入
 
-![图2](https://tva1.sinaimg.cn/large/008i3skNgy1gxv1g5b7xij31jh030mxf.jpg)
+![图2](https://tva1.sinaimg.cn/large/008i3skNgy1gy1rjn2jnxj31je03gdg6.jpg)
 
 ### 6. 搜索指令
 

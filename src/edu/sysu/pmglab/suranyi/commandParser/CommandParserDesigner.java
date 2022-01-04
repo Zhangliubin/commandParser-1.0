@@ -59,6 +59,7 @@ public class CommandParserDesigner extends JFrame {
     private JButton checkButton;
     private JCheckBox debugModeCheckBox;
     private JTextField searchBox;
+    private JCheckBox atSyntaxCheckBox;
     private SmartList<Object[]> commandBackupList;
     private SmartList<Object[]> ruleBackupList;
     private String openFileName;
@@ -558,6 +559,8 @@ public class CommandParserDesigner extends JFrame {
             mainClassTextField.setText("<main class>");
             offsetSpinner.setValue(0);
             globalRuleComboBox.setSelectedItem(".");
+            debugModeCheckBox.setSelected(false);
+            atSyntaxCheckBox.setSelected(true);
             commandPreview.setText("");
             setTitle("Command Parser Designer");
 
@@ -681,6 +684,7 @@ public class CommandParserDesigner extends JFrame {
         offsetSpinner.setValue(parser.offset);
         globalRuleComboBox.setSelectedItem(parser.globalRules == null ? "." : String.valueOf(parser.globalRules));
         debugModeCheckBox.setSelected(parser.debug);
+        atSyntaxCheckBox.setSelected(parser.usingAtSymbol);
 
         for (String commandName : parser.mainRegisteredCommandItems) {
             CommandItem item = parser.getCommandItem(commandName);
@@ -737,6 +741,7 @@ public class CommandParserDesigner extends JFrame {
                 "        parser.setProgramName(\"" + mainClassTextField.getText().trim() + "\");\n" +
                 "        parser.offset(" + offsetSpinner.getValue() + ");\n" +
                 "        parser.debug(" + debugModeCheckBox.isSelected() + ");\n" +
+                "        parser.usingAt(" + atSyntaxCheckBox.isSelected() + ");\n" +
                 "        parser.registerGlobalRule(" + (Objects.equals(globalRuleComboBox.getSelectedItem(), ".") ? "null" : globalRuleComboBox.getSelectedItem()) + ");\n\n" +
                 "        // add commandItems");
 
@@ -1002,6 +1007,7 @@ public class CommandParserDesigner extends JFrame {
     CommandParser transToParser() {
         CommandParser parser = new CommandParser(false, mainClassTextField.getText().trim());
         parser.debug = debugModeCheckBox.isSelected();
+        parser.usingAtSymbol = atSyntaxCheckBox.isSelected();
         parser.offset((Integer) offsetSpinner.getValue());
         // 设置了 global rule
         switch ((String) globalRuleComboBox.getSelectedItem()) {
