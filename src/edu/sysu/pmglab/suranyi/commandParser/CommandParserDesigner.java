@@ -530,8 +530,10 @@ public class CommandParserDesigner extends JFrame {
                     setTitle("Command Parser Designer: " + file.getName());
                     loadFromFile(file.getAbsolutePath());
                     tabbedPane.setSelectedIndex(0);
+                    commandTable.clearSelection();
                 } catch (Exception exception) {
                     setTitle("Command Parser Designer");
+                    JOptionPane.showOptionDialog(this, exception.getMessage(), "Error", JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE, null, new String[]{"OK"}, "OK");
                 }
             }
         });
