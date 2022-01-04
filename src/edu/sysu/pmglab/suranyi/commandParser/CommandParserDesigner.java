@@ -706,6 +706,7 @@ public class CommandParserDesigner extends JFrame {
         imports.add("import edu.sysu.pmglab.suranyi.commandParser.converter.array.*;");
         imports.add("import edu.sysu.pmglab.suranyi.commandParser.converter.map.*;");
         imports.add("import edu.sysu.pmglab.suranyi.commandParser.converter.value.*;");
+        imports.add("import java.util.HashMap;");
         imports.add("\n");
         imports.add("import static edu.sysu.pmglab.suranyi.commandParser.CommandOptions.*;");
         imports.add("import static edu.sysu.pmglab.suranyi.commandParser.CommandRuleType.*;");
