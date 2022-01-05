@@ -3,9 +3,11 @@ package edu.sysu.pmglab.suranyi.commandParser.validator;
 import edu.sysu.pmglab.suranyi.check.Assert;
 import edu.sysu.pmglab.suranyi.commandParser.exception.CommandParserException;
 import edu.sysu.pmglab.suranyi.commandParser.exception.ParameterException;
+import edu.sysu.pmglab.suranyi.container.BiDict;
+import edu.sysu.pmglab.suranyi.easytools.ArrayUtils;
 
+import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.regex.Pattern;
 
@@ -15,65 +17,164 @@ import java.util.regex.Pattern;
  */
 
 public class ElementValidator implements IValidator {
-    final HashSet<String> keys;
-    final static Pattern COMMAND_NAME_RULE = Pattern.compile("^[a-zA-Z0-9+_\\-@./]+$");
+    boolean index = true;
+    boolean ignoreCase = true;
 
-    private ElementValidator() {
-        keys = null;
-    }
+    final BiDict<String, String> keysBiDict;
+    final String[] keys;
+
+    final static Pattern COMMAND_NAME_RULE = Pattern.compile("^[a-zA-Z0-9+_\\-./]+$");
 
     public ElementValidator(String... keys) {
         Assert.NotEmpty(keys);
-        this.keys = new HashSet<>();
+        this.keysBiDict = new BiDict<>(keys.length);
 
-        for (String key : keys) {
-            if (!checkKeyName(key)) {
-                throw new CommandParserException("invalid syntax: element (" + key + ") contains invalid characters");
+        for (int i = 0; i < keys.length; i++) {
+            if (!checkKeyName(keys[i])) {
+                throw new CommandParserException("invalid syntax: element (" + keys[i] + ") contains invalid characters");
             }
-            this.keys.add(key);
+
+            // 默认是忽略大小写的
+            this.keysBiDict.put(String.valueOf(i), keys[i].toLowerCase());
         }
+
+        this.keys = keys;
+    }
+
+    public ElementValidator setAllowIndex(boolean enable) {
+        this.index = enable;
+        return this;
+    }
+
+    public ElementValidator setIgnoreCase(boolean enable) {
+        if (this.ignoreCase != enable) {
+            keysBiDict.clear();
+
+            if (ignoreCase) {
+                for (int i = 0; i < keys.length; i++) {
+                    this.keysBiDict.put(String.valueOf(i), keys[i].toLowerCase());
+                }
+            } else {
+                for (int i = 0; i < keys.length; i++) {
+                    this.keysBiDict.put(String.valueOf(i), keys[i]);
+                }
+            }
+
+            this.ignoreCase = enable;
+        }
+        return this;
     }
 
     @Override
     public void validate(String commandKey, Object params) {
-        if (params instanceof String[]) {
-            for (String param : (String[]) params) {
-                if (!keys.contains(param)) {
-                    throw new ParameterException(commandKey + ": one of the following values is supported: " + keys);
+        if (index) {
+            // 允许通过索引访问数据
+            if (params instanceof String[]) {
+                for (String param : (String[]) params) {
+                    if (!containKey(param) && !containValue(param)) {
+                        throw new ParameterException(commandKey + ": one (or more) of the following values/indexes are supported: " + Arrays.toString(this.keys));
+                    }
                 }
-            }
-        } else if (params instanceof String) {
-            if (!keys.contains(((String) params))) {
-                throw new ParameterException(commandKey + ": one of the following values is supported: " + keys);
-            }
-        } else if (params instanceof Collection) {
-            for (String param : (Collection<String>) params) {
-                if (!keys.contains(param)) {
-                    throw new ParameterException(commandKey + ": one of the following values is supported: " + keys);
+            } else if (params instanceof String) {
+                if (!containKey((String) params) && !containValue((String) params)) {
+                    throw new ParameterException(commandKey + ": one (or more) of the following values/indexes are supported: " + Arrays.toString(this.keys));
                 }
-            }
-        } else if (params instanceof Map) {
-            for (String param : ((Map<?, String>) params).values()) {
-                if (!keys.contains(param)) {
-                    throw new ParameterException(commandKey + ": one of the following values is supported: " + keys);
+            } else if (params instanceof Collection) {
+                for (String param : (Collection<String>) params) {
+                    if (!containKey(param) && !containValue(param)) {
+                        throw new ParameterException(commandKey + ": one (or more) of the following values/indexes are supported: " + Arrays.toString(this.keys));
+                    }
                 }
+            } else if (params instanceof Map) {
+                for (String param : ((Map<?, String>) params).values()) {
+                    if (!containKey(param) && !containValue(param)) {
+                        throw new ParameterException(commandKey + ": one (or more) of the following values/indexes are supported: " + Arrays.toString(this.keys));
+                    }
+                }
+            } else {
+                throw new ParameterException(commandKey + ": unable to infer the type of " + commandKey);
             }
         } else {
-            throw new ParameterException(commandKey + ": unable to infer the type of " + commandKey);
+            // 不允许通过索引访问数据
+            if (params instanceof String[]) {
+                for (String param : (String[]) params) {
+                    if (!containValue(param)) {
+                        throw new ParameterException(commandKey + ": one (or more) of the following values are supported: " + Arrays.toString(this.keys));
+                    }
+                }
+            } else if (params instanceof String) {
+                if (!containValue((String) params)) {
+                    throw new ParameterException(commandKey + ": one (or more) of the following values are supported: " + Arrays.toString(this.keys));
+                }
+            } else if (params instanceof Collection) {
+                for (String param : (Collection<String>) params) {
+                    if (!containValue(param)) {
+                        throw new ParameterException(commandKey + ": one (or more) of the following values are supported: " + Arrays.toString(this.keys));
+                    }
+                }
+            } else if (params instanceof Map) {
+                for (String param : ((Map<?, String>) params).values()) {
+                    if (!containValue(param)) {
+                        throw new ParameterException(commandKey + ": one (or more) of the following values are supported: " + Arrays.toString(this.keys));
+                    }
+                }
+            } else {
+                throw new ParameterException(commandKey + ": unable to infer the type of " + commandKey);
+            }
         }
+    }
+
+    boolean containKey(String key) {
+        try {
+            int index = Integer.parseInt(key);
+            if (index >= 0 && index < this.keys.length) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
+    boolean containValue(String value) {
+        if (ignoreCase) {
+            return this.keysBiDict.containValue(value.toLowerCase());
+        } else {
+            return ArrayUtils.contain(this.keys, value);
+        }
+    }
+
+    /**
+     * 获取索引对应的值
+     */
+    public String get(int index) {
+        if (ignoreCase) {
+            return this.keysBiDict.valueOf(String.valueOf(index));
+        } else {
+            return this.keys[index];
+        }
+
+    }
+
+    /**
+     * 获取值对应的索引
+     */
+    public int indexOf(String key) {
+        if (ignoreCase) {
+            key = key.toLowerCase();
+        }
+
+        return Integer.parseInt(this.keysBiDict.keyOf(key));
     }
 
     boolean checkKeyName(String commandName) {
         return commandName != null && commandName.length() != 0 && COMMAND_NAME_RULE.matcher(commandName).matches();
     }
 
-    public String[] getKeys() {
-        return keys.toArray(new String[]{});
-    }
-
     @Override
     public String toString() {
-        String values = keys.toString().replace(" ", "");
+        String values = Arrays.toString(keys).replace(" ", "");
         return "ElementOf(" + values.substring(1, values.length() - 1) + ')';
     }
 }
