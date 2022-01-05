@@ -144,7 +144,7 @@ public class ElementValidator implements IValidator {
     /**
      * 获取索引对应的值
      */
-    public String get(int index) {
+    public String valueOf(int index) {
         if (index < keys.length) {
             if (ignoreCase) {
                 return this.keysBiDict.valueOf(String.valueOf(index));
