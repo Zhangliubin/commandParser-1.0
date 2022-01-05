@@ -797,59 +797,59 @@ public class CommandParserDesigner extends JFrame {
 
             switch ((String) row[3]) {
                 case "boolean":
-                    commandScript.add("              .convertTo(new BooleanConverter() {})");
+                    commandScript.add("              .convertTo(new BooleanConverter())");
                     break;
                 case "short":
-                    commandScript.add("              .convertTo(new ShortConverter() {})");
+                    commandScript.add("              .convertTo(new ShortConverter())");
                     break;
                 case "integer":
-                    commandScript.add("              .convertTo(new IntConverter() {})");
+                    commandScript.add("              .convertTo(new IntConverter())");
                     break;
                 case "long":
-                    commandScript.add("              .convertTo(new LongConverter() {})");
+                    commandScript.add("              .convertTo(new LongConverter())");
                     break;
                 case "float":
-                    commandScript.add("              .convertTo(new FloatConverter() {})");
+                    commandScript.add("              .convertTo(new FloatConverter())");
                     break;
                 case "double":
-                    commandScript.add("              .convertTo(new DoubleConverter() {})");
+                    commandScript.add("              .convertTo(new DoubleConverter())");
                     break;
                 case "string":
-                    commandScript.add("              .convertTo(new StringConverter() {})");
+                    commandScript.add("              .convertTo(new StringConverter())");
                     break;
                 case CommandOptions.MISS_VALUE:
                     // 未指定转换器时结合其他信息推断
                     if (row[5].equals("0")) {
-                        commandScript.add("              .convertTo(new PassedInConverter() {})");
+                        commandScript.add("              .convertTo(new PassedInConverter())");
                     } else if (row[5].equals("1") || row[5].equals(CommandOptions.MISS_VALUE)) {
-                        commandScript.add("              .convertTo(new StringConverter() {})");
+                        commandScript.add("              .convertTo(new StringConverter())");
                     } else {
-                        commandScript.add("              .convertTo(new StringArrayConverter() {})");
+                        commandScript.add("              .convertTo(new StringArrayConverter())");
                     }
                     break;
                 case "passedIn":
-                    commandScript.add("              .convertTo(new PassedInConverter() {})");
+                    commandScript.add("              .convertTo(new PassedInConverter())");
                     break;
                 case "boolean-array":
-                    commandScript.add("              .convertTo(new BooleanArrayConverter(" + (length == 1 ? "\",\"" : "") + ") {})");
+                    commandScript.add("              .convertTo(new BooleanArrayConverter(" + (length == 1 ? "\",\"" : "") + "))");
                     break;
                 case "short-array":
-                    commandScript.add("              .convertTo(new ShortArrayConverter(" + (length == 1 ? "\",\"" : "") + ") {})");
+                    commandScript.add("              .convertTo(new ShortArrayConverter(" + (length == 1 ? "\",\"" : "") + "))");
                     break;
                 case "integer-array":
-                    commandScript.add("              .convertTo(new IntArrayConverter(" + (length == 1 ? "\",\"" : "") + ") {})");
+                    commandScript.add("              .convertTo(new IntArrayConverter(" + (length == 1 ? "\",\"" : "") + "))");
                     break;
                 case "long-array":
-                    commandScript.add("              .convertTo(new LongArrayConverter(" + (length == 1 ? "\",\"" : "") + ") {})");
+                    commandScript.add("              .convertTo(new LongArrayConverter(" + (length == 1 ? "\",\"" : "") + "))");
                     break;
                 case "string-array":
-                    commandScript.add("              .convertTo(new StringArrayConverter(" + (length == 1 ? "\",\"" : "") + ") {})");
+                    commandScript.add("              .convertTo(new StringArrayConverter(" + (length == 1 ? "\",\"" : "") + "))");
                     break;
                 case "float-array":
-                    commandScript.add("              .convertTo(new FloatArrayConverter(" + (length == 1 ? "\",\"" : "") + ") {})");
+                    commandScript.add("              .convertTo(new FloatArrayConverter(" + (length == 1 ? "\",\"" : "") + "))");
                     break;
                 case "double-array":
-                    commandScript.add("              .convertTo(new DoubleArrayConverter(" + (length == 1 ? "\",\"" : "") + ") {})");
+                    commandScript.add("              .convertTo(new DoubleArrayConverter(" + (length == 1 ? "\",\"" : "") + "))");
                     break;
                 case "k1=v1;k2=v2;...":
                     commandScript.add(
@@ -861,22 +861,22 @@ public class CommandParserDesigner extends JFrame {
                                     "               })");
                     break;
                 case "<start>-<end> (double)":
-                    commandScript.add("              .convertTo(new NaturalDoubleRangeConverter() {})");
+                    commandScript.add("              .convertTo(new NaturalDoubleRangeConverter())");
                     break;
                 case "<start>-<end> (integer)":
-                    commandScript.add("              .convertTo(new NaturalIntRangeConverter() {})");
+                    commandScript.add("              .convertTo(new NaturalIntRangeConverter())");
                     break;
                 case "<index>:<start>-<end> (integer)":
-                    commandScript.add("              .convertTo(new NaturalIntRangeWithIndexConverter() {})");
+                    commandScript.add("              .convertTo(new NaturalIntRangeWithIndexConverter())");
                     break;
                 case "<start>-<end> (long)":
-                    commandScript.add("              .convertTo(new NaturalLongRangeConverter() {})");
+                    commandScript.add("              .convertTo(new NaturalLongRangeConverter())");
                     break;
                 case "<start>-<end> (string)":
-                    commandScript.add("              .convertTo(new RangeConverter() {})");
+                    commandScript.add("              .convertTo(new RangeConverter())");
                     break;
                 case "<index>:<start>-<end> (string)":
-                    commandScript.add("              .convertTo(new RangeWithIndexConverter() {})");
+                    commandScript.add("              .convertTo(new RangeWithIndexConverter())");
                     break;
                 default:
                     // built-in 或其他的转换器
