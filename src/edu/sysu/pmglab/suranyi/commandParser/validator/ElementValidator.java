@@ -71,23 +71,23 @@ public class ElementValidator implements IValidator {
             // 允许通过索引访问数据
             if (params instanceof String[]) {
                 for (String param : (String[]) params) {
-                    if (!containKey(param) && !containValue(param)) {
+                    if (!containIndex(param) && !containValue(param)) {
                         throw new ParameterException(commandKey + ": one (or more) of the following values/indexes are supported: " + Arrays.toString(this.keys));
                     }
                 }
             } else if (params instanceof String) {
-                if (!containKey((String) params) && !containValue((String) params)) {
+                if (!containIndex((String) params) && !containValue((String) params)) {
                     throw new ParameterException(commandKey + ": one (or more) of the following values/indexes are supported: " + Arrays.toString(this.keys));
                 }
             } else if (params instanceof Collection) {
                 for (String param : (Collection<String>) params) {
-                    if (!containKey(param) && !containValue(param)) {
+                    if (!containIndex(param) && !containValue(param)) {
                         throw new ParameterException(commandKey + ": one (or more) of the following values/indexes are supported: " + Arrays.toString(this.keys));
                     }
                 }
             } else if (params instanceof Map) {
                 for (String param : ((Map<?, String>) params).values()) {
-                    if (!containKey(param) && !containValue(param)) {
+                    if (!containIndex(param) && !containValue(param)) {
                         throw new ParameterException(commandKey + ": one (or more) of the following values/indexes are supported: " + Arrays.toString(this.keys));
                     }
                 }
@@ -124,20 +124,16 @@ public class ElementValidator implements IValidator {
         }
     }
 
-    boolean containKey(String key) {
+    public boolean containIndex(String key) {
         try {
             int index = Integer.parseInt(key);
-            if (index >= 0 && index < this.keys.length) {
-                return true;
-            } else {
-                return false;
-            }
+            return index >= 0 && index < this.keys.length;
         } catch (NumberFormatException e) {
             return false;
         }
     }
 
-    boolean containValue(String value) {
+    public boolean containValue(String value) {
         if (ignoreCase) {
             return this.keysBiDict.containValue(value.toLowerCase());
         } else {
@@ -149,12 +145,15 @@ public class ElementValidator implements IValidator {
      * 获取索引对应的值
      */
     public String get(int index) {
-        if (ignoreCase) {
-            return this.keysBiDict.valueOf(String.valueOf(index));
+        if (index < keys.length) {
+            if (ignoreCase) {
+                return this.keysBiDict.valueOf(String.valueOf(index));
+            } else {
+                return this.keys[index];
+            }
         } else {
-            return this.keys[index];
+            return null;
         }
-
     }
 
     /**
@@ -165,7 +164,12 @@ public class ElementValidator implements IValidator {
             key = key.toLowerCase();
         }
 
-        return Integer.parseInt(this.keysBiDict.keyOf(key));
+        String index = this.keysBiDict.keyOf(key);
+        if (index != null) {
+            return Integer.parseInt(index);
+        } else {
+            return -1;
+        }
     }
 
     boolean checkKeyName(String commandName) {
