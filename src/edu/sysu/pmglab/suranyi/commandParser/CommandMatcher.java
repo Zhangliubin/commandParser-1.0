@@ -20,30 +20,47 @@ public class CommandMatcher {
     final HashSet<String> isPassedIn = new HashSet<>();
     final SmartList<String[]> caughtValues = new SmartList<>(1, true);
     final HashMap<String, CommandItem> commandItems;
+    final boolean help;
 
-    CommandMatcher(CommandParser parser) {
+    CommandMatcher(CommandParser parser, boolean help) {
         this.commandItems = parser.registeredCommandItems;
+        this.help = help;
     }
 
     void addAsDefault(CommandItem commandItem) {
         String commandName = commandItem.getCommandName();
 
-        if (isPassedIn.contains(commandName)) {
+        if (this.values.containsKey(commandName)) {
             throw new ParameterException("keyword argument repeated");
         }
-        this.values.put(commandName, commandItem.getDefaultValue());
+
+        if (!this.help) {
+            this.values.put(commandName, commandItem.getDefaultValue());
+        }
     }
 
     void add(CommandItem commandItem, String[] values) {
-        String commandName = commandItem.getCommandName();
+        if (help) {
+            String commandName = commandItem.getCommandName();
 
-        if (isPassedIn.contains(commandName)) {
-            throw new ParameterException("keyword argument repeated");
+            if (isPassedIn.contains(commandName)) {
+                throw new ParameterException("keyword argument repeated");
+            }
+
+            // help 模式下不解析值
+            this.isPassedIn.add(commandName);
+            this.caughtValues.add(new String[]{commandName, String.join(" ", values)});
+        } else {
+            String commandName = commandItem.getCommandName();
+
+            if (isPassedIn.contains(commandName)) {
+                throw new ParameterException("keyword argument repeated");
+            }
+
+            this.values.put(commandName, commandItem.parseValue(values));
+            this.isPassedIn.add(commandName);
+            this.caughtValues.add(new String[]{commandName, String.join(" ", values)});
         }
-
-        this.values.put(commandName, commandItem.parseValue(values));
-        this.isPassedIn.add(commandName);
-        this.caughtValues.add(new String[]{commandName, String.join(" ", values)});
     }
 
     public boolean isPassedIn(String commandKey) {
@@ -62,12 +79,16 @@ public class CommandMatcher {
      * @return 参数值
      */
     public Object get(String commandKey) {
-        CommandItem group = this.commandItems.get(commandKey);
-        if (group == null) {
-            throw new ParameterException("undefined parameter: " + commandKey);
-        }
+        if (help) {
+            throw new ParameterException("only '.isPassedIn($commandName)' can be used in help mode");
+        } else {
+            CommandItem group = this.commandItems.get(commandKey);
+            if (group == null) {
+                throw new ParameterException("undefined parameter: " + commandKey);
+            }
 
-        return this.values.get(group.getCommandName());
+            return this.values.get(group.getCommandName());
+        }
     }
 
     @Override

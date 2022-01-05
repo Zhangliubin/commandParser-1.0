@@ -401,40 +401,32 @@ public class CommandParser {
         }
 
         // 创建捕获组
-        CommandMatcher matcher = new CommandMatcher(this);
+        CommandMatcher matcher = new CommandMatcher(this, passedInHelp);
 
         // 当开启了 request one 模式时 (常用于子模式选择), 只匹配第一个
-        if (this.globalRules == CommandRuleType.REQUEST_ONE) {
-            CommandItem matchedItem = this.registeredCommandItems.get(args[this.offset]);
+        for (int seek = this.offset; seek < args.length; seek++) {
+            CommandItem matchedItem = this.registeredCommandItems.get(args[seek]);
 
-            if (matchedItem == null) {
-                if (!passedInHelp) {
-                    throw new ParameterException(args[this.offset] + " is passed but no commandItem was defined in Parser");
-                }
-            } else {
-                // 匹配任意长度的参数 (这种情况下包含 0 长参数, 但 真值 和 0 会校验长度)
-                if (!passedInHelp && matchedItem.getLength() != -1 && (args.length - this.offset - 1 != matchedItem.getLength())) {
-                    throw new ParameterException(matchedItem.getCommandName() + " takes " + matchedItem.getLength() + " positional argument (" + (args.length - this.offset - 1) + " given)");
+            if (matchedItem != null) {
+                if (matcher.isPassedIn.contains(matchedItem.getCommandName())) {
+                    // 若已经包含该参数，报错
+                    throw new ParameterException(matchedItem.getCommandName() + " keyword argument repeated");
                 }
 
-                matcher.add(matchedItem, Arrays.copyOfRange(args, this.offset + 1, args.length));
-            }
-        } else {
-            for (int seek = this.offset; seek < args.length; seek++) {
-                CommandItem matchedItem = this.registeredCommandItems.get(args[seek]);
-
-                if (matchedItem != null) {
-
-                    if (matcher.isPassedIn.contains(matchedItem.getCommandName())) {
-                        if (!passedInHelp) {
-                            // 若已经包含该参数，报错
-                            throw new ParameterException(matchedItem.getCommandName() + " keyword argument repeated");
+                // 匹配指定长度的参数
+                if (passedInHelp) {
+                    int length0 = 0;
+                    while (seek + length0 + 1 < args.length) {
+                        if (this.registeredCommandItems.containsKey(args[seek + length0 + 1])) {
+                            break;
                         } else {
-                            continue;
+                            length0++;
                         }
                     }
 
-                    // 匹配指定长度的参数
+                    matcher.add(matchedItem, Arrays.copyOfRange(args, seek + 1, seek + 1 + length0));
+                    seek += length0;
+                } else {
                     if (matchedItem.getLength() == -1) {
                         int length0 = 0;
                         while (seek + length0 + 1 < args.length) {
@@ -447,11 +439,7 @@ public class CommandParser {
 
                         if (length0 == 0) {
                             // 任意长度的参数，但是没有输入
-                            if (!passedInHelp) {
-                                throw new ParameterException(matchedItem.getCommandName() + " takes at least 1 positional argument (0 given)");
-                            } else {
-                                matcher.add(matchedItem, new String[]{});
-                            }
+                            throw new ParameterException(matchedItem.getCommandName() + " takes at least 1 positional argument (0 given)");
                         } else {
                             // 添加捕获组
                             matcher.add(matchedItem, Arrays.copyOfRange(args, seek + 1, seek + 1 + length0));
@@ -471,21 +459,16 @@ public class CommandParser {
                         }
 
                         if (length0 < matchedItem.getLength()) {
-                            if (!passedInHelp) {
-                                throw new ParameterException(matchedItem.getCommandName() + " takes " + matchedItem.getLength() + " positional argument (" + length0 + " given)");
-                            }
-                            // 否则，这一组没有完全输入的参数将被整体丢弃
+                            throw new ParameterException(matchedItem.getCommandName() + " takes " + matchedItem.getLength() + " positional argument (" + length0 + " given)");
                         } else {
                             // 添加捕获组
                             matcher.add(matchedItem, Arrays.copyOfRange(args, seek + 1, seek + 1 + length0));
                         }
                         seek += length0;
                     }
-                } else {
-                    if (!passedInHelp) {
-                        throw new ParameterException(args[seek] + " is passed but no commandItem was defined in Parser");
-                    }
                 }
+            } else {
+                throw new ParameterException(args[seek] + " is passed but no commandItem was defined in Parser");
             }
         }
 
