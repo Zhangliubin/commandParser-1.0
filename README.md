@@ -426,59 +426,29 @@ parser.getCommandItem("$commandName").validateWith($convertor)
 
 重新链接自定义的方法。
 
-例如：实现一个名为 `--subject` 的指令，包含两种输入格式：`--subject s1,s2,s3,...` 与 `--subject @<file>`，后者表示从文件中读取信息并作为值被 `--subject` 捕获。
-
-```java
-parser.register("--subject", "-s")
-        .arity(1)
-        .convertTo(new StringArrayConverter(",") {
-            @Override
-            public String[] convert(String... params) {
-                Assert.that(params.length == 1);
-                String subjects = params[0];
-                SmartList<String> converted = new SmartList<>();
-
-                if (subjects.startsWith("@")) {
-                    // 读取文件模式
-                    subjects = subjects.substring(1);
-                    try (FileStream fs = new FileStream(subjects, subjects.endsWith(".gz") ? FileOptions.BGZIP_READER : FileOptions.DEFAULT_READER)) {
-                        String line;
-                        while ((line = fs.readLineToString()) != null) {
-                            converted.add(line.split(this.separator));
-                        }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                } else {
-                    for (String param : params) {
-                        converted.add(param.split(this.separator));
-                    }
-                }
-
-                return converted.toStringArray();
-            }
-        })
-        .setDescription("Extract the information of the specified subjects. Subject name can be stored in a file with ',' delimited form, and pass in via '-s @file'", "'-s <string>,<string>,...' or '-s @<file>'");
-```
-
 例如：实现一个名为 `--model` 的指令，它的转换格式为 ILDModel 类型。输入的 `geno, --geno, --geno-ld, --geno-r2` 将被识别为 `ILDModel.GENOTYPE_LD`，而输入的 `hap, --hap, --hap-ld, --hap-r2` 将被识别为 `ILDModel.HAPLOTYPE_LD`。
 
 ```java
 parser.register("--model", "-m")
+        .arity(1)
         .convertTo((IConverter<ILDModel>) params -> {
-            if (params.length == 1) {
-                String param = params[0].toUpperCase();
+            Assert.that(params.length == 1);
+            ElementValidator validator = new ElementValidator("geno", "--geno", "--geno-ld", "--geno-r2", "hap", "--hap", "--hap-ld", "--hap-r2");
+            validator.validate("--model", params);
 
-                if (param.equals("GENO") || param.equals("--GENO") || param.equals("--GENO-LD") || param.equals("--GENO-R2")) {
-                    return ILDModel.GENOTYPE_LD;
-                } else if (param.equals("HAP") || param.equals("--HAP") || param.equals("--HAP-LD") || param.equals("--HAP-R2")) {
-                    return ILDModel.HAPLOTYPE_LD;
-                }
+            String param = params[0].toUpperCase();
+
+            if (param.equals("GENO") || param.equals("--GENO") || param.equals("--GENO-LD") || param.equals("--GENO-R2")) {
+                return ILDModel.GENOTYPE_LD;
+            } else if (param.equals("HAP") || param.equals("--HAP") || param.equals("--HAP-LD") || param.equals("--HAP-R2")) {
+                return ILDModel.HAPLOTYPE_LD;
+            } else {
+                throw new ParameterException("unable convert " + Arrays.toString(params) + " to " + ILDModel.class);
             }
-
-            throw new ParameterException("unable convert " + Arrays.toString(params) + " to " + ILDModel.class);
         })
-        .setDescription("Calculate pairwise the linkage disequilibrium (--hap, --hap-ld, --hap-r2) or genotypic correlation (--geno, --geno-ld, --geno-r2)", "'-m <string>'");
+        .setOptionGroup("LD Calculation Options")
+        .setDescription("Calculate pairwise the linkage disequilibrium (hap, --hap, --hap-ld, --hap-r2) or genotypic correlation (geno, --geno, --geno-ld, --geno-r2)")
+        .setFormat("'-m <string>'");
 ```
 
 ## 项目实例
