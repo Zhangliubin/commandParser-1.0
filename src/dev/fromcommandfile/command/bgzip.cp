@@ -10,4 +10,4 @@ convert	false	.	string-array	.	-1	Options	Convert *.gz format to *.bgz format.	c
 decompress	false	.	string-array	.	-1	Options	Decompression.	decompress <file>	false	false	false
 extract	false	.	string-array	.	-1	Options	Cut the bgzip file by pointer range (decompressed file).	extract <file> -r <start>-<end>	false	false	false
 concat	false	.	string-array	.	-1	Options	Concatenate multiple files.	concat <file> <file> ...	false	false	false
-md5	false	.	string-array	.	-1	Options	Calculate a message-digest fingerprint (checksum) for decompressed file.	md5 <file>	false	false	false
+md5	false	.	string	.	1	Options	Calculate a message-digest fingerprint (checksum) for decompressed file.	md5 <file>	false	false	false

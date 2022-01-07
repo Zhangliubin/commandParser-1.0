@@ -5,6 +5,7 @@ import edu.sysu.pmglab.suranyi.commandParser.CommandMatcher;
 import edu.sysu.pmglab.suranyi.commandParser.CommandParser;
 import edu.sysu.pmglab.suranyi.commandParser.converter.array.StringArrayConverter;
 import edu.sysu.pmglab.suranyi.commandParser.converter.value.PassedInConverter;
+import edu.sysu.pmglab.suranyi.commandParser.converter.value.StringConverter;
 
 import static edu.sysu.pmglab.suranyi.commandParser.CommandOptions.HELP;
 import static edu.sysu.pmglab.suranyi.commandParser.CommandOptions.HIDDEN;
@@ -75,8 +76,8 @@ enum BGZIPParser {
               .setDescription("Concatenate multiple files.")
               .setFormat("concat <file> <file> ...");
         parser.register("md5")
-              .arity(-1)
-              .convertTo(new StringArrayConverter() {})
+              .arity(1)
+              .convertTo(new StringConverter() {})
               .setOptionGroup("Options")
               .setDescription("Calculate a message-digest fingerprint (checksum) for decompressed file.")
               .setFormat("md5 <file>");
