@@ -520,7 +520,7 @@ public class CommandParser {
                             throw new ParameterException("program missing 1 required argument: " + info.substring(1, info.length() - 1));
                         } else if (matcher.isPassedIn.size() >= 2) {
                             String info = mainRegisteredCommandItems.toString();
-                            throw new ParameterException("program takes 1 required argument (" + info.substring(1, info.length() - 1) + ") but more than 1 were given");
+                            throw new ParameterException("program takes 1 required argument (" + info.substring(1, info.length() - 1) + "), but more than 1 were given");
                         }
                     default:
                         break;

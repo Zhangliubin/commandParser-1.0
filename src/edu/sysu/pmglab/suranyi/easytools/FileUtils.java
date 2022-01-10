@@ -121,19 +121,10 @@ public class FileUtils {
 
     /**
      * 递归列出所有的子文件绝对路径
-     * @param fileName 文件夹名
-     * @return 子文件构成的数组列表
-     */
-    public static String[] listFilesDeeply(String fileName) throws IOException {
-        return ArrayUtils.toStringArray(listFilesDeeply0(fileName));
-    }
-
-    /**
-     * 递归列出所有的子文件绝对路径
      * @param fileNames 多个文件夹名
      * @return 子文件构成的数组列表
      */
-    public static String[] listFilesDeeply(String... fileNames) throws IOException {
+    public static String[] listFilesDeeply(String... fileNames) {
         ArrayList<String> allInputFileNames = new ArrayList<>(fileNames.length);
         for (String fileName : fileNames) {
             if (FileUtils.isDirectory(fileName)) {
@@ -151,7 +142,7 @@ public class FileUtils {
      * @param fileNames 多个文件夹名
      * @return 子文件构成的数组列表
      */
-    public static String[] listFilesDeeply(Collection<String> fileNames) throws IOException {
+    public static String[] listFilesDeeply(Collection<String> fileNames) {
         ArrayList<String> allInputFileNames = new ArrayList<>(fileNames.size());
         for (String fileName : fileNames) {
             if (FileUtils.isDirectory(fileName)) {
@@ -169,7 +160,7 @@ public class FileUtils {
      * @param fileNames 一个或多个文件夹名
      * @return 子文件构成的数组列表
      */
-    private static ArrayList<String> listFilesDeeply0(String fileNames) throws IOException {
+    private static ArrayList<String> listFilesDeeply0(String fileNames) {
         Assert.that(isDirectory(fileNames), fileNames + " is not a folder.");
 
         File[] subFiles = Objects.requireNonNull(new File(fileNames).listFiles());
@@ -336,7 +327,6 @@ public class FileUtils {
     public static boolean mkdirs(String fileName) {
         return new File(fileName).mkdirs();
     }
-
 
     /**
      * 文件大小字符串格式化转换器

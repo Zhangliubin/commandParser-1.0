@@ -1106,7 +1106,7 @@ public class CommandParserDesigner extends JFrame {
                 // dev.fromcommandfile.BGZIPCommandEntry.submit(args);
                 dev.fromjavascript.BGZIPCommandEntry.submit(args);
             } catch (Exception e) {
-                e.printStackTrace();
+                // e.printStackTrace();
                 System.out.println("ERROR   " + e.getMessage());
             }
         }
