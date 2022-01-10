@@ -153,6 +153,20 @@ public class CommandParser {
     }
 
     /**
+     * 是否使用 @ 语法
+     */
+    public boolean isUsingAtSyntax() {
+        return this.usingAtSymbol;
+    }
+
+    /**
+     * 获取偏移量
+     */
+    public int getOffset() {
+        return this.offset;
+    }
+
+    /**
      * 添加需要捕获的参数信息
      *
      * @param commandNames 其他参数
