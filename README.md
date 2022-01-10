@@ -298,7 +298,6 @@ CommandParser 包含三个注册器:
 - parser.setProgramName(String programName): 设置程序名
 - parser.offset(int length): 设置偏移量 (偏移量指对于用户传入的指令 `args`，将忽略前面的 length 个参数)
 - parser.registerGlobalRule(CommandRuleType ruleType): 设置全局规则。全局规则接受一个 CommandRuleType 参数 (这是一个枚举类)，支持 AT_MOST_ONE (至多包含 1 个参数)、AT_LEAST_ONE (至少包含 1 个参数)、REQUEST_ONE (恰好 1 个参数)
-- parser.createOptionGroup(String optionGroup): 创建参数组
 - parser.debug(boolean enable): 是否为 debug 模式
 - parser.ustingAt(boolean enable): 是否将 `@` 转译为取地址符 (地址对应的文件内容作为参数传入)
 
