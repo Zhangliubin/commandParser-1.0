@@ -29,6 +29,7 @@ public class SmartList<T> implements Collection<T>, RandomAccess {
 
     /**
      * 创建一个循环列表
+     *
      * @param autoExpansion 是否可自动扩容
      */
     public SmartList(boolean autoExpansion) {
@@ -37,6 +38,7 @@ public class SmartList<T> implements Collection<T>, RandomAccess {
 
     /**
      * 创建一个循环列表
+     *
      * @param size 缓冲区大小
      */
     public SmartList(int size) {
@@ -45,7 +47,8 @@ public class SmartList<T> implements Collection<T>, RandomAccess {
 
     /**
      * 创建一个循环列表
-     * @param size 缓冲区大小
+     *
+     * @param size          缓冲区大小
      * @param autoExpansion 是否可自动扩容
      */
     public SmartList(int size, boolean autoExpansion) {
@@ -57,6 +60,7 @@ public class SmartList<T> implements Collection<T>, RandomAccess {
 
     /**
      * 包装基础数据类型
+     *
      * @param src 源数据
      */
     public SmartList(boolean[] src) {
@@ -65,6 +69,7 @@ public class SmartList<T> implements Collection<T>, RandomAccess {
 
     /**
      * 包装基础数据类型
+     *
      * @param src 源数据
      */
     public SmartList(byte[] src) {
@@ -73,6 +78,7 @@ public class SmartList<T> implements Collection<T>, RandomAccess {
 
     /**
      * 包装基础数据类型
+     *
      * @param src 源数据
      */
     public SmartList(short[] src) {
@@ -81,6 +87,7 @@ public class SmartList<T> implements Collection<T>, RandomAccess {
 
     /**
      * 包装基础数据类型
+     *
      * @param src 源数据
      */
     public SmartList(int[] src) {
@@ -89,6 +96,7 @@ public class SmartList<T> implements Collection<T>, RandomAccess {
 
     /**
      * 包装基础数据类型
+     *
      * @param src 源数据
      */
     public SmartList(long[] src) {
@@ -97,6 +105,7 @@ public class SmartList<T> implements Collection<T>, RandomAccess {
 
     /**
      * 创建一个循环列表
+     *
      * @param cache 将缓冲数据包装为循环列表
      */
     public SmartList(T[] cache) {
@@ -105,7 +114,8 @@ public class SmartList<T> implements Collection<T>, RandomAccess {
 
     /**
      * 创建一个循环列表
-     * @param cache 将缓冲数据包装为循环列表
+     *
+     * @param cache         将缓冲数据包装为循环列表
      * @param autoExpansion 是否可自动扩容
      */
     public SmartList(T[] cache, boolean autoExpansion) {
@@ -114,7 +124,8 @@ public class SmartList<T> implements Collection<T>, RandomAccess {
 
     /**
      * 创建一个循环列表
-     * @param cache 将缓冲数据包装为循环列表
+     *
+     * @param cache  将缓冲数据包装为循环列表
      * @param length 有效数据长度
      */
     public SmartList(T[] cache, int length) {
@@ -123,7 +134,8 @@ public class SmartList<T> implements Collection<T>, RandomAccess {
 
     /**
      * 创建一个循环列表
-     * @param cache 将缓冲数据包装为循环列表
+     *
+     * @param cache  将缓冲数据包装为循环列表
      * @param length 有效数据长度
      */
     public SmartList(T[] cache, int length, boolean autoExpansion) {
@@ -132,7 +144,8 @@ public class SmartList<T> implements Collection<T>, RandomAccess {
 
     /**
      * 创建一个循环列表
-     * @param cache 将缓冲数据包装为循环列表
+     *
+     * @param cache  将缓冲数据包装为循环列表
      * @param offset 偏移量
      * @param length 有效数据长度
      */
@@ -142,7 +155,8 @@ public class SmartList<T> implements Collection<T>, RandomAccess {
 
     /**
      * 创建一个循环列表
-     * @param cache 将缓冲数据包装为循环列表
+     *
+     * @param cache  将缓冲数据包装为循环列表
      * @param offset 偏移量
      * @param length 有效数据长度
      */
@@ -161,6 +175,7 @@ public class SmartList<T> implements Collection<T>, RandomAccess {
 
     /**
      * 创建一个循环列表
+     *
      * @param cache 将缓冲数据包装为循环列表
      */
     public SmartList(Collection<T> cache) {
@@ -169,6 +184,7 @@ public class SmartList<T> implements Collection<T>, RandomAccess {
 
     /**
      * 创建一个循环列表
+     *
      * @param cache 将缓冲数据包装为循环列表
      */
     public SmartList(Collection<T> cache, boolean autoExpansion) {
@@ -180,6 +196,7 @@ public class SmartList<T> implements Collection<T>, RandomAccess {
 
     /**
      * 设置可自动扩容
+     *
      * @param autoExpansion 自动扩容
      */
     public SmartList<T> setAutoExpansion(boolean autoExpansion) {
@@ -191,6 +208,7 @@ public class SmartList<T> implements Collection<T>, RandomAccess {
 
     /**
      * 获取当前有效数据数
+     *
      * @return 有效数据数
      */
     @Override
@@ -208,6 +226,7 @@ public class SmartList<T> implements Collection<T>, RandomAccess {
 
     /**
      * 获取总容量 (可扩容容器的容量为 2 GB - 2)
+     *
      * @return 缓冲区长度
      */
     public int getCapacity() {
@@ -249,6 +268,7 @@ public class SmartList<T> implements Collection<T>, RandomAccess {
 
     /**
      * 从左往右查找数据
+     *
      * @param element 待查找的元素
      * @return -1 代表不存在，其余值代表其表内索引
      */
@@ -272,6 +292,7 @@ public class SmartList<T> implements Collection<T>, RandomAccess {
 
     /**
      * 从右往左查找数据
+     *
      * @param element 待查找的元素
      * @return -1 代表不存在，其余值代表其表内索引
      */
@@ -295,17 +316,7 @@ public class SmartList<T> implements Collection<T>, RandomAccess {
 
     /**
      * 添加元素
-     * @return 是否成功添加
-     */
-    public boolean addNull() {
-        makeSureCapacity(1);
-
-        this.cache[end++] = null;
-        return true;
-    }
-
-    /**
-     * 添加元素
+     *
      * @param element 添加元素
      * @return 是否成功添加
      */
@@ -319,6 +330,7 @@ public class SmartList<T> implements Collection<T>, RandomAccess {
 
     /**
      * 添加元素
+     *
      * @param elements 添加元素
      */
     public boolean add(T[] elements) {
@@ -327,6 +339,7 @@ public class SmartList<T> implements Collection<T>, RandomAccess {
 
     /**
      * 添加元素
+     *
      * @param elements 添加元素
      */
     public boolean add(T[] elements, int offset, int length) {
@@ -343,7 +356,6 @@ public class SmartList<T> implements Collection<T>, RandomAccess {
         if (otherLength > 0) {
             // 确保容量是充足的
             makeSureCapacity(otherLength);
-
             System.arraycopy(otherQueue.cache, otherQueue.start, this.cache, this.end, otherLength);
             this.end += otherLength;
         }
@@ -405,6 +417,7 @@ public class SmartList<T> implements Collection<T>, RandomAccess {
 
     /**
      * 移除指定元素
+     *
      * @param element 指定元素
      * @return 是否成功执行了移除操作
      */
@@ -547,6 +560,7 @@ public class SmartList<T> implements Collection<T>, RandomAccess {
 
     /**
      * 弹出最开始的元素
+     *
      * @return 第一个元素
      */
     @SuppressWarnings("unchecked")
@@ -563,6 +577,7 @@ public class SmartList<T> implements Collection<T>, RandomAccess {
 
     /**
      * 弹出最开始的元素
+     *
      * @param size 弹出的元素个数
      * @return 弹出最开始的 size 个元素
      */
@@ -579,6 +594,7 @@ public class SmartList<T> implements Collection<T>, RandomAccess {
 
     /**
      * 弹出最末尾的元素
+     *
      * @return 最后一个元素
      */
     @SuppressWarnings("unchecked")
@@ -594,7 +610,8 @@ public class SmartList<T> implements Collection<T>, RandomAccess {
 
     /**
      * 弹出最末尾的元素
-     * @param size  弹出的元素个数
+     *
+     * @param size 弹出的元素个数
      * @return 弹出最末尾的 size 个元素
      */
     public T[] popLast(int size) {
@@ -610,6 +627,7 @@ public class SmartList<T> implements Collection<T>, RandomAccess {
 
     /**
      * 获取指定索引值元素
+     *
      * @param index 索引
      * @return 该索引对应的元素值
      */
@@ -627,6 +645,7 @@ public class SmartList<T> implements Collection<T>, RandomAccess {
 
     /**
      * 获取指定索引值元素
+     *
      * @param index 索引
      */
     public void set(int index, T newValue) {
@@ -642,6 +661,7 @@ public class SmartList<T> implements Collection<T>, RandomAccess {
 
     /**
      * 插入元素
+     *
      * @param index 插入位置索引
      * @param value 插入值
      */
@@ -678,6 +698,7 @@ public class SmartList<T> implements Collection<T>, RandomAccess {
 
     /**
      * 获取指定索引值范围的元素
+     *
      * @param offset 偏移值
      * @param length 提取数据长度
      * @return 指定范围 (offset, offset + length) 的元素
@@ -693,6 +714,7 @@ public class SmartList<T> implements Collection<T>, RandomAccess {
 
     /**
      * 获取指定索引值范围的子列表 （区别在于它是关联 cache 的，主 cache 被改变，子 cache 也一样被改变）
+     *
      * @param offset 偏移值
      * @param length 提取数据长度
      * @return 指定范围 (offset, offset + length) 的元素
@@ -849,6 +871,7 @@ public class SmartList<T> implements Collection<T>, RandomAccess {
 
     /**
      * 确保容量充足
+     *
      * @param requestSize 需求的大小
      */
     private void makeSureCapacity(int requestSize) {
@@ -879,8 +902,11 @@ public class SmartList<T> implements Collection<T>, RandomAccess {
             }
 
             newCache = new Object[(int) newSize];
-            System.arraycopy(this.cache, this.start, newCache, 0, size());
+            int relSize = size();
+            System.arraycopy(this.cache, this.start, newCache, 0, relSize);
             this.cache = newCache;
+            this.start = 0;
+            this.end = relSize;
         }
     }
 
@@ -933,6 +959,7 @@ public class SmartList<T> implements Collection<T>, RandomAccess {
 
     /**
      * 输出至多 maxNums 个元素
+     *
      * @param maxNums 至多输出的元素个数
      */
     public String toString(int maxNums) {
