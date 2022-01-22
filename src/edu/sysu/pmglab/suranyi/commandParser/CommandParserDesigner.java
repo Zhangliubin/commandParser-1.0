@@ -52,7 +52,6 @@ public class CommandParserDesigner extends JFrame {
     private JTextArea parserTestingInputTextArea;
     private JTable parserTestingTable;
     private JScrollPane parserTestingScrollPane;
-    private JScrollPane parserTestingInputScrollPane;
     private JButton parserTestingParseButton;
     private JButton parserTestingClearButton;
     private JButton parserTestingOpenButton;
@@ -60,6 +59,7 @@ public class CommandParserDesigner extends JFrame {
     private JCheckBox debugModeCheckBox;
     private JTextField searchBox;
     private JCheckBox atSyntaxCheckBox;
+    private JScrollPane parserTestingInputScrollPane;
     private SmartList<Object[]> commandBackupList;
     private SmartList<Object[]> ruleBackupList;
     private String openFileName;
@@ -68,12 +68,15 @@ public class CommandParserDesigner extends JFrame {
         setTitle("Command Parser Designer");
 
         pack();
-        setResizable(false);
+        setResizable(true);
         setContentPane(mainPanel);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         // 设置窗口大小
         initSize(1000, 600);
+
+        // 窗口最小大小限制
+        setMinimumSize(new Dimension(850, 300));
 
         // 添加监听器
         addListener();

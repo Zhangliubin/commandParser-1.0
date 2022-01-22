@@ -397,7 +397,7 @@ public class SmartList<T> implements Collection<T>, RandomAccess {
     }
 
     /**
-     * dropNull 的逻辑不太一样
+     * dropNull 删除 null 元素
      */
     public void dropNull() {
         int count = 0;
