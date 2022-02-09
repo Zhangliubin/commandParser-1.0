@@ -12,7 +12,7 @@ import java.util.*;
  * @description 循环队列 (非常适用于经常从前面或者后面添加、删除数据的情形)
  */
 
-public class SmartList<T> implements Collection<T>, RandomAccess {
+public class SmartList<T> implements Collection<T>, RandomAccess, Cloneable {
     Object[] cache;
     int start = 0;
     int end = 0;
@@ -1005,6 +1005,11 @@ public class SmartList<T> implements Collection<T>, RandomAccess {
         }
 
         return b.toString();
+    }
+
+    @Override
+    public SmartList<T> clone() {
+        return new SmartList<>(this);
     }
 
     /**
