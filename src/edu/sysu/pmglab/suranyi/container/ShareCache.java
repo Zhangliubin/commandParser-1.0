@@ -1,11 +1,13 @@
 package edu.sysu.pmglab.suranyi.container;
 
+import java.util.Iterator;
+
 /**
  * @author suranyi
  * @description 多个定容字节数组组成的共享缓冲区
  */
 
-public class ShareCache {
+public class ShareCache implements Iterable<VolumeByteStream> {
     SmartList<VolumeByteStream> caches;
 
     public ShareCache() {
@@ -18,6 +20,7 @@ public class ShareCache {
 
     /**
      * 获取缓冲区索引
+     *
      * @param index 索引值
      */
     public VolumeByteStream getCache(int index) {
@@ -26,6 +29,7 @@ public class ShareCache {
 
     /**
      * 请求分配一个长度为 cacheSize 的缓冲区
+     *
      * @param cacheSize 缓冲区大小
      */
     public VolumeByteStream alloc(int cacheSize) {
@@ -61,5 +65,10 @@ public class ShareCache {
      */
     public boolean enable() {
         return this.caches != null;
+    }
+
+    @Override
+    public Iterator<VolumeByteStream> iterator() {
+        return this.caches.iterator();
     }
 }

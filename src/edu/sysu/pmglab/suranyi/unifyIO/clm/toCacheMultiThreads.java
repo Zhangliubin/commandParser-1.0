@@ -17,7 +17,6 @@ class toCacheMultiThreads implements To {
     final FileStream file;
     final VolumeByteStream[] caches;
     final Semaphore[] semaphores;
-    final AtomicBoolean finishAssigned = new AtomicBoolean(false);
 
     public toCacheMultiThreads(String outputFileName, int nThreads) throws IOException {
         this.file = new FileStream(outputFileName, FileOptions.CHANNEL_WRITER);

@@ -649,14 +649,18 @@ public class SmartList<T> implements Collection<T>, RandomAccess, Cloneable {
      * @param index 索引
      */
     public void set(int index, T newValue) {
-        if (index < 0) {
-            index = size() + index;
+        if (index == size()) {
+            add(newValue);
+        } else {
+            if (index < 0) {
+                index = size() + index;
 
-            Assert.that(index >= 0, RuntimeExceptionOptions.ArrayIndexOutOfBoundsException, "index out of bounds");
+                Assert.that(index >= 0, RuntimeExceptionOptions.ArrayIndexOutOfBoundsException, "index out of bounds");
+            }
+
+            Assert.that(this.start + index < this.end, RuntimeExceptionOptions.ArrayIndexOutOfBoundsException, "index out of bounds");
+            this.cache[this.start + index] = newValue;
         }
-
-        Assert.that(this.start + index < this.end, RuntimeExceptionOptions.ArrayIndexOutOfBoundsException, "index out of bounds");
-        this.cache[this.start + index] = newValue;
     }
 
     /**

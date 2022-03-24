@@ -35,9 +35,6 @@ public class FileStream implements AutoCloseable, Closeable {
     private int length = 0;
     private byte[] cache;
 
-    // 分隔符及是否切割末尾字符
-    private final boolean separatorTrim = false;
-
     // 文件状态
     private boolean closed;
 
@@ -46,6 +43,7 @@ public class FileStream implements AutoCloseable, Closeable {
 
     /**
      * 构造器方法
+     *
      * @param fileName 文件名
      */
     public FileStream(String fileName) throws IOException {
@@ -67,8 +65,9 @@ public class FileStream implements AutoCloseable, Closeable {
 
     /**
      * 构造器方法
+     *
      * @param fileName 文件名
-     * @param mode 打开模式，文件夹只能用 NO_OPEN 打开
+     * @param mode     打开模式，文件夹只能用 NO_OPEN 打开
      */
     public FileStream(String fileName, FileOptions mode) throws IOException {
         this.mode = mode;
@@ -82,6 +81,7 @@ public class FileStream implements AutoCloseable, Closeable {
 
     /**
      * 构造器方法
+     *
      * @param fileStream 文件流
      */
     public static FileStream of(IFileStream fileStream) throws IOException {
@@ -90,6 +90,7 @@ public class FileStream implements AutoCloseable, Closeable {
 
     /**
      * 构造器方法
+     *
      * @param fileName 文件名
      */
     public static FileStream of(String fileName) throws IOException {
@@ -98,8 +99,9 @@ public class FileStream implements AutoCloseable, Closeable {
 
     /**
      * 构造器方法
+     *
      * @param fileName 文件名
-     * @param mode 打开模式，文件夹只能用 NO_OPEN 打开
+     * @param mode     打开模式，文件夹只能用 NO_OPEN 打开
      */
     public static FileStream of(String fileName, FileOptions mode) throws IOException {
         return new FileStream(fileName, mode);
@@ -107,8 +109,9 @@ public class FileStream implements AutoCloseable, Closeable {
 
     /**
      * 打开文件
+     *
      * @param fileName 文件名
-     * @param mode 文件模式
+     * @param mode     文件模式
      */
     private IFileStream openFile(String fileName, FileOptions mode) throws IOException {
         try {
@@ -203,6 +206,7 @@ public class FileStream implements AutoCloseable, Closeable {
 
     /**
      * 读取 n 个字节
+     *
      * @param n 一次性读取的字节数
      * @return <= n 个字节长度的数组，无数据读取则返回 null
      */
@@ -224,6 +228,7 @@ public class FileStream implements AutoCloseable, Closeable {
 
     /**
      * 填充目标数组
+     *
      * @param dst 目标数组
      * @return 填充字节数
      */
@@ -233,7 +238,8 @@ public class FileStream implements AutoCloseable, Closeable {
 
     /**
      * 填充目标数组
-     * @param dst 目标数组
+     *
+     * @param dst    目标数组
      * @param offset 目标数组偏移量
      * @param length 目标数组写入长度
      * @return 填充字节数
@@ -259,7 +265,8 @@ public class FileStream implements AutoCloseable, Closeable {
 
     /**
      * 读取长度为 length 的数据，并写入 dst 中
-     * @param dst 目标数组
+     *
+     * @param dst    目标数组
      * @param length 目标数组写入长度
      */
     public int read(VolumeByteStream dst, int length) throws IOException {
@@ -295,6 +302,7 @@ public class FileStream implements AutoCloseable, Closeable {
 
     /**
      * 写入 1 字节
+     *
      * @param element 写入的元素
      */
     public void write(byte element) throws IOException {
@@ -303,6 +311,7 @@ public class FileStream implements AutoCloseable, Closeable {
 
     /**
      * 将源数据 src 的数据写入文件
+     *
      * @param src 源数据
      */
     public void write(byte[] src) throws IOException {
@@ -311,6 +320,7 @@ public class FileStream implements AutoCloseable, Closeable {
 
     /**
      * 将源数据 ByteBuffer 的数据写入文件。若使用 Buffer.allocate 创建缓冲区，并使用 put 添加数据，则需要先使用 buffer.flip() 重置
+     *
      * @param buffer 源数据
      */
     public void write(ByteBuffer buffer) throws IOException {
@@ -319,7 +329,8 @@ public class FileStream implements AutoCloseable, Closeable {
 
     /**
      * 将源数据 src 的数据，从 offset 开始的 length 长度数据写入文件
-     * @param src 源数据
+     *
+     * @param src    源数据
      * @param offset 偏移量
      * @param length 写入的长度
      */
@@ -329,6 +340,7 @@ public class FileStream implements AutoCloseable, Closeable {
 
     /**
      * 将字符串形式的源数据转为字节数组，并写入文件
+     *
      * @param src 源数据，字符串形式
      */
     public void write(String src) throws IOException {
@@ -337,6 +349,7 @@ public class FileStream implements AutoCloseable, Closeable {
 
     /**
      * 将源数据定容数组写入文件
+     *
      * @param src 源数据，定容数组
      */
     public void write(VolumeByteStream src) throws IOException {
@@ -345,7 +358,8 @@ public class FileStream implements AutoCloseable, Closeable {
 
     /**
      * 将源数据定容数组从 offset 开始 连续的 length 长度写入文件
-     * @param src 源数据，定容数组
+     *
+     * @param src    源数据，定容数组
      * @param offset 偏移量
      * @param length 写入的长度
      */
@@ -355,8 +369,9 @@ public class FileStream implements AutoCloseable, Closeable {
 
     /**
      * 将本文件从 position 开始的 count 字节写入另一个文件
-     * @param position 开始写入的指针
-     * @param count 写入的长度
+     *
+     * @param position      开始写入的指针
+     * @param count         写入的长度
      * @param channelWriter 另一个文件
      */
     public void writeTo(long position, long count, FileChannel channelWriter) throws IOException {
@@ -379,6 +394,7 @@ public class FileStream implements AutoCloseable, Closeable {
 
     /**
      * 设定文件指针
+     *
      * @param pos 新文件指针的位置
      */
     public void seek(long pos) throws IOException {
@@ -457,6 +473,7 @@ public class FileStream implements AutoCloseable, Closeable {
 
     /**
      * 按行读取
+     *
      * @param dst 写入缓冲区
      * @return 写入的数据长度
      */
@@ -561,6 +578,7 @@ public class FileStream implements AutoCloseable, Closeable {
 
     /**
      * 重新打开文件
+     *
      * @param mode 按照指定的新模式
      */
     public void reOpen(FileOptions mode) throws IOException {
@@ -609,6 +627,7 @@ public class FileStream implements AutoCloseable, Closeable {
 
     /**
      * 修改文件名，会导致本文件被关闭
+     *
      * @param newName 目标文件名
      */
     public boolean rename(String newName) throws IOException {

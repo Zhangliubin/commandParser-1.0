@@ -20,7 +20,6 @@ class toCacheBGZIPMultiThreads implements To {
     final IBlockWriter<VolumeByteStream>[] caches;
     final Semaphore[] semaphores;
     final BGZOutputParam bgzOutputParam;
-    final AtomicBoolean finishAssigned = new AtomicBoolean(false);
 
     public toCacheBGZIPMultiThreads(String outputFileName, final BGZOutputParam bgzOutputParam, int nThreads) throws IOException {
         this.bgzOutputParam = bgzOutputParam;

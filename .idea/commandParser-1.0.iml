@@ -9,5 +9,7 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="bgzf4j-0.1.0" level="project" />
     <orderEntry type="library" name="flatlaf-1.4" level="project" />
+    <orderEntry type="library" name="zstd-jni-1.4.9-5" level="project" />
+    <orderEntry type="library" name="xz-java" level="project" />
   </component>
 </module>
