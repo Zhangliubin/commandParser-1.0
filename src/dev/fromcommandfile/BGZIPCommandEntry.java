@@ -1,9 +1,9 @@
 package dev.fromcommandfile;
 
-import edu.sysu.pmglab.suranyi.commandParser.CommandMatcher;
-import edu.sysu.pmglab.suranyi.commandParser.CommandParser;
-import edu.sysu.pmglab.suranyi.easytools.FileUtils;
-import edu.sysu.pmglab.suranyi.unifyIO.bgztools.BGZTools;
+import edu.sysu.pmglab.commandParser.CommandMatcher;
+import edu.sysu.pmglab.commandParser.CommandParser;
+import edu.sysu.pmglab.easytools.FileUtils;
+import edu.sysu.pmglab.unifyIO.bgztools.BGZTools;
 
 import java.io.IOException;
 import java.util.Scanner;

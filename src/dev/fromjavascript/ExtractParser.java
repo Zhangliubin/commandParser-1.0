@@ -1,16 +1,15 @@
 package dev.fromjavascript;
 
-import edu.sysu.pmglab.suranyi.commandParser.CommandMatcher;
-import edu.sysu.pmglab.suranyi.commandParser.CommandParser;
-import edu.sysu.pmglab.suranyi.commandParser.converter.map.NaturalLongRangeConverter;
-import edu.sysu.pmglab.suranyi.commandParser.converter.value.IntConverter;
-import edu.sysu.pmglab.suranyi.commandParser.converter.value.PassedInConverter;
-import edu.sysu.pmglab.suranyi.commandParser.converter.value.StringConverter;
-import edu.sysu.pmglab.suranyi.commandParser.validator.EnsureFileExistsValidator;
-import edu.sysu.pmglab.suranyi.commandParser.validator.EnsureFileIsNotDirectoryValidator;
-import edu.sysu.pmglab.suranyi.commandParser.validator.RangeValidator;
-
-import static edu.sysu.pmglab.suranyi.commandParser.CommandOptions.*;
+import edu.sysu.pmglab.commandParser.CommandMatcher;
+import edu.sysu.pmglab.commandParser.CommandOptions;
+import edu.sysu.pmglab.commandParser.CommandParser;
+import edu.sysu.pmglab.commandParser.converter.map.NaturalLongRangeConverter;
+import edu.sysu.pmglab.commandParser.converter.value.IntConverter;
+import edu.sysu.pmglab.commandParser.converter.value.PassedInConverter;
+import edu.sysu.pmglab.commandParser.converter.value.StringConverter;
+import edu.sysu.pmglab.commandParser.validator.EnsureFileExistsValidator;
+import edu.sysu.pmglab.commandParser.validator.EnsureFileIsNotDirectoryValidator;
+import edu.sysu.pmglab.commandParser.validator.RangeValidator;
 
 enum ExtractParser {
     /**
@@ -42,18 +41,18 @@ enum ExtractParser {
 
         // add commandItems
         parser.register("--help", "-help", "-h")
-              .addOptions(HIDDEN, HELP)
+              .addOptions(CommandOptions.HIDDEN, CommandOptions.HELP)
               .arity(0)
               .convertTo(new PassedInConverter() {})
               .setOptionGroup("Options");
         parser.register("extract")
-              .addOptions(REQUEST, HIDDEN)
+              .addOptions(CommandOptions.REQUEST, CommandOptions.HIDDEN)
               .arity(1)
               .convertTo(new StringConverter() {})
               .validateWith(EnsureFileExistsValidator.INSTANCE, EnsureFileIsNotDirectoryValidator.INSTANCE)
               .setOptionGroup("Options");
         parser.register("--range", "-r")
-              .addOptions(REQUEST)
+              .addOptions(CommandOptions.REQUEST)
               .arity(1)
               .convertTo(new NaturalLongRangeConverter() {})
               .setOptionGroup("Options")

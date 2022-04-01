@@ -1,7 +1,7 @@
 package dev.fromcommandfile;
 
-import edu.sysu.pmglab.suranyi.commandParser.CommandMatcher;
-import edu.sysu.pmglab.suranyi.commandParser.CommandParser;
+import edu.sysu.pmglab.commandParser.CommandMatcher;
+import edu.sysu.pmglab.commandParser.CommandParser;
 
 enum BGZIPParser {
     /**
