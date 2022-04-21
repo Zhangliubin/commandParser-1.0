@@ -7,7 +7,6 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="bgzf4j-0.1.0" level="project" />
-    <orderEntry type="library" name="flatlaf-1.4" level="project" />
+    <orderEntry type="library" name="utils" level="project" />
   </component>
 </module>

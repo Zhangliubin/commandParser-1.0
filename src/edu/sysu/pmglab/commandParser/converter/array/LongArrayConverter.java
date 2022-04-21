@@ -1,13 +1,13 @@
 package edu.sysu.pmglab.commandParser.converter.array;
 
-import edu.sysu.pmglab.container.Array;
+import edu.sysu.pmglab.container.array.LongArray;
 
 /**
  * @author suranyi
  * @description 整数数组转换器
  */
 
-public class LongArrayConverter implements IArrayConverter<long[]> {
+public class LongArrayConverter implements IArrayConverter<Long[]> {
     public final String separator;
 
     public LongArrayConverter() {
@@ -23,16 +23,16 @@ public class LongArrayConverter implements IArrayConverter<long[]> {
     }
 
     @Override
-    public long[] convert(String... params) {
+    public Long[] convert(String... params) {
         if (this.separator.length() == 0) {
-            long[] converted = new long[params.length];
+            Long[] converted = new Long[params.length];
             for (int i = 0; i < params.length; i++) {
                 converted[i] = Long.parseLong(params[i]);
             }
 
             return converted;
         } else {
-            Array<Long> converted = new Array<>();
+            LongArray converted = new LongArray();
             for (String param : params) {
                 String[] valuesUnconverted = param.split(this.separator);
 
@@ -41,7 +41,7 @@ public class LongArrayConverter implements IArrayConverter<long[]> {
                 }
             }
 
-            return converted.toLongArray();
+            return converted.toArray();
         }
     }
 

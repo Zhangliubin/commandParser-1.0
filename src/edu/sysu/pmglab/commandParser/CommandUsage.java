@@ -2,7 +2,7 @@ package edu.sysu.pmglab.commandParser;
 
 import edu.sysu.pmglab.commandParser.converter.array.*;
 import edu.sysu.pmglab.commandParser.converter.map.*;
-import edu.sysu.pmglab.container.Array;
+import edu.sysu.pmglab.container.array.StringArray;
 
 import java.util.Arrays;
 
@@ -30,7 +30,7 @@ class CommandUsage {
         this.programName = commandName.trim();
     }
 
-    String addOptionGroups(StringBuilder out, String groupName, Array<String> commands) {
+    String addOptionGroups(StringBuilder out, String groupName, StringArray commands) {
         out.append(generateSpaces(firstLevelPrefixLength)).append(groupName).append(":");
 
         // 获取该参数分组下最长的参数长度
@@ -155,7 +155,7 @@ class CommandUsage {
         boolean showDebugParam = parser.debug;
 
         // 对命令进行分组
-        Array<String> optionGroups = new Array<>();
+        StringArray optionGroups = new StringArray();
         for (String commandName : this.parser.mainRegisteredCommandItems) {
             CommandItem commandItem = this.parser.getCommandItem(commandName);
             if (!optionGroups.contains(commandItem.getOptionGroup()) && !commandItem.isHide()) {
@@ -165,7 +165,7 @@ class CommandUsage {
             }
         }
 
-        Array<String> commands = new Array<>();
+        StringArray commands = new StringArray();
         for (String optionGroup : optionGroups) {
             commands.clear();
             for (String command : this.parser.mainRegisteredCommandItems) {

@@ -1,7 +1,7 @@
 package edu.sysu.pmglab.commandParser.converter.map;
 
 import edu.sysu.pmglab.commandParser.exception.ParameterException;
-import edu.sysu.pmglab.container.Array;
+import edu.sysu.pmglab.container.array.StringArray;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -15,14 +15,14 @@ public abstract class KVConverter<K, V> implements IMapConverter<HashMap<K, V>> 
     /**
      * 捕获的键值对关键字
      */
-    public final Array<String> KEYWORD;
+    public final StringArray KEYWORD;
     public final String separator = ";";
 
     public KVConverter(String... KEYWORD) {
         if (KEYWORD == null) {
-            this.KEYWORD = new Array<>(0, false);
+            this.KEYWORD = new StringArray(0, false);
         } else {
-            this.KEYWORD = new Array<>(KEYWORD);
+            this.KEYWORD = new StringArray(KEYWORD);
         }
     }
 

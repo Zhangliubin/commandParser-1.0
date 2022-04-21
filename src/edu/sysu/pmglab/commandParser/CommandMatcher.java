@@ -1,8 +1,8 @@
 package edu.sysu.pmglab.commandParser;
 
 import edu.sysu.pmglab.commandParser.exception.ParameterException;
-import edu.sysu.pmglab.container.Array;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -18,7 +18,7 @@ public class CommandMatcher {
      */
     final HashMap<String, Object> values = new HashMap<>();
     final HashSet<String> isPassedIn = new HashSet<>();
-    final Array<String[]> caughtValues = new Array<>(1, true);
+    final ArrayList<String[]> caughtValues = new ArrayList<>();
     final HashMap<String, CommandItem> commandItems;
     final boolean help;
 

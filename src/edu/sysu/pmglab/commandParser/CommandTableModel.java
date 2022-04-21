@@ -1,6 +1,6 @@
 package edu.sysu.pmglab.commandParser;
 
-import edu.sysu.pmglab.container.Array;
+import edu.sysu.pmglab.container.array.Array;
 
 import javax.swing.*;
 import javax.swing.event.TableModelEvent;

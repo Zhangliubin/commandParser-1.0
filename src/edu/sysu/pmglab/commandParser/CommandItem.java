@@ -7,12 +7,8 @@ import edu.sysu.pmglab.commandParser.converter.map.*;
 import edu.sysu.pmglab.commandParser.converter.value.*;
 import edu.sysu.pmglab.commandParser.validator.*;
 import edu.sysu.pmglab.commandParser.exception.CommandParserException;
-import edu.sysu.pmglab.container.Array;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Locale;
+import java.util.*;
 
 /**
  * @author suranyi
@@ -899,7 +895,7 @@ public class CommandItem {
         // 设定验证器
         if (!options[4].equals(CommandOptions.MISS_VALUE)) {
             String[] validators = options[4].split(";");
-            Array<IValidator> addToItem = new Array<>();
+            ArrayList<IValidator> addToItem = new ArrayList<>();
 
             for (String validator : validators) {
                 // 替换空格

@@ -1,6 +1,6 @@
 package edu.sysu.pmglab.commandParser.converter.array;
 
-import edu.sysu.pmglab.container.Array;
+import edu.sysu.pmglab.container.array.StringArray;
 
 /**
  * @author suranyi
@@ -27,12 +27,12 @@ public class StringArrayConverter implements IArrayConverter<String[]> {
         if (this.separator.length() == 0) {
             return params;
         } else {
-            Array<String> converted = new Array<>();
+            StringArray converted = new StringArray();
             for (String param : params) {
                 converted.addAll(param.split(this.separator));
             }
 
-            return converted.toStringArray();
+            return converted.toArray();
         }
     }
 

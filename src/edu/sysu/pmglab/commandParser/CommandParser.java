@@ -5,7 +5,9 @@ import edu.sysu.pmglab.commandParser.converter.map.KVConverter;
 import edu.sysu.pmglab.commandParser.converter.value.PassedInConverter;
 import edu.sysu.pmglab.commandParser.exception.CommandParserException;
 import edu.sysu.pmglab.commandParser.exception.ParameterException;
-import edu.sysu.pmglab.container.Array;
+import edu.sysu.pmglab.container.array.Array;
+import edu.sysu.pmglab.container.array.IntArray;
+import edu.sysu.pmglab.container.array.StringArray;
 import edu.sysu.pmglab.unifyIO.FileStream;
 import edu.sysu.pmglab.unifyIO.InputStreamReaderStream;
 import edu.sysu.pmglab.unifyIO.options.FileOptions;
@@ -33,13 +35,13 @@ public class CommandParser {
     /**
      * 注册的主参数名，该表与参数的优先级绑定
      */
-    Array<String> mainRegisteredCommandItems = new Array<>(1, true);
+    StringArray mainRegisteredCommandItems = new StringArray(1, true);
 
     /**
      * 注册的规则及其顺序表
      */
     HashMap<Integer, CommandRule> registeredRules = new HashMap<>(1);
-    Array<Integer> registeredRulesOrder = new Array<>(1, true);
+    IntArray registeredRulesOrder = new IntArray(1, true);
 
     int priority = 0;
 
@@ -324,13 +326,13 @@ public class CommandParser {
             }
 
             if (containAtSymbol) {
-                Array<String> oldArgs = new Array<>(args);
+                StringArray oldArgs = new StringArray(args);
 
                 while (containAtSymbol) {
                     containAtSymbol = false;
 
                     // 再进行转换
-                    Array<String> newArgs = new Array<>();
+                    StringArray newArgs = new StringArray();
                     for (String arg : oldArgs) {
                         if (arg.startsWith("@")) {
                             arg = arg.substring(1);
@@ -370,7 +372,7 @@ public class CommandParser {
                     oldArgs = newArgs;
                 }
 
-                args = oldArgs.toStringArray();
+                args = oldArgs.toArray();
             }
         }
 
@@ -618,7 +620,7 @@ public class CommandParser {
                     }
                 }
             }
-            return parse(args.toStringArray());
+            return parse(args.toArray());
         }
     }
 
@@ -653,7 +655,7 @@ public class CommandParser {
             }
         }
 
-        return parse(args.toStringArray());
+        return parse(args.toArray());
     }
 
     /**

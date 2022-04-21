@@ -1,13 +1,12 @@
 package edu.sysu.pmglab.commandParser.converter.array;
-
-import edu.sysu.pmglab.container.Array;
+import edu.sysu.pmglab.container.array.FloatArray;
 
 /**
  * @author suranyi
  * @description 浮点数组转换器
  */
 
-public class FloatArrayConverter implements IArrayConverter<float[]> {
+public class FloatArrayConverter implements IArrayConverter<Float[]> {
     public final String separator;
 
     public FloatArrayConverter() {
@@ -23,16 +22,16 @@ public class FloatArrayConverter implements IArrayConverter<float[]> {
     }
 
     @Override
-    public float[] convert(String... params) {
+    public Float[] convert(String... params) {
         if (this.separator.length() == 0) {
-            float[] converted = new float[params.length];
+            Float[] converted = new Float[params.length];
             for (int i = 0; i < params.length; i++) {
                 converted[i] = Float.parseFloat(params[i]);
             }
 
             return converted;
         } else {
-            Array<Float> converted = new Array<>();
+            FloatArray converted = new FloatArray();
             for (String param : params) {
                 String[] valuesUnconverted = param.split(this.separator);
 
@@ -41,7 +40,7 @@ public class FloatArrayConverter implements IArrayConverter<float[]> {
                 }
             }
 
-            return converted.toFloatArray();
+            return converted.toArray();
         }
     }
 

@@ -1,13 +1,13 @@
 package edu.sysu.pmglab.commandParser.converter.array;
 
-import edu.sysu.pmglab.container.Array;
+import edu.sysu.pmglab.container.array.IntArray;
 
 /**
  * @author suranyi
  * @description 整数数组转换器
  */
 
-public class IntArrayConverter implements IArrayConverter<int[]> {
+public class IntArrayConverter implements IArrayConverter<Integer[]> {
     public final String separator;
 
     public IntArrayConverter() {
@@ -23,16 +23,16 @@ public class IntArrayConverter implements IArrayConverter<int[]> {
     }
 
     @Override
-    public int[] convert(String... params) {
+    public Integer[] convert(String... params) {
         if (this.separator.length() == 0) {
-            int[] converted = new int[params.length];
+            Integer[] converted = new Integer[params.length];
             for (int i = 0; i < params.length; i++) {
                 converted[i] = Integer.parseInt(params[i]);
             }
 
             return converted;
         } else {
-            Array<Integer> converted = new Array<>();
+            IntArray converted = new IntArray();
             for (String param : params) {
                 String[] valuesUnconverted = param.split(this.separator);
 
@@ -41,7 +41,7 @@ public class IntArrayConverter implements IArrayConverter<int[]> {
                 }
             }
 
-            return converted.toIntegerArray();
+            return converted.toArray();
         }
     }
 

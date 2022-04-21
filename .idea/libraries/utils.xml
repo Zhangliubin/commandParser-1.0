@@ -1,7 +1,7 @@
 <component name="libraryTable">
-  <library name="bgzf4j-0.1.0">
+  <library name="utils">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/lib/bgzf4j-0.1.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/utils.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

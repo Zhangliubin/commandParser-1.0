@@ -1,13 +1,13 @@
 package edu.sysu.pmglab.commandParser.converter.array;
 
-import edu.sysu.pmglab.container.Array;
+import edu.sysu.pmglab.container.array.BooleanArray;
 
 /**
  * @author suranyi
  * @description 布尔数组转换器
  */
 
-public class BooleanArrayConverter implements IArrayConverter<boolean[]> {
+public class BooleanArrayConverter implements IArrayConverter<Boolean[]> {
     public final String separator;
 
     public BooleanArrayConverter() {
@@ -23,16 +23,16 @@ public class BooleanArrayConverter implements IArrayConverter<boolean[]> {
     }
 
     @Override
-    public boolean[] convert(String... params) {
+    public Boolean[] convert(String... params) {
         if (this.separator.length() == 0) {
-            boolean[] converted = new boolean[params.length];
+            Boolean[] converted = new Boolean[params.length];
             for (int i = 0; i < params.length; i++) {
                 converted[i] = Boolean.parseBoolean(params[i]);
             }
 
             return converted;
         } else {
-            Array<Boolean> converted = new Array<>();
+            BooleanArray converted = new BooleanArray();
             for (String param : params) {
                 String[] valuesUnconverted = param.split(this.separator);
 
@@ -41,7 +41,7 @@ public class BooleanArrayConverter implements IArrayConverter<boolean[]> {
                 }
             }
 
-            return converted.toBooleanArray();
+            return converted.toArray();
         }
     }
 

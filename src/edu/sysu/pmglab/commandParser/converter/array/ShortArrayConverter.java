@@ -1,13 +1,13 @@
 package edu.sysu.pmglab.commandParser.converter.array;
 
-import edu.sysu.pmglab.container.Array;
+import edu.sysu.pmglab.container.array.ShortArray;
 
 /**
  * @author suranyi
  * @description 整数数组转换器
  */
 
-public class ShortArrayConverter implements IArrayConverter<short[]> {
+public class ShortArrayConverter implements IArrayConverter<Short[]> {
     public final String separator;
 
     public ShortArrayConverter() {
@@ -23,16 +23,16 @@ public class ShortArrayConverter implements IArrayConverter<short[]> {
     }
 
     @Override
-    public short[] convert(String... params) {
+    public Short[] convert(String... params) {
         if (this.separator.length() == 0) {
-            short[] converted = new short[params.length];
+            Short[] converted = new Short[params.length];
             for (int i = 0; i < params.length; i++) {
                 converted[i] = Short.parseShort(params[i]);
             }
 
             return converted;
         } else {
-            Array<Short> converted = new Array<>();
+            ShortArray converted = new ShortArray();
             for (String param : params) {
                 String[] valuesUnconverted = param.split(this.separator);
 
@@ -41,7 +41,7 @@ public class ShortArrayConverter implements IArrayConverter<short[]> {
                 }
             }
 
-            return converted.toShortArray();
+            return converted.toArray();
         }
     }
 

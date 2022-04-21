@@ -2,7 +2,7 @@ package edu.sysu.pmglab.commandParser;
 
 import com.formdev.flatlaf.FlatLightLaf;
 import edu.sysu.pmglab.commandParser.exception.CommandParserException;
-import edu.sysu.pmglab.container.Array;
+import edu.sysu.pmglab.container.array.Array;
 import edu.sysu.pmglab.easytools.FileUtils;
 import edu.sysu.pmglab.unifyIO.FileStream;
 import edu.sysu.pmglab.unifyIO.options.FileOptions;
@@ -774,7 +774,7 @@ public class CommandParserDesigner extends JFrame {
             }
 
             if (cache.size() != 0) {
-                commandScript.add("              .addOptions(" + merge(false, cache.toStringArray()) + ")");
+                commandScript.add("              .addOptions(" + merge(false, cache.toArray()) + ")");
                 cache.clear();
             }
 
@@ -932,7 +932,7 @@ public class CommandParserDesigner extends JFrame {
                     }
                 }
 
-                commandScript.add("              .validateWith(" + merge(false, cache.toStringArray()) + ")");
+                commandScript.add("              .validateWith(" + merge(false, cache.toArray()) + ")");
                 cache.clear();
             }
 
@@ -946,7 +946,7 @@ public class CommandParserDesigner extends JFrame {
                 commandScript.add("              .setFormat(\"" + row[8] + "\")");
             }
 
-            lines.add(String.join("\n", commandScript.toStringArray()) + ";");
+            lines.add(String.join("\n", commandScript.toArray()) + ";");
         }
 
         copy = ruleBackupList == null ? ruleModel.data : ruleBackupList;
